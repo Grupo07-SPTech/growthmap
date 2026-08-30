@@ -5,6 +5,9 @@
   font-family: 'Geologica', Arial, Helvetica, sans-serif;
 }
 
+html{
+  scroll-behavior: smooth;
+}
 body {
   background: #e9e9e9;
 }
@@ -13,8 +16,8 @@ body {
   background: #161658;
   position: relative;
   overflow: hidden;
-  clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-  filter: drop-shadow(0 25px 20px rgba(0, 0, 0, 0.35));
+  clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%); /*para dar o "corte" no hero e deixar mais parecido com o prototipo*/
+  filter: drop-shadow(0 25px 20px rgba(0, 0, 0, 0.35)); /*para dar profundidade ao corte*/
 }
 
 header {
@@ -43,6 +46,9 @@ header {
 nav {
   display: flex;
   gap: 40px;
+  /*por causa do corte a navbar não pode ser fixa
+  pensar sobre isso melhor depois
+  */
 }
 
 nav a {
@@ -59,15 +65,15 @@ nav a {
 }
 
 .hero-bg {
-  position: absolute;
+  position: absolute; /*usando absolute, consigo usar direções para posicionar a minha imagem*/
   top: -80px;
-  right: -100px;
+  right: -100px; 
   width: 750px;
   height: 750px;
-  object-fit: contain;
+  object-fit: contain; /*controla a imagem quando a imagem e o conteiner não tem o mesmo formato e tamanho, não distorce e nem estica a imagem*/
   opacity: 0.1;
   z-index: 0;
-  transform: rotate(-5deg);
+  transform: rotate(-5deg); /*faz a imagem dar uma rodada*/
 
 }
 
@@ -82,7 +88,7 @@ nav a {
 
 .somos-section {
   display: grid;
-  grid-template-columns: 1fr 1px 1fr;
+  grid-template-columns: 1fr 1px 1fr;/*!fração importante pra responsividade!*/
   gap: 50px;
   padding: 80px 60px;
   align-items: start;
@@ -189,14 +195,14 @@ nav a {
   display: flex;
   gap: 20px;
   width: max-content;
-  animation: rolar-carrossel 30s linear infinite;
+  animation: rolar-carrossel 30s linear infinite; /*tempo total de execução de totdos os cards do carrosle*/
 }
 
 .carrossel:hover .beneficios-grid {
-  animation-play-state: paused;
+  animation-play-state: paused; /*quando o cursor do mause passar, vai parar o carrosel*/
 }
 
-@keyframes rolar-carrossel {
+@keyframes rolar-carrossel { /*função que faz o carrossel rodar */
   from {
     transform: translateX(0);
   }
@@ -400,12 +406,12 @@ footer .footer-info p {
 -- preciso mudar todos as classes do site para encaixar nas proporções do mobile
 é preferivel evitar usar larguras fixas para evitar o vazamento da tela, a barra de rolagem lateral e a quebra das proporções do site
 para grid, preferir usar frações
-!tomar cuidado com o tamanho das imagens, dependendo da resolução ou tamanho, elas podem acabar 'estourando' a tela do celular!
+!tomar cuidado com o tamanho das imagens, dependendo da resolução ou tamanho, elas podem acabar 'estourando' na tela do celular!
 max-width = usar quando pensar no site para notebooks/desktop 
 min-width = usar para quando pensar em mobile
 ampliando a responsividade para telas de até 780px, tenho uma cartela maior de dispositivos que conseguem acessar o site via celular ou tablet
 
-/* Responsividade tablet (telas até 780px) */
+/* Responsividade para tablets com telas até 780px */
 @media (max-width: 780px) {
   header {
     padding: 16px 30px;
@@ -517,7 +523,7 @@ ampliando a responsividade para telas de até 780px, tenho uma cartela maior de 
   }
 }
 
-/* Responsivo celular (telas até 600px) */
+/* para celulares com telas até 600px */
 @media (max-width: 600px) {
 
   /*definindo o tamanho maximo que essas proporções aguentam*/

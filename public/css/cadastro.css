@@ -25,7 +25,7 @@ body {
 
 
 #logo {
-   background-image: url("/public/assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png");
+   background-image: url("../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png");
    background-size: contain;
    background-repeat: no-repeat;
    background-position: center;
