@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Growth Map | Cadastro</title>
+
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet">
+
+   <link rel="stylesheet" href="./css/cadastro.css">
+</head>
+
+<body>
+
+   <div class="container">
+      <!-- bloc1 é na esquerda, bloc2 na direta -->
+
+      <div id="bloc1" class="cadastro">
+         <a href="index.html" class="link-logo" aria-label="Ir para a página inicial">
+            <div id="logo"></div>
+         </a>
+         <div id="inputs"><!-- separei os inputs em caixas pra ficar mais facil de mexer -->
+
+
+            <div class="caixa" id="caixaNome" class="caixa_input">
+               <p class="tituloInp">Nome:</p>
+               <input id="inpNome" class="input" oninput="validarNome()" type="text">
+            </div>
+
+            <div class="caixa" id="caixaEmail" class="caixa_input">
+               <p class="tituloInp">Email:</p>
+               <input id="inpEmail" class="input" oninput="validarEmail()" type="text">
+            </div>
+
+            <div class="caixa" id="caixaCnpj" class="caixa_input">
+               <p class="tituloInp">CNPJ:</p>
+               <input id="inpCnpj" class="input" oninput="validarCnpj()" type="text">
+            </div>
+
+            <div class="caixa" id="caixaCidade">
+               <p class="tituloInp">Cidade:</p>
+               <input id="inpCidade" class="input" oninput="validarCidade()" type="text">
+               <!-- aqui eu posso colocar o validar nome, inves de ter duas funcoes(acho q é mais facil) -->
+            </div>
+
+            <div class="caixa" id="caixaSenha">
+               <p class="tituloInp">Senha:</p>
+               <input id="inpSenha" class="input" oninput="validarSenha()" type="text">
+            </div>
+
+            <div class="caixa" id="caixaConfirmarSenha">
+               <p class="tituloInp">Confirmar senha:</p>
+               <input id="inpConfSenha" class="input" oninput="validarConfSenha()" type="text">
+            </div>
+
+         </div>
+
+         <div class="caixa" id="caixaBotao"><!-- caixa para o botao -->
+            <button class="botao" onclick="cadastrar()">CADASTRAR-SE</button>
+            <p class="texto">Já tem uma conta? <b><a href="login.html">Entrar</a></b></p>
+         </div>
+
+      </div>
+
+      <div id="bloc2" class="cadastro">
+         <p class="texto-cadastro">Cadastro.</p>
+         <div class="cadastro" id="logoFundo"></div>
+      </div>
+
+   </div>
+
+   <script>
+
+      validarNome(){
+
+      }
+
+      validarEmail(){
+
+      }
+
+      validarCnpj(){
+
+      }
+
+      validarCidade(){
+
+      }
+
+      validarSenha(){
+
+      }
+
+      validarConfSenha(){
+
+      }
+
+      cadastrar(){
+         console.log("cadastrou")
+      }
+
+   </script>
+
+
+
+
+
+</body>
+
+</html>
