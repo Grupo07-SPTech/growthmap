@@ -9,7 +9,7 @@ body {
    background-color: #e9e9e9;
 }
 
-/* Arrumando os Bloc */
+/* Container */
 
 .container {
    position: fixed;
@@ -28,30 +28,98 @@ body {
    overflow: hidden;
 }
 
+/* Logo */
 
 #logo {
+   width: 15vw;
+   height: 30vh;
+
    background-image: url("/public/assets/logo/logos-sem-fundo/logo_com_escrita__azul.png");
    background-size: contain;
    background-repeat: no-repeat;
    background-position: center;
 
-   width: 15vw;
-   height: 30vh;
-
    margin-bottom: 0.1vh;
 }
 
+/* Parte azul */
+
 #bloc1.login {
    position: relative;
-   width: 44%;
+   width: 35%;
    height: 100vh;
+
    overflow: hidden;
+
    background-color: #0d0d5e;
    border-radius: 0 28px 28px 0;
 }
 
+/* Imagem dos livros */
+#bloc1.login::after {
+   content: "";
+
+   position: absolute;
+   inset: 0;
+
+   background-image: url("/public/assets/imgs/livrosCadLogin.jpg");
+   background-size: cover;
+   background-position: center;
+   background-repeat: no-repeat;
+
+   opacity: 0.03;
+   z-index: 1;
+}
+
+/* Logo de fundo */
+#logoFundo {
+   position: absolute;
+   inset: 0;
+
+   width: 100%;
+   height: 100%;
+
+   background-image: url("/public/assets/logo/logos-sem-fundo/logo_sem_escrita_-_cinza.png");
+   background-size: 90%;
+   background-position: center;
+   background-repeat: no-repeat;
+
+   opacity: 0.09;
+   z-index: 2;
+
+   pointer-events: none;
+}
+
+/* Texto */
+.texto-login {
+   position: absolute;
+
+   top: 5%;
+   left: 3.4vw;
+
+   width: 100px;
+   height: 90%;
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   color: #fff;
+   font-size: clamp(55px, 7vw, 105px);
+   font-weight: bold;
+   line-height: 1;
+
+   writing-mode: vertical-rl;
+   transform: rotate(180deg);
+
+   white-space: nowrap;
+   z-index: 3;
+}
+
+/* Parte do formulário */
+
 #bloc2.login {
-   flex: 0 0 65%;
+   position: relative;
 
    width: 65%;
    height: 100%;
@@ -65,57 +133,7 @@ body {
    overflow: hidden;
 }
 
-
-.texto-login {
-   position: absolute;
-   z-index: 2;
-
-   top: 50%;
-   right: 60px;
-
-   transform: translateY(-50%) rotate(-90deg);
-   /* faz o texto deitar */
-
-   color: white;
-   font-size: 7vw;
-   font-weight: bold;
-   line-height: 1;
-   white-space: nowrap;
-}
-
-/* Primeira imagem */
-
-#bloc1.login::after {
-   content: "";
-   position: absolute;
-   inset: 0;
-
-   background-image: url("/public/assets/imgs/livrosCadLogin.jpg");
-   background-size: cover;
-   background-position: center;
-   background-repeat: no-repeat;
-
-   opacity: 0.03;
-   z-index: 1;
-}
-
-
-#logoFundo {
-   position: absolute;
-   inset: 0;
-
-   background-image: url("/public/assets/logo/logos-sem-fundo/logo_sem_escrita_-_cinza.png");
-   background-size: 90%;
-   background-position: center;
-   background-repeat: no-repeat;
-
-   opacity: 0.08;
-
-   z-index: 2;
-}
-
-
-/* arrumando inputs */
+/* Campos */
 
 #inputs {
    width: 100%;
@@ -123,15 +141,16 @@ body {
 
    display: flex;
    flex-direction: column;
+
    z-index: 5;
 }
 
 .caixa {
    width: 100%;
    margin-bottom: 1vw;
+
    z-index: 5;
 }
-
 
 .input {
    width: 100%;
@@ -149,13 +168,12 @@ body {
    color: #333;
 }
 
-.input::placeholder {
+/* .input::placeholder {
    color: #bdbdbd;
    opacity: 1;
    font-size: 16px;
-}
+} */
 
-/* Botão */
 #caixaBotao {
    width: 100%;
    max-width: 430px;
@@ -205,6 +223,40 @@ body {
 .link-logo {
    display: block;
 
+   width: 15vw;
+   height: 30vh;
 
    cursor: pointer;
+}
+
+/* Responsividade */
+
+@media (max-width: 650px) {
+   #bloc1.login {
+      display: none;
+   }
+
+   #bloc2.login {
+      width: 100%;
+      min-height: 100vh;
+      height: 100vh;
+
+      flex: none;
+   }
+
+   .link-logo {
+      width: 180px;
+      height: 135px;
+   }
+
+   #logo {
+      width: 180px;
+      height: 135px;
+   }
+
+   #inputs,
+   #caixaBotao {
+      width: 90%;
+      max-width: 430px;
+   }
 }

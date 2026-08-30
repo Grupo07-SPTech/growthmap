@@ -6,8 +6,6 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Growth Map | Cadastro</title>
 
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&family=Poppins:wght@400;600&display=swap"
       rel="stylesheet">
 
@@ -26,35 +24,35 @@
          <div id="inputs"><!-- separei os inputs em caixas pra ficar mais facil de mexer -->
 
 
-            <div class="caixa" id="caixaNome" class="caixa_input">
+            <div class="caixa" id="caixaNome">
                <p class="tituloInp">Nome:</p>
-               <input id="inpNome" class="input" oninput="validarNome()" type="text">
+               <input id="inpNome" class="input" type="text">
             </div>
 
-            <div class="caixa" id="caixaEmail" class="caixa_input">
+            <div class="caixa" id="caixaEmail">
                <p class="tituloInp">Email:</p>
-               <input id="inpEmail" class="input" oninput="validarEmail()" type="text">
+               <input id="inpEmail" class="input" type="text">
             </div>
 
-            <div class="caixa" id="caixaCnpj" class="caixa_input">
+            <div class="caixa" id="caixaCnpj">
                <p class="tituloInp">CNPJ:</p>
-               <input id="inpCnpj" class="input" oninput="validarCnpj()" type="text">
+               <input id="inpCnpj" class="input" type="text">
             </div>
 
             <div class="caixa" id="caixaCidade">
                <p class="tituloInp">Cidade:</p>
-               <input id="inpCidade" class="input" oninput="validarCidade()" type="text">
+               <input id="inpCidade" class="input" type="text">
                <!-- aqui eu posso colocar o validar nome, inves de ter duas funcoes(acho q é mais facil) -->
             </div>
 
             <div class="caixa" id="caixaSenha">
                <p class="tituloInp">Senha:</p>
-               <input id="inpSenha" class="input" oninput="validarSenha()" type="text">
+               <input id="inpSenha" class="input" type="password">
             </div>
 
             <div class="caixa" id="caixaConfirmarSenha">
                <p class="tituloInp">Confirmar senha:</p>
-               <input id="inpConfSenha" class="input" oninput="validarConfSenha()" type="text">
+               <input id="inpConfSenha" class="input" type="password">
             </div>
 
          </div>
@@ -75,38 +73,174 @@
 
    <script>
 
-      validarNome(){
+      function validarNome() {
+         let nome = inpNome.value;
 
+         if (nome.length < 3) {
+            return false;
+         }
+
+         return true;
       }
 
-      validarEmail(){
+      function validarEmail() {
+         let email = inpEmail.value;
 
+         if (!email.includes("@")) {
+            return false;
+         }
+
+         return true;
       }
 
-      validarCnpj(){
+      function validarCnpj() {
+         let cnpj = inpCnpj.value;
 
+         cnpj = cnpj.replace(/\D/g, ""); // Regex que substitui pontos e barras por nada, dai o cpnj vem apenas com os numeros
+
+         if (cnpj.length != 14) {
+            return false;
+         }
+
+         return true;
       }
 
-      validarCidade(){
+      function validarCidade() {
+         let cidade = inpCidade.value;
 
+         if (cidade.length < 2) {
+            return false;
+         }
+
+         return true;
       }
 
-      validarSenha(){
+      let mensagemErro = ""
 
+      function validarSenha() {
+         let senha = inpSenha.value;
+
+         let tamanho = false;
+         let temMinuscula = false;
+         let temMaiuscula = false;
+         let temEspecial = false;
+
+
+         for (let i = 0; i < senha.length; i++) {
+
+            let caractere = senha[i];
+
+            // ve tamanho
+            if (senha.length >= 8) {
+               tamanho = true;
+            }
+
+            // Verifica letra minúscula
+            if (caractere >= "a" && caractere <= "z") {
+               temMinuscula = true;
+            }
+
+            // Verifica letra maiúscula
+            if (caractere >= "A" && caractere <= "Z") {
+               temMaiuscula = true;
+            }
+
+            // Verifica caractere especial
+            if (
+               caractere == "!" ||
+               caractere == "@" ||
+               caractere == "#" ||
+               caractere == "$" ||
+               caractere == "%" ||
+               caractere == "&" ||
+               caractere == "*" ||
+               caractere == "_" ||
+               caractere == "-" ||
+               caractere == "."
+            ) {
+               temEspecial = true;
+            }
+         }
+
+         if (!tamanho) {
+            mensagemErro = "A senha deve ter pelo menos 8 caracteres."
+         }
+         else if (!temMinuscula) {
+            mensagemErro = "A senha deve ter pelo menos uma letra minuscula."
+         }
+         else if (!temMaiuscula) {
+            mensagemErro = "A senha deve ter pelo menos uma letra maiuscula."
+         }
+         else if (!temEspecial) {
+            mensagemErro = "A senha deve ter pelo menos um caractere especial."
+         }
+
+
+         if (temMinuscula && temMaiuscula && temEspecial && tamanho) {
+            return mensagemErro;
+            return true;
+         }
+
+         return false;
       }
 
-      validarConfSenha(){
+      function validarConfSenha() {
+         let senha = inpSenha.value;
+         let confSenha = inpConfSenha.value;
 
+         if (senha != confSenha) {
+            return false;
+         }
+
+         return true;
       }
 
-      cadastrar(){
-         console.log("cadastrou")
+      function cadastrar() {
+
+         validarNome()
+         validarEmail()
+         validarCnpj()
+         validarCidade()
+         validarSenha()
+         validarConfSenha()
+
+         if (!validarNome()) {
+            alert("Digite um nome válido.");
+            return;
+         }
+
+         if (!validarEmail()) {
+            alert("Digite um email válido.");
+            return;
+         }
+
+         if (!validarCnpj()) {
+            alert("Digite um CNPJ válido.");
+            return;
+         }
+
+
+         if (!validarCidade()) {
+            alert("Digite uma cidade válida.");
+            return;
+         }
+
+         if (!validarSenha()) {
+            alert(mensagemErro)
+            return
+         }
+
+         if (!validarConfSenha()) {
+            alert("As senhas não são iguais.");
+            return;
+         }
+
+         console.log("cadastrou");
+         alert("Cadastro realizado com sucesso!");
+
       }
 
    </script>
-
-
-
 
 
 </body>
