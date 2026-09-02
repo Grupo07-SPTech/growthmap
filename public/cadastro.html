@@ -116,8 +116,6 @@
 
 
       function validarCnpj(cnpj) {
-         let cnpj = inpCnpj.value;
-
          cnpj = cnpj.replace(/\D/g, ""); // Regex que substitui pontos e barras por nada, dai o cpnj vem apenas com os numeros
 
          if (cnpj.length != 14) {
