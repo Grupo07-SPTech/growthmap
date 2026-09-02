@@ -104,6 +104,7 @@ body {
    display: flex;
    align-items: center;
    justify-content: center;
+   padding-left: 5vh;
 
    z-index: 3;
 
@@ -207,7 +208,7 @@ body {
 .link-logo {
    display: block;
    width: 150px;
-   height: 135px;
+   height: 19vh;
 
    cursor: pointer;
 }
