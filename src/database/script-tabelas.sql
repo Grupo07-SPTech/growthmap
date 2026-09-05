@@ -2,10 +2,6 @@ CREATE DATABASE growthmap;
 
 USE growthmap;
 
--- =========================================
--- TABELA: empresa
--- =========================================
-
 CREATE TABLE empresa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -14,21 +10,11 @@ CREATE TABLE empresa (
 	senha VARCHAR(255) NOT NULL
 );
 
-
--- =========================================
--- TABELA: municipio
--- =========================================
-
 CREATE TABLE municipio (
     co_municipio INT PRIMARY KEY,
     nome_municipio VARCHAR(100) NOT NULL,
     uf CHAR(2) NOT NULL
 );
-
-
--- =========================================
--- TABELA: unidade
--- =========================================
 
 CREATE TABLE unidade (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -47,11 +33,6 @@ CREATE TABLE unidade (
         REFERENCES empresa(id)
 );
 
-
--- =========================================
--- TABELA: usuario
--- =========================================
-
 CREATE TABLE usuario (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -64,11 +45,6 @@ CREATE TABLE usuario (
         FOREIGN KEY (id_unidade)
         REFERENCES unidade(id)
 );
-
-
--- =========================================
--- TABELA: desempenho_regional
--- =========================================
 
 CREATE TABLE desempenho_regional (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -85,11 +61,6 @@ CREATE TABLE desempenho_regional (
         FOREIGN KEY (co_municipio)
         REFERENCES municipio(co_municipio)
 );
-
-
--- =========================================
--- TABELA: painel_acompanhamento
--- =========================================
 
 CREATE TABLE painel_acompanhamento (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -108,11 +79,6 @@ CREATE TABLE painel_acompanhamento (
         REFERENCES municipio(co_municipio)
 );
 
-
--- =========================================
--- TABELA: config_notificacao
--- =========================================
-
 CREATE TABLE config_notificacao (
     id INT AUTO_INCREMENT PRIMARY KEY,
     canal VARCHAR(20) NOT NULL,
@@ -128,4 +94,15 @@ CREATE TABLE config_notificacao (
     CONSTRAINT fk_config_usuario
         FOREIGN KEY (id_usuario)
         REFERENCES usuario(id)
+);
+
+CREATE TABLE logs(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    acao VARCHAR(100) NOT NULL,
+    dataHora DATETIME NOT NULL,
+    
+    CONSTRAINT fk_id_usuario
+		FOREIGN KEY (id_usuario)
+		REFERENCES usuarios(id)
 );
