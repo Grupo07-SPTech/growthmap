@@ -46,38 +46,50 @@
          </div>
 
       </div>
-
-
-
-
-
    </div>
-
    <script>
 
-     // *IMPORTANTE* - a função de entrar(login) não está completa, é necessário rever os códigos.
+      function entrar() {
+         var emailVar = inpEmail.value;
+         var senhaVar = inpSenha.value;
 
-   /*   function entrar() {
-
-         verificarEmail()
-         verificarSenha()
-
-         if (verificarEmail()) {
-            alert("Digite um email válido.");
-            return;
+         if (emailVar == "" || senhaVar == "") {
+            alert("Preencha todos os campos!");
+            return false;
          }
 
-         if (!verificarrSenha()) {
-            alert(mensagemErro)
-            return
-         }
+         fetch("/empresas/autenticar", {
+            method: "POST",
+            headers: {
+                  "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                  email: emailVar,
+                  senha: senhaVar
+            })
+         })
+            .then(function (resposta) {
+               if (resposta.ok) {
+                  resposta.json().then(function (empresa) {
+                     sessionStorage.ID_EMPRESA = empresa.id;
+                     sessionStorage.NOME_EMPRESA = empresa.nome;
+                     sessionStorage.EMAIL_EMPRESA = empresa.email;
+                     sessionStorage.CNPJ_EMPRESA = empresa.cnpj;
 
-         console.log("Fez login com sucesso");
-         alert("Login realizado com sucesso!");
+                     window.location = "index.html";
+                  });
+               } else {
+                  resposta.text().then(function (texto) {
+                     alert(texto);
+                  });
+               }
+            })
+            .catch(function (erro) {
+                  console.log("#ERRO:", erro);
+            });
 
-      };
-         */ 
-
+         return false;
+      }
    </script>
 
 

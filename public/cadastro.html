@@ -66,20 +66,6 @@
    </div>
 
    <script>
-
-      function campoVazio(valor) {
-         if (valor == null) {
-            return true;
-         }
-
-         if (valor.trim().length == 0) {
-            return true;
-         }
-
-         return false;
-      }
-
-
       function validarNome(nome) {
          if (nome.length < 3) {
             return false;
@@ -121,6 +107,8 @@
          if (cnpj.length != 14) {
             return false;
          }
+
+         console.log(cnpj)
 
          let todosIguais = true;
 
@@ -204,33 +192,18 @@
 
          let nome = inpNome.value.trim();
          let email = inpEmail.value.trim();
-         let cnpj = inpCnpj.value;
+         let cnpj = inpCnpj.value.replace(/\D/g, "");
          let senha = inpSenha.value;
          let confSenha = inpConfSenha.value;
 
-         if (campoVazio(nome)) {
-            alert("Preencha o campo Empresa.");
-            return;
-         }
- 
-         if (campoVazio(email)) {
-            alert("Preencha o campo Email.");
-            return;
-         }
- 
-         if (campoVazio(cnpj)) {
-            alert("Preencha o campo CNPJ.");
-            return;
-         }
- 
-         if (campoVazio(senha)) {
-            alert("Preencha o campo Senha.");
-            return;
-         }
- 
-         if (campoVazio(confSenha)) {
-            alert("Preencha o campo Confirmar senha.");
-            return;
+         if (
+            nome == "" ||
+            email == "" ||
+            cnpj == "" ||
+            senha == ""
+         ) {
+            alert("Preencha todos os campos!");
+            return false;
          }
 
          if (!validarNome(nome)) {
@@ -258,17 +231,34 @@
             return;
          }
          
-         // objeto para utilizar no fetch
-         let dadosCadastro = {
-            nome: nome,
-            cnpj: cnpj.replace(/\D/g, ""),
-            email: email,
-            senha: senha
-         };
-         
-         // trocar por POST do web-data-viz //
-         console.log("Empresa Cadastrada");
-         alert("Cadastro realizado com sucesso!");
+         fetch("/empresas/cadastrar", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+               nome: nome,
+               email: email,
+               cnpj: cnpj,
+               senha: senha
+            })
+         })
+            .then(function (resposta) {
+               if (resposta.ok) {
+                  alert("Cadastro realizado com sucesso!");
+
+                  window.location = "login.html";
+               } else {
+                  resposta.text().then(function (texto) {
+                     alert(texto);
+                  });
+               }
+            })
+            .catch(function (erro) {
+                  console.log("#ERRO:", erro);
+            });
+
+         return false;
       }
    </script>
 

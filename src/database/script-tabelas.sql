@@ -1,58 +1,131 @@
--- Arquivo de apoio, caso você queira criar tabelas como as aqui criadas para a API funcionar.
--- Você precisa executar os comandos no banco de dados para criar as tabelas,
--- ter este arquivo aqui não significa que a tabela em seu BD estará como abaixo!
+CREATE DATABASE growthmap;
 
-/*
-comandos para mysql server
-*/
+USE growthmap;
 
-CREATE DATABASE aquatech;
-
-USE aquatech;
+-- =========================================
+-- TABELA: empresa
+-- =========================================
 
 CREATE TABLE empresa (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	razao_social VARCHAR(50),
-	cnpj CHAR(14),
-	codigo_ativacao VARCHAR(50)
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+	email VARCHAR(255) NOT NULL,
+    cnpj CHAR(14) NOT NULL,
+	senha VARCHAR(255) NOT NULL
 );
+
+
+-- =========================================
+-- TABELA: municipio
+-- =========================================
+
+CREATE TABLE municipio (
+    co_municipio INT PRIMARY KEY,
+    nome_municipio VARCHAR(100) NOT NULL,
+    uf CHAR(2) NOT NULL
+);
+
+
+-- =========================================
+-- TABELA: unidade
+-- =========================================
+
+CREATE TABLE unidade (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    endereco VARCHAR(200),
+    co_municipio INT NOT NULL,
+    id_empresa INT NOT NULL,
+    cnpj CHAR(14),
+
+    CONSTRAINT fk_unidade_municipio
+        FOREIGN KEY (co_municipio)
+        REFERENCES municipio(co_municipio),
+
+    CONSTRAINT fk_unidade_empresa
+        FOREIGN KEY (id_empresa)
+        REFERENCES empresa(id)
+);
+
+
+-- =========================================
+-- TABELA: usuario
+-- =========================================
 
 CREATE TABLE usuario (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	nome VARCHAR(50),
-	email VARCHAR(50),
-	senha VARCHAR(50),
-	fk_empresa INT,
-	FOREIGN KEY (fk_empresa) REFERENCES empresa(id)
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    cargo VARCHAR(100) NOT NULL,
+    id_unidade INT NOT NULL,
+
+    CONSTRAINT fk_usuario_unidade
+        FOREIGN KEY (id_unidade)
+        REFERENCES unidade(id)
 );
 
-CREATE TABLE aviso (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	titulo VARCHAR(100),
-	descricao VARCHAR(150),
-	fk_usuario INT,
-	FOREIGN KEY (fk_usuario) REFERENCES usuario(id)
+
+-- =========================================
+-- TABELA: desempenho_regional
+-- =========================================
+
+CREATE TABLE desempenho_regional (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    co_municipio INT NOT NULL,
+    ano SMALLINT NOT NULL,
+    media_cn DECIMAL(6,2),
+    media_ch DECIMAL(6,2),
+    media_lc DECIMAL(6,2),
+    media_mt DECIMAL(6,2),
+    media_redacao DECIMAL(6,2),
+    qtd_participantes INT,
+
+    CONSTRAINT fk_desempenho_municipio
+        FOREIGN KEY (co_municipio)
+        REFERENCES municipio(co_municipio)
 );
 
-create table aquario (
-/* em nossa regra de negócio, um aquario tem apenas um sensor */
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	descricao VARCHAR(300),
-	fk_empresa INT,
-	FOREIGN KEY (fk_empresa) REFERENCES empresa(id)
+
+-- =========================================
+-- TABELA: painel_acompanhamento
+-- =========================================
+
+CREATE TABLE painel_acompanhamento (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    co_municipio INT NOT NULL,
+    area_conhecimento VARCHAR(20),
+    observacao VARCHAR(255),
+    data_criacao DATETIME,
+
+    CONSTRAINT fk_painel_usuario
+        FOREIGN KEY (id_usuario)
+        REFERENCES usuario(id),
+
+    CONSTRAINT fk_painel_municipio
+        FOREIGN KEY (co_municipio)
+        REFERENCES municipio(co_municipio)
 );
 
-/* esta tabela deve estar de acordo com o que está em INSERT de sua API do arduino - dat-acqu-ino */
 
-create table medida (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	temperatura DECIMAL,
-	momento DATETIME,
-	fk_aquario INT,
-	FOREIGN KEY (fk_aquario) REFERENCES aquario(id)
+-- =========================================
+-- TABELA: config_notificacao
+-- =========================================
+
+CREATE TABLE config_notificacao (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    canal VARCHAR(20) NOT NULL,
+    destinatario VARCHAR(150) NOT NULL,
+    limiar_media DECIMAL(6,2),
+    id_unidade INT NOT NULL,
+    id_usuario INT NOT NULL,
+
+    CONSTRAINT fk_config_unidade
+        FOREIGN KEY (id_unidade)
+        REFERENCES unidade(id),
+
+    CONSTRAINT fk_config_usuario
+        FOREIGN KEY (id_usuario)
+        REFERENCES usuario(id)
 );
-
-insert into empresa (razao_social, codigo_ativacao) values ('Empresa 1', 'ED145B');
-insert into empresa (razao_social, codigo_ativacao) values ('Empresa 2', 'A1B2C3');
-insert into aquario (descricao, fk_empresa) values ('Aquário de Estrela-do-mar', 1);
-insert into aquario (descricao, fk_empresa) values ('Aquário de Peixe-dourado', 2);
