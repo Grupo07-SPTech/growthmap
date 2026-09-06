@@ -68,7 +68,7 @@ body {
    position: absolute;
    inset: 0;
 
-   background-image: url("/public/assets/imgs/livrosCadLogin.jpg");
+   background-image: url("../assets/imgs/livrosCadLogin.jpg");
    background-size: cover;
    background-position: center;
    background-repeat: no-repeat;
@@ -83,7 +83,7 @@ body {
    position: absolute;
    inset: 0;
 
-   background-image: url("/public/assets/logo/logos-sem-fundo/logo_sem_escrita_preto.png");
+   background-image: url("../assets/logo/logos-sem-fundo/logo_sem_escrita_preto.png");
    background-size: 100%;
    background-position: center;
    background-repeat: no-repeat;

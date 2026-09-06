@@ -34,7 +34,7 @@ body {
    width: 15vw;
    height: 30vh;
 
-   background-image: url("/public/assets/logo/logos-sem-fundo/logo_com_escrita__azul.png");
+   background-image: url("../assets/logo/logos-sem-fundo/logo_com_escrita__azul.png");
    background-size: contain;
    background-repeat: no-repeat;
    background-position: center;
@@ -62,7 +62,7 @@ body {
    position: absolute;
    inset: 0;
 
-   background-image: url("/public/assets/imgs/livrosCadLogin.jpg");
+   background-image: url("../assets/imgs/livrosCadLogin.jpg");
    background-size: cover;
    background-position: center;
    background-repeat: no-repeat;
@@ -79,7 +79,7 @@ body {
    width: 100%;
    height: 100%;
 
-   background-image: url("/public/assets/logo/logos-sem-fundo/logo_sem_escrita_-_cinza.png");
+   background-image: url("../assets/logo/logos-sem-fundo/logo_sem_escrita_-_cinza.png");
    background-size: 90%;
    background-position: center;
    background-repeat: no-repeat;
