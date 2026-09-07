@@ -104,5 +104,5 @@ CREATE TABLE logs(
     
     CONSTRAINT fk_id_usuario
 		FOREIGN KEY (id_usuario)
-		REFERENCES usuarios(id)
+		REFERENCES usuario(id)
 );
