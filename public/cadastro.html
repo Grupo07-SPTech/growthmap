@@ -1,268 +1,264 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Growth Map | Cadastro</title>
 
-<head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Growth Map | Cadastro</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="./assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png"
+    />
+    <link rel="stylesheet" href="./css/cadastro.css" />
+  </head>
 
-   <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&family=Poppins:wght@400;600&display=swap"
-      rel="stylesheet">
-  <link rel="icon" href="./assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
-      <link rel="stylesheet" href="./css/cadastro.css">
-</head>
-
-<body>
-
-   <div class="container">
+  <body>
+    <div class="container">
       <!-- bloc1 é na esquerda, bloc2 na direta -->
 
       <div id="bloc1" class="cadastro">
-         <a href="index.html" class="link-logo" aria-label="Ir para a página inicial">
-            <div id="logo"></div>
-         </a>
-         <div id="inputs"><!-- separei os inputs em caixas pra ficar mais facil de mexer -->
+        <a
+          href="index.html"
+          class="link-logo"
+          aria-label="Ir para a página inicial"
+        >
+          <div id="logo"></div>
+        </a>
+        <div id="inputs">
+          <!-- separei os inputs em caixas pra ficar mais facil de mexer -->
 
+          <div class="caixa" id="caixaNome">
+            <p class="tituloInp">Empresa:</p>
+            <input id="inpNome" class="input" type="text" />
+          </div>
 
-            <div class="caixa" id="caixaNome">
-               <p class="tituloInp">Empresa:</p>
-               <input id="inpNome" class="input" type="text">
+          <div class="caixa" id="caixaEmail">
+            <p class="tituloInp">Email:</p>
+            <input id="inpEmail" class="input" type="text" />
+          </div>
+
+          <div class="caixa" id="caixaCnpj">
+            <p class="tituloInp">CNPJ:</p>
+            <input id="inpCnpj" class="input" type="text" />
+          </div>
+
+          <div class="caixa" id="caixaSenha">
+            <p class="tituloInp">Senha:</p>
+            <input id="inpSenha" class="input" type="password" />
+
+            <div class="validacao_senha">
+              <div class="fraco" id="fraco"></div>
+              <div class="medio" id="medio"></div>
+              <div class="forte" id="forte"></div>
             </div>
+          </div>
 
-            <div class="caixa" id="caixaEmail">
-               <p class="tituloInp">Email:</p>
-               <input id="inpEmail" class="input" type="text">
-            </div>
+          <div class="caixa" id="caixaConfirmarSenha">
+            <p class="tituloInp">Confirmar senha:</p>
+            <input id="inpConfSenha" class="input" type="password" />
+          </div>
+        </div>
 
-            <div class="caixa" id="caixaCnpj">
-               <p class="tituloInp">CNPJ:</p>
-               <input id="inpCnpj" class="input" type="text">
-            </div>
-
-            <div class="caixa" id="caixaSenha">
-               <p class="tituloInp">Senha:</p>
-               <input id="inpSenha" class="input" type="password">
-            </div>
-
-            <div class="caixa" id="caixaConfirmarSenha">
-               <p class="tituloInp">Confirmar senha:</p>
-               <input id="inpConfSenha" class="input" type="password">
-            </div>
-
-         </div>
-
-         <div class="caixa" id="caixaBotao"><!-- caixa para o botao -->
-            <button class="botao" onclick="cadastrar()">CADASTRAR-SE</button>
-            <p class="texto">Já tem uma conta? <b><a href="login.html">Entrar</a></b></p>
-         </div>
-
+        <div class="caixa" id="caixaBotao">
+          <!-- caixa para o botao -->
+          <button class="botao" onclick="cadastrar()">CADASTRAR-SE</button>
+          <p class="texto">
+            Já tem uma conta? <b><a href="login.html">Entrar</a></b>
+          </p>
+        </div>
       </div>
 
       <div id="bloc2" class="cadastro">
-         <p class="texto-cadastro">Cadastro.</p>
-         <div class="cadastro" id="logoFundo"></div>
+        <p class="texto-cadastro">Cadastro.</p>
+        <div class="cadastro" id="logoFundo"></div>
       </div>
+    </div>
 
-   </div>
-
-   <script>
+    <script>
       function validarNome(nome) {
-         if (nome.length < 3) {
-            return false;
-         }
+        if (nome.length < 3) {
+          return false;
+        }
 
-         return true;
+        return true;
       }
-
 
       function validarEmail(email) {
-         if (!email.includes("@")) {
-            return false;
-         }
- 
-         let partes = email.split("@");
- 
-         if (partes.length != 2) { // mais de um @ no email
-            return false;
-         }
- 
-         let usuario = partes[0];
-         let dominio = partes[1];
- 
-         if (usuario.length < 1) { // nada antes do @ no email
-            return false;
-         }
- 
-         if (dominio.indexOf(".") < 1) { // sem ponto no dominio ou ponto logo no inicio
-            return false;
-         }
- 
-         return true;
-      }
+        if (!email.includes("@")) {
+          return false;
+        }
 
+        let partes = email.split("@");
+
+        if (partes.length != 2) {
+          // mais de um @ no email
+          return false;
+        }
+
+        let usuario = partes[0];
+        let dominio = partes[1];
+
+        if (usuario.length < 1) {
+          // nada antes do @ no email
+          return false;
+        }
+
+        if (dominio.indexOf(".") < 1) {
+          // sem ponto no dominio ou ponto logo no inicio
+          return false;
+        }
+
+        return true;
+      }
 
       function validarCnpj(cnpj) {
-         cnpj = cnpj.replace(/\D/g, ""); // Regex que substitui pontos e barras por nada, dai o cpnj vem apenas com os numeros
+        cnpj = cnpj.replace(/\D/g, ""); // Regex que substitui pontos e barras por nada, dai o cpnj vem apenas com os numeros
 
-         if (cnpj.length != 14) {
-            return false;
-         }
+        if (cnpj.length != 14) {
+          return false;
+        }
 
-         console.log(cnpj)
+        console.log(cnpj);
 
-         let todosIguais = true;
+        let todosIguais = true;
 
-         for (let i = 1; i < cnpj.length; i++) {
-            if (cnpj[i] != cnpj[0]) {
-               todosIguais = false;
-            }
-         }
-         if (todosIguais) {
-            return false;
-         }
+        for (let i = 1; i < cnpj.length; i++) {
+          if (cnpj[i] != cnpj[0]) {
+            todosIguais = false;
+          }
+        }
+        if (todosIguais) {
+          return false;
+        }
 
-         return true;
+        return true;
       }
 
-
-      let mensagemErro = ""
+      let mensagemErro = "";
 
       function validarSenha(senha) {
-         mensagemErro = "";
+        mensagemErro = "";
 
-         let tamanho = senha.length >= 8;
-         let temMinuscula = false;
-         let temMaiuscula = false;
-         let temEspecial = false;
-         let especiais = "!@#$%&*_-.";
+        let tamanho = senha.length >= 8;
+        let temMinuscula = false;
+        let temMaiuscula = false;
+        let temEspecial = false;
+        let especiais = "!@#$%&*_-.";
 
+        for (let i = 0; i < senha.length; i++) {
+          let caractere = senha[i];
 
-         for (let i = 0; i < senha.length; i++) {
+          // Verifica letra minúscula
+          if (caractere >= "a" && caractere <= "z") {
+            temMinuscula = true;
+          }
 
-            let caractere = senha[i];
+          // Verifica letra maiúscula
+          if (caractere >= "A" && caractere <= "Z") {
+            temMaiuscula = true;
+          }
 
-            // Verifica letra minúscula
-            if (caractere >= "a" && caractere <= "z") {
-               temMinuscula = true;
-            }
+          // Verifica caractere especial
+          if (especiais.includes(caractere)) {
+            temEspecial = true;
+          }
+        }
 
-            // Verifica letra maiúscula
-            if (caractere >= "A" && caractere <= "Z") {
-               temMaiuscula = true;
-            }
+        if (!tamanho) {
+          mensagemErro = "A senha deve ter pelo menos 8 caracteres.";
+        } else if (!temMinuscula) {
+          mensagemErro = "A senha deve ter pelo menos uma letra minuscula.";
+        } else if (!temMaiuscula) {
+          mensagemErro = "A senha deve ter pelo menos uma letra maiuscula.";
+        } else if (!temEspecial) {
+          mensagemErro = "A senha deve ter pelo menos um caractere especial.";
+        }
 
-            // Verifica caractere especial
-            if (especiais.includes(caractere)) {
-               temEspecial = true;
-            }
-         }
+        if (temMinuscula && temMaiuscula && temEspecial && tamanho) {
+          return true;
+        }
 
-         if (!tamanho) {
-            mensagemErro = "A senha deve ter pelo menos 8 caracteres."
-         }
-         else if (!temMinuscula) {
-            mensagemErro = "A senha deve ter pelo menos uma letra minuscula."
-         }
-         else if (!temMaiuscula) {
-            mensagemErro = "A senha deve ter pelo menos uma letra maiuscula."
-         }
-         else if (!temEspecial) {
-            mensagemErro = "A senha deve ter pelo menos um caractere especial."
-         }
-
-
-         if (temMinuscula && temMaiuscula && temEspecial && tamanho) {
-            return true;
-         }
-
-         return false;
+        return false;
       }
-
 
       function validarConfSenha(senha, confSenha) {
-         if (senha != confSenha) {
-            return false;
-         }
+        if (senha != confSenha) {
+          return false;
+        }
 
-         return true;
+        return true;
       }
-
 
       function cadastrar() {
+        let nome = inpNome.value.trim();
+        let email = inpEmail.value.trim();
+        let cnpj = inpCnpj.value.replace(/\D/g, "");
+        let senha = inpSenha.value;
+        let confSenha = inpConfSenha.value;
 
-         let nome = inpNome.value.trim();
-         let email = inpEmail.value.trim();
-         let cnpj = inpCnpj.value.replace(/\D/g, "");
-         let senha = inpSenha.value;
-         let confSenha = inpConfSenha.value;
+        if (nome == "" || email == "" || cnpj == "" || senha == "") {
+          alert("Preencha todos os campos!");
+          return false;
+        }
 
-         if (
-            nome == "" ||
-            email == "" ||
-            cnpj == "" ||
-            senha == ""
-         ) {
-            alert("Preencha todos os campos!");
-            return false;
-         }
+        if (!validarNome(nome)) {
+          alert("Digite um nome válido.");
+          return;
+        }
 
-         if (!validarNome(nome)) {
-            alert("Digite um nome válido.");
-            return;
-         }
+        if (!validarEmail(email)) {
+          alert("Digite um email válido.");
+          return;
+        }
 
-         if (!validarEmail(email)) {
-            alert("Digite um email válido.");
-            return;
-         }
+        if (!validarCnpj(cnpj)) {
+          alert("Digite um CNPJ válido.");
+          return;
+        }
 
-         if (!validarCnpj(cnpj)) {
-            alert("Digite um CNPJ válido.");
-            return;
-         }
+        if (!validarSenha(senha)) {
+          alert(mensagemErro);
+          return;
+        }
 
-         if (!validarSenha(senha)) {
-            alert(mensagemErro)
-            return
-         }
+        if (!validarConfSenha(senha, confSenha)) {
+          alert("As senhas não são iguais.");
+          return;
+        }
 
-         if (!validarConfSenha(senha, confSenha)) {
-            alert("As senhas não são iguais.");
-            return;
-         }
-         
-         fetch("/empresas/cadastrar", {
-            method: "POST",
-            headers: {
-               "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-               nome: nome,
-               email: email,
-               cnpj: cnpj,
-               senha: senha
-            })
-         })
-            .then(function (resposta) {
-               if (resposta.ok) {
-                  alert("Cadastro realizado com sucesso!");
+        fetch("/empresas/cadastrar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nome: nome,
+            email: email,
+            cnpj: cnpj,
+            senha: senha,
+          }),
+        })
+          .then(function (resposta) {
+            if (resposta.ok) {
+              alert("Cadastro realizado com sucesso!");
 
-                  window.location = "login.html";
-               } else {
-                  resposta.text().then(function (texto) {
-                     alert(texto);
-                  });
-               }
-            })
-            .catch(function (erro) {
-                  console.log("#ERRO:", erro);
-            });
+              window.location = "login.html";
+            } else {
+              resposta.text().then(function (texto) {
+                alert(texto);
+              });
+            }
+          })
+          .catch(function (erro) {
+            console.log("#ERRO:", erro);
+          });
 
-         return false;
+        return false;
       }
-   </script>
-
-
-</body>
-
+    </script>
+  </body>
 </html>
