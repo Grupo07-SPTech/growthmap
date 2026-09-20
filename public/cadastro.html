@@ -48,7 +48,7 @@
 
           <div class="caixa" id="caixaSenha">
             <p class="tituloInp">Senha:</p>
-            <input id="inpSenha" class="input" type="password" />
+            <input id="inpSenha" class="input" type="password" oninput="verificarForcaSenha()" />
 
             <div class="validacao_senha">
               <div class="fraco" id="fraco"></div>
@@ -140,57 +140,106 @@
 
       let mensagemErro = "";
 
+      function analisarSenha(senha) { 
+        let tamanho = senha.length >= 8; 
+        let temMinuscula = false; 
+        let temMaiuscula = false; 
+        let temEspecial = false; 
+        let especiais = "!@#$%&*_-."; 
+        
+        for (let i = 0; i < senha.length; i++) { 
+          let caractere = senha[i]; 
+          
+          if (caractere >= "a" && caractere <= "z") { 
+            temMinuscula = true; 
+          } 
+          
+          if (caractere >= "A" && caractere <= "Z") { 
+            temMaiuscula = true; 
+          } 
+          
+          if (especiais.includes(caractere)) { 
+            temEspecial = true; 
+          } 
+        } 
+        
+        return { tamanho, temMinuscula, temMaiuscula, temEspecial }; 
+      }
+
+      function verificarForcaSenha() { 
+        let senha = inpSenha.value; 
+        let analise = analisarSenha(senha); 
+
+        fraco.style.backgroundColor = "#888";
+        medio.style.backgroundColor = "#888";
+        forte.style.backgroundColor = "#888"; 
+        
+        if (senha.length == 0) { 
+          return; 
+        } 
+        
+        let pontos = 0; 
+        
+        if (analise.tamanho) { 
+          pontos++; 
+        } 
+        
+        if (analise.temMinuscula) { 
+          pontos++; 
+        } 
+        
+        if (analise.temMaiuscula) { 
+          pontos++; 
+        } 
+        
+        if (analise.temEspecial) { 
+          pontos++; 
+        } 
+        
+        if (pontos <= 2) { 
+          fraco.style.backgroundColor = "red";
+
+        } else if (pontos == 3) { 
+          fraco.style.backgroundColor = "red";
+          medio.style.backgroundColor = "yellow";
+
+        } else {
+          fraco.style.backgroundColor = "red";
+          medio.style.backgroundColor = "yellow";
+          forte.style.backgroundColor = "green"; 
+        } 
+      }
+
       function validarSenha(senha) {
         mensagemErro = "";
 
-        let tamanho = senha.length >= 8;
-        let temMinuscula = false;
-        let temMaiuscula = false;
-        let temEspecial = false;
-        let especiais = "!@#$%&*_-.";
+        let analise = analisarSenha(senha);
 
-        for (let i = 0; i < senha.length; i++) {
-          let caractere = senha[i];
-
-          // Verifica letra minúscula
-          if (caractere >= "a" && caractere <= "z") {
-            temMinuscula = true;
-          }
-
-          // Verifica letra maiúscula
-          if (caractere >= "A" && caractere <= "Z") {
-            temMaiuscula = true;
-          }
-
-          // Verifica caractere especial
-          if (especiais.includes(caractere)) {
-            temEspecial = true;
-          }
-        }
-
-        if (!tamanho) {
-          mensagemErro = "A senha deve ter pelo menos 8 caracteres.";
-        } else if (!temMinuscula) {
-          mensagemErro = "A senha deve ter pelo menos uma letra minuscula.";
-        } else if (!temMaiuscula) {
-          mensagemErro = "A senha deve ter pelo menos uma letra maiuscula.";
-        } else if (!temEspecial) {
-          mensagemErro = "A senha deve ter pelo menos um caractere especial.";
-        }
-
-        if (temMinuscula && temMaiuscula && temEspecial && tamanho) {
-          return true;
-        }
-
-        return false;
+        if (!analise.tamanho) { 
+          mensagemErro = "A senha deve ter pelo menos 8 caracteres."; 
+          return false; 
+        } 
+        
+        if (!analise.temMinuscula) { 
+          mensagemErro = "A senha deve ter pelo menos uma letra minúscula."; 
+          return false; 
+        } 
+        
+        if (!analise.temMaiuscula) { 
+          mensagemErro = "A senha deve ter pelo menos uma letra maiúscula."; 
+          return false; 
+        } 
+        
+        if (!analise.temEspecial) { 
+          mensagemErro = "A senha deve ter pelo menos um caractere especial."; 
+          return false; 
+        } 
+        
+        return true;
       }
 
       function validarConfSenha(senha, confSenha) {
-        if (senha != confSenha) {
-          return false;
-        }
-
-        return true;
+        return senha == confSenha;
       }
 
       function cadastrar() {
@@ -207,27 +256,27 @@
 
         if (!validarNome(nome)) {
           alert("Digite um nome válido.");
-          return;
+          return false;
         }
 
         if (!validarEmail(email)) {
           alert("Digite um email válido.");
-          return;
+          return false;
         }
 
         if (!validarCnpj(cnpj)) {
           alert("Digite um CNPJ válido.");
-          return;
+          return false;
         }
 
         if (!validarSenha(senha)) {
           alert(mensagemErro);
-          return;
+          return false;
         }
 
         if (!validarConfSenha(senha, confSenha)) {
           alert("As senhas não são iguais.");
-          return;
+          return false;
         }
 
         fetch("/empresas/cadastrar", {
