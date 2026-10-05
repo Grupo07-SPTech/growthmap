@@ -1,4 +1,4 @@
-CREATE DATABASE growthmap;
+CREATE DATABASE IF NOT EXISTS growthmap;
 
 USE growthmap;
 
