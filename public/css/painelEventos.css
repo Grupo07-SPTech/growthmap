@@ -1,0 +1,406 @@
+*{box-sizing:border-box;margin:0;padding:0}
+
+/* ---------- Fundo detalhado ---------- */
+body{
+  font-family:"Poppins","Segoe UI",Arial,sans-serif;
+  color:#1a1a1a;
+  min-height:100vh;
+  background-color:#ebebeb;
+  background-image:
+    radial-gradient(circle at 8% 0%, rgba(122,31,61,.18) 0, transparent 38%),
+    radial-gradient(circle at 100% 100%, rgba(31,31,122,.14) 0, transparent 42%),
+    radial-gradient(circle at 85% 15%, rgba(122,31,61,.08) 0, transparent 30%),
+    radial-gradient(circle at 40% 70%, rgba(31,31,122,.05) 0, transparent 35%),
+    radial-gradient(rgba(122,31,61,.14) 1.2px, transparent 1.4px);
+  background-size:auto, auto, auto, auto, 26px 26px;
+  background-attachment:fixed;
+}
+
+/* ---------- Barra lateral (fixa) ---------- */
+.sidebar{
+  position:fixed;
+  top:0;
+  left:0;
+  bottom:0;
+  width:100px;
+  z-index:10;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:16px 0;
+  gap:34px;
+  background:#ebebeb;
+  border-right:1px solid #b5b5b5;
+  border-radius:0 36px 36px 0;
+  box-shadow:
+    8px 0 24px rgba(122,31,61,.14),
+    2px 0 6px rgba(0,0,0,.10),
+    inset -3px 0 8px rgba(255,255,255,.7);
+}
+.logo{
+  display:block;
+  width:76px;
+  height:auto;
+  max-height:80px;
+  object-fit:contain;
+}
+.nav-item{
+  width:100%;
+  height:60px;
+  display:flex;align-items:center;justify-content:center;
+  color:#7a1f3d;
+  opacity:.35;
+  cursor:pointer;
+  border-right:4px solid transparent;
+}
+.nav-item:hover{opacity:.7}
+.nav-item.ativo{
+  opacity:1;
+  border-right-color:#7a1f3d;
+}
+.perfil{
+  margin-top:auto;
+  width:54px;height:54px;
+  border-radius:50%;
+  background:#7a1f3d;
+  box-shadow:0 4px 10px rgba(122,31,61,.35), inset 0 2px 3px rgba(255,255,255,.3);
+}
+.sair{color:#b5b5b5;cursor:pointer;font-size:18px}
+.sair:hover{color:#7a1f3d}
+
+/* ---------- Conteúdo ---------- */
+.conteudo{
+  margin-left:100px;
+  min-width:0;
+  padding:22px 60px 40px 40px;
+}
+
+/* Título */
+.data-hoje{
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:#7a1f3d;
+  margin-bottom:2px;
+}
+.titulo{
+  font-family:inherit;
+  font-size:40px;
+  font-weight:300;
+  line-height:1.15;
+  letter-spacing:-.01em;
+  margin-bottom:22px;
+}
+.titulo span{
+  font-weight:700;
+  color:#7a1f3d;
+  padding:0 8px;
+  background:linear-gradient(transparent 58%, rgba(122,31,61,.25) 58%);
+  border-radius:4px;
+}
+
+h2.rotulo{font-size:16px;font-weight:500;margin-bottom:4px}
+
+/* Mesma largura para os eventos e para calendário + tarefas */
+.topo,
+.baixo{
+  max-width:none;
+  padding-right:24px;
+}
+
+/* ---------- Caixas (sem borda, com camadas atrás) ---------- */
+.card{
+  position:relative;
+  border:none;
+  border-radius:18px;
+  padding:14px 20px;
+  background:rgba(255,255,255,.88);
+  box-shadow:
+    10px 10px 0 rgba(122,31,61,.22),
+    20px 20px 0 rgba(122,31,61,.10),
+    0 12px 28px rgba(122,31,61,.12);
+}
+.cal-box{
+  padding:12px 16px 14px;
+}
+
+/* ---------- Eventos próximos ---------- */
+.dia-titulo{font-size:19px;font-weight:400;margin:8px 0 6px}
+.dia-titulo:first-child{margin-top:0}
+.evento{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.evento .icone{
+  width:42px;height:42px;
+  border-radius:50%;
+  background:#7a1f3d;
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.evento .info{
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:4px;
+}
+.evento .nome{font-size:19px;line-height:1.2}
+.badge{
+  background:#7a1f3d;
+  color:#fff;
+  border-radius:30px;
+  padding:3px 14px;
+  font-size:12px;
+  font-weight:500;
+  white-space:nowrap;
+}
+.badge.concluido{background:#4b7a4b}
+.vazio{font-size:16px;color:#777;padding:10px 0}
+
+/* ---------- Calendário + painel ---------- */
+.baixo{
+  display:grid;
+  grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);
+  gap:50px;
+  margin-top:30px;
+  align-items:start;
+}
+.cal-titulo{font-size:28px;font-weight:500;margin-bottom:2px}
+.cal-nav{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:24px;
+}
+.cal-nav .mes{
+  font-size:16px;
+  font-weight:500;
+  text-transform:uppercase;
+  min-width:180px;
+  text-align:center;
+}
+.cal-nav button{
+  background:none;
+  border:none;
+  font-size:20px;
+  font-family:inherit;
+  cursor:pointer;
+  padding:0 8px;
+}
+
+table{
+  border-collapse:collapse;
+  width:100%;
+  table-layout:fixed;
+  margin-top:4px;
+}
+th{font-size:14px;font-weight:500;padding:3px 0}
+td{
+  border:2px solid #000;
+  height:48px;
+  text-align:center;
+  font-size:17px;
+  position:relative;
+  cursor:pointer;
+}
+td:hover{background:rgba(122,31,61,.08)}
+td.tem{font-weight:700}
+td.vazia{cursor:default}
+td.vazia:hover{background:none}
+td.sel{background:rgba(122,31,61,.15)}
+table td.passado{
+  background:#bdbdbd;
+  color:#555;
+}
+table td.passado:hover{background:#adadad}
+table td.passado.sel{background:#b59aa4}
+td.hoje .num{
+  display:inline-flex;
+  width:36px;height:36px;
+  border-radius:50%;
+  background:#1f1f7a;
+  color:#fff;
+  align-items:center;justify-content:center;
+  font-weight:700;
+}
+
+.marcas{
+  position:absolute;
+  top:2px;right:4px;
+  display:flex;
+  gap:2px;
+  z-index:1;
+}
+.marca{
+  width:14px;height:14px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;
+}
+.marca.tarefa{background:#7a1f3d}
+.marca.prova{background:#1f1f7a}
+
+/* ---------- Painel: tarefas do dia ---------- */
+.painel{
+  min-height:320px;
+  box-shadow:
+    10px 10px 0 rgba(31,31,122,.20),
+    20px 20px 0 rgba(31,31,122,.09),
+    0 12px 28px rgba(31,31,122,.12);
+}
+.painel-topo{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:12px;
+}
+.painel-rotulo{font-size:20px;font-weight:600}
+.painel-data{font-size:13px;color:#666;margin-top:2px}
+
+.btn-editar{
+  background:#7a1f3d;
+  color:#fff;
+  border:none;
+  border-radius:20px;
+  padding:4px 14px;
+  font-size:12px;
+  font-family:inherit;
+  cursor:pointer;
+  flex-shrink:0;
+}
+.btn-editar:hover{background:#4d1226}
+
+.lista-tarefas{
+  max-height:250px;
+  overflow-y:auto;
+  padding-right:8px;
+  margin-bottom:8px;
+}
+.tarefa{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:7px 0;
+  border-bottom:1px solid #ddd;
+  font-size:15px;
+  line-height:1.2;
+  cursor:pointer;
+}
+.tarefa.fixa,
+.tarefa.editando{cursor:default}
+.tarefa .txt{flex:1;min-width:0}
+.tarefa small{display:block;color:#777;font-size:12px;margin-top:2px}
+.tarefa.feita .txt{text-decoration:line-through;color:#888}
+
+.check{
+  width:26px;height:26px;
+  border:1.5px solid #333;
+  border-radius:50%;
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  color:#7a1f3d;
+  font-weight:700;
+}
+.icone-mini{
+  width:26px;height:26px;
+  border-radius:50%;
+  background:#1f1f7a;
+  color:#fff;
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* modo de edição */
+.edit-nome{
+  flex:1;
+  min-width:0;
+  border:2px solid #7a1f3d;
+  background:#ebebeb;
+  border-radius:6px;
+  padding:4px 8px;
+  font-size:15px;
+  font-family:inherit;
+}
+.btn-excluir{
+  flex-shrink:0;
+  width:30px;height:30px;
+  border:none;
+  border-radius:50%;
+  background:#7a1f3d;
+  color:#fff;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+}
+.btn-excluir:hover{background:#4d1226}
+
+.btn-add{
+  width:100%;
+  margin-top:6px;
+  border:2px solid #777;
+  background:transparent;
+  border-radius:4px;
+  padding:8px;
+  font-size:15px;
+  font-family:inherit;
+  cursor:pointer;
+}
+.btn-add:hover{background:rgba(122,31,61,.08)}
+
+.form-tarefa{
+  display:none;
+  margin-top:10px;
+  border:none;
+  border-radius:12px;
+  background:rgba(122,31,61,.08);
+  padding:10px;
+  flex-direction:column;
+  gap:6px;
+}
+.form-tarefa.aberto{display:flex}
+.form-data{font-size:12px;color:#555}
+.form-data strong{color:#7a1f3d}
+.form-tarefa label{
+  font-size:12px;
+  font-weight:500;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.form-tarefa input,
+.form-tarefa select{
+  border:2px solid #7a1f3d;
+  background:#ebebeb;
+  padding:5px 7px;
+  font-size:13px;
+  font-family:inherit;
+  border-radius:3px;
+}
+.form-acoes{display:flex;gap:6px;margin-top:2px}
+.form-acoes button{
+  flex:1;
+  padding:6px;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+  font-size:13px;
+  font-family:inherit;
+}
+.btn-salvar{background:#7a1f3d;color:#fff}
+.btn-cancelar{background:#d5d5d5}
+
+/* ---------- Ícones (Flaticon UIcons) ---------- */
+.fi{display:inline-flex;line-height:1}
+.nav-item i{font-size:30px}
+.evento .icone i{font-size:20px}
+.check i{font-size:20px}
+.icone-mini i{font-size:13px}
+.marca i{font-size:9px}
+
+/* ---------- Responsivo ---------- */
+@media (max-width:1200px){
+  .baixo{grid-template-columns:minmax(0,1fr)}
+  .painel{min-height:160px}
+}
