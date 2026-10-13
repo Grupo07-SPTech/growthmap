@@ -7,19 +7,27 @@
 <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
 <link rel="stylesheet" href="./css/painelEventos.css">
 <link rel="icon" href="./assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+<button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
+  <i class="fi fi-rr-menu-burger"></i>
+</button>
+<div class="overlay" id="overlay"></div>
 
 <div class="sidebar">
   <img class="logo" src="./assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
   <div class="nav-item"><i class="fi fi-rr-apps"></i></div>
-  <div class="nav-item ativo"><i class="fi fi-rr-calendar"></i></div>
-  <div class="nav-item"><i class="fi fi-rr-chart-pie-alt"></i></div>
-  <div class="nav-item"><i class="fi fi-rr-users"></i></div>
+  <div class="nav-item">
+    <a href="./dashboard/dashboardProfessor.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
+  </div>
+ <div class="nav-item ativo">
+    <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
+  </div>
   <div class="perfil"></div>
-  <div class="sair">Sair</div>
+    <div class="sair">
+        <a href="../index.html">Sair</a>
+    </div>
 </div>
 
 <div class="conteudo">
@@ -81,7 +89,7 @@
   </div>
 </div>
 
-<script>
+<script-*>
 const chave = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 const daChave = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
@@ -305,6 +313,19 @@ document.getElementById('mes-ant').addEventListener('click', () => {
 document.getElementById('mes-prox').addEventListener('click', () => {
   mesVisivel = new Date(mesVisivel.getFullYear(), mesVisivel.getMonth()+1, 1);
   renderCalendario();
+});
+
+const btnMenu = document.getElementById('btn-menu');
+const overlay = document.getElementById('overlay');
+
+// em telas pequenas, começa fechada
+if(window.innerWidth <= 900) document.body.classList.add('menu-fechado');
+
+btnMenu.addEventListener('click', () => {
+  document.body.classList.toggle('menu-fechado');
+});
+overlay.addEventListener('click', () => {
+  document.body.classList.add('menu-fechado');
 });
 
 function renderTudo(){
