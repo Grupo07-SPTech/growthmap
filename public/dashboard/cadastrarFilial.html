@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Growth Map | Cadastro de Filial</title>
+<link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+<link rel="stylesheet" href="./css/cadastrarFilial.css">
+<link rel="stylesheet" href="./css/style.css">
+<link rel="icon" href="./assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
+  <i class="fi fi-rr-menu-burger"></i>
+</button>
+<div class="sidebar">
+  <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
+  <div class="nav-indicador" id="nav-indicador"></div>
+
+  <div class="nav-item">
+    <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
+  </div>
+  <div class="nav-item">
+    <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
+  </div>
+  <div class="nav-item ativo">
+    <a href="./filiais.html"><i class="fi fi-rr-home"></i></a>
+  </div>
+  <div class="nav-item">
+    <a href="./dashboardDiretorGeral.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
+  </div>
+  <div class="nav-item">
+    <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
+  </div>
+
+    <div class="perfil"><a href="perfilUsuario.html"></a></div>
+  <div class="sair"><a href="../index.html">Sair</a></div>
+</div>
+
+<div class="conteudo">
+  <h1 class="titulo">Cadastro de <span>Filial</span></h1>
+
+  <div class="card form-card">
+    <form id="form-filial">
+      <div class="form-grupo">
+        <label>Nome da Filial:</label>
+        <input type="text" id="f-nome" required placeholder="Ex.: Growth Map - Unidade Centro">
+      </div>
+
+      <div class="form-linha">
+        <div class="form-grupo">
+          <label>CNPJ:</label>
+          <input type="text" id="f-cnpj" required placeholder="00.000.000/0001-00">
+        </div>
+        <div class="form-grupo">
+          <label>Telefone:</label>
+          <input type="text" id="f-tel" placeholder="(00) 00000-0000">
+        </div>
+      </div>
+
+      <div class="form-linha">
+        <div class="form-grupo" style="flex: 1;">
+          <label>CEP:</label>
+          <input type="text" id="f-cep" placeholder="00000-000">
+        </div>
+        <div class="form-grupo" style="flex: 3;">
+          <label>Logradouro (Rua, Av., etc.):</label>
+          <input type="text" id="f-rua" placeholder="Ex.: Av. Industrial">
+        </div>
+      </div>
+
+      <div class="form-linha">
+        <div class="form-grupo" style="flex: 1;">
+          <label>Número:</label>
+          <input type="text" id="f-num" placeholder="Ex.: 3330">
+        </div>
+        <div class="form-grupo" style="flex: 2;">
+          <label>Bairro:</label>
+          <input type="text" id="f-bairro" placeholder="Ex.: Centro">
+        </div>
+      </div>
+
+      <div class="form-linha">
+        <div class="form-grupo" style="flex: 2;">
+          <label>Cidade:</label>
+          <input type="text" id="f-cidade" placeholder="Ex.: Santo André">
+        </div>
+        <div class="form-grupo" style="flex: 1;">
+          <label>Estado (UF):</label>
+          <select id="f-estado" required>
+            <option value="">Selecione...</option>
+            <option value="AC">AC</option>
+            <option value="AL">AL</option>
+            <option value="AP">AP</option>
+            <option value="AM">AM</option>
+            <option value="BA">BA</option>
+            <option value="CE">CE</option>
+            <option value="DF">DF</option>
+            <option value="ES">ES</option>
+            <option value="GO">GO</option>
+            <option value="MA">MA</option>
+            <option value="MT">MT</option>
+            <option value="MS">MS</option>
+            <option value="MG">MG</option>
+            <option value="PA">PA</option>
+            <option value="PB">PB</option>
+            <option value="PR">PR</option>
+            <option value="PE">PE</option>
+            <option value="PI">PI</option>
+            <option value="RJ">RJ</option>
+            <option value="RN">RN</option>
+            <option value="RS">RS</option>
+            <option value="RO">RO</option>
+            <option value="RR">RR</option>
+            <option value="SC">SC</option>
+            <option value="SP">SP</option>
+            <option value="SE">SE</option>
+            <option value="TO">TO</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-acoes">
+        <button type="submit" class="btn-salvar">Cadastrar Filial</button>
+        <button type="reset" class="btn-limpar">Limpar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="./js/menu.js"></script>
+</body>
+</html>

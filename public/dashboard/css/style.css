@@ -54,10 +54,17 @@ body{
   color:#7a1f3d;
   opacity:.35;
   cursor:pointer;
+  position: relative;
   transition:opacity .3s ease;
 }
 .nav-item:hover{opacity:.7}
 .nav-item.ativo{opacity:1}
+
+/* Garante que o risco/indicador apareça ao lado do item ativo */
+.nav-item.ativo .nav-indicador,
+.sidebar .nav-item.ativo ~ .nav-indicador {
+  opacity: 1;
+}
 
 .nav-item a{
   width:100%;
@@ -79,6 +86,7 @@ body{
   opacity:0;
   transition:transform .4s cubic-bezier(.4,0,.2,1);
 }
+
 .perfil{
   margin-top:auto;
   width:54px;height:54px;
@@ -86,6 +94,7 @@ body{
   background:#7a1f3d;
   box-shadow:0 4px 10px rgba(122,31,61,.35), inset 0 2px 3px rgba(255,255,255,.3);
 }
+
 .btn-menu{
   position:fixed;
   top:16px;
@@ -115,6 +124,7 @@ body{
 body.menu-fechado .sidebar{transform:translateX(-110%)}
 body.menu-fechado .conteudo{margin-left:0}
 body.menu-fechado .btn-menu{left:14px}
+
 .sair{
     color:#b5b5b5;
     cursor:pointer;
@@ -133,22 +143,7 @@ a{
   padding:64px 60px 40px 40px;
   transition:margin-left .3s ease;
 }
-.btn-menu{
-  position:fixed;
-  top:16px;
-  left:82px;
-  z-index:20;
-  width:36px;height:36px;
-  border:none;
-  border-radius:50%;
-  background:#7a1f3d;
-  color:#fff;
-  cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;
-  box-shadow:0 4px 10px rgba(122,31,61,.35);
-  transition:left .3s ease, background .2s;
-}
+
 .fi{display:inline-flex;line-height:1}
 .nav-item i{font-size:30px}
 .evento .icone i{font-size:20px}
