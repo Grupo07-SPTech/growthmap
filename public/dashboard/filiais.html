@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Map | Filiais </title>
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/filiais.css">
+    <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
+  <i class="fi fi-rr-menu-burger"></i>
+</button>
+<div class="sidebar">
+  <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
+  <div class="nav-indicador" id="nav-indicador"></div>
+
+  <div class="nav-item">
+    <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
+  </div>
+  <div class="nav-item">
+    <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
+  </div>
+  <div class="nav-item ativo">
+    <a href="./filial.html"><i class="fi fi-rr-home"></i></a>
+  </div>
+  <div class="nav-item">
+    <a href="./dashboardDiretorGeral.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
+  </div>
+  <div class="nav-item">
+    <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
+  </div>
+
+  <div class="perfil"><a href="perfilUsuario.html"></a></div>
+  <div class="sair"><a href="../index.html">Sair</a></div>
+</div>
+
+<div class="conteudo">
+  <div class="topo-pagina">
+    <h1 class="titulo">Lista de <span>Filiais</span></h1>
+    <a href="./cadastrarFilial.html" class="btn-novo">
+      <i class="fi fi-rr-plus"></i> Cadastrar Filial
+    </a>
+  </div>
+
+  <div class="card filtros-card">
+    <div class="form-grupo" style="max-width: 350px;">
+      <label>Filtrar por Município:</label>
+      <select id="filtro-municipio">
+        <option value="">Todos os municípios</option>
+        <option value="Santo André">Santo André</option>
+        <option value="São Paulo">São Paulo</option>
+        <option value="São Bernardo do Campo">São Bernardo do Campo</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card tabela-card">
+    <table class="tabela-dados">
+      <thead>
+        <tr>
+          <th>Nome da Filial</th>
+          <th>CNPJ</th>
+          <th>Município</th>
+          <th>Estado</th>
+          <th>Telefone</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Growth Map - Unidade Centro</td>
+          <td>12.345.678/0001-99</td>
+          <td>Santo André</td>
+          <td>SP</td>
+          <td>(11) 4433-2211</td>
+          <td>
+            <a href="#" class="btn-acao" title="Editar"><i class="fi fi-rr-edit"></i> Editar</a>
+            <button class="btn-acao excluir" title="Excluir"><i class="fi fi-rr-trash"></i> Excluir</button>
+          </td>
+        </tr>
+        <tr>
+          <td>Growth Map - Unidade Paulista</td>
+          <td>98.765.432/0001-11</td>
+          <td>São Paulo</td>
+          <td>SP</td>
+          <td>(11) 3222-1144</td>
+          <td>
+            <a href="#" class="btn-acao" title="Editar"><i class="fi fi-rr-edit"></i> Editar</a>
+            <button class="btn-acao excluir" title="Excluir"><i class="fi fi-rr-trash"></i> Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+    
+<script src="../js/menu.js"></script>
+</body>
+</html>

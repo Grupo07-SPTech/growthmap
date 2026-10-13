@@ -1,0 +1,78 @@
+.conteudo{
+  margin-left:100px;
+  padding:40px 60px 40px 40px;
+  transition:margin-left .3s ease;
+  max-width:850px;
+}
+
+.titulo{
+  font-size:36px;
+  font-weight:300;
+  margin-bottom:24px;
+}
+.titulo span{
+  font-weight:700;
+  color:#7a1f3d;
+  padding:0 8px;
+  background:linear-gradient(transparent 58%, rgba(122,31,61,.25) 58%);
+  border-radius:4px;
+}
+
+.card{
+  background:rgba(255,255,255,.88);
+  border-radius:18px;
+  padding:30px;
+  box-shadow: 10px 10px 0 rgba(122,31,61,.22), 20px 20px 0 rgba(122,31,61,.10), 0 12px 28px rgba(122,31,61,.12);
+}
+
+.form-grupo{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-bottom:16px;
+  flex:1;
+}
+
+.form-linha{
+  display:flex;
+  gap:20px;
+}
+
+.form-grupo label{
+  font-size:14px;
+  font-weight:500;
+  color:#333;
+}
+
+.form-grupo input, 
+.form-grupo select{
+  border:2px solid #7a1f3d;
+  background:#ebebeb;
+  padding:10px 14px;
+  font-size:15px;
+  font-family:inherit;
+  border-radius:8px;
+  outline:none;
+}
+
+.form-acoes{
+  display:flex;
+  gap:12px;
+  margin-top:24px;
+}
+
+.btn-salvar, .btn-limpar{
+  padding:10px 24px;
+  border:none;
+  border-radius:20px;
+  font-size:15px;
+  font-family:inherit;
+  cursor:pointer;
+  font-weight:500;
+}
+
+.btn-salvar{background:#7a1f3d;color:#fff}
+.btn-salvar:hover{background:#4d1226}
+
+.btn-limpar{background:#d5d5d5;color:#333}
+.btn-limpar:hover{background:#c0c0c0}
