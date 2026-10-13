@@ -1,6 +1,9 @@
-*{box-sizing:border-box;margin:0;padding:0}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0
+}
 
-/* ---------- Fundo detalhado ---------- */
 body{
   font-family:"Poppins","Segoe UI",Arial,sans-serif;
   color:#1a1a1a;
@@ -16,7 +19,11 @@ body{
   background-attachment:fixed;
 }
 
-/* ---------- Barra lateral (fixa) ---------- */
+.nav-item a{
+  color:inherit;
+  text-decoration:none;
+}
+
 .sidebar{
   position:fixed;
   top:0;
@@ -68,22 +75,13 @@ body{
 .sair{color:#b5b5b5;cursor:pointer;font-size:18px}
 .sair:hover{color:#7a1f3d}
 
-/* ---------- Conteúdo ---------- */
 .conteudo{
   margin-left:100px;
   min-width:0;
   padding:22px 60px 40px 40px;
 }
 
-/* Título */
-.data-hoje{
-  font-size:12px;
-  font-weight:600;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  color:#7a1f3d;
-  margin-bottom:2px;
-}
+
 .titulo{
   font-family:inherit;
   font-size:40px;
@@ -102,14 +100,12 @@ body{
 
 h2.rotulo{font-size:16px;font-weight:500;margin-bottom:4px}
 
-/* Mesma largura para os eventos e para calendário + tarefas */
 .topo,
 .baixo{
   max-width:none;
   padding-right:24px;
 }
 
-/* ---------- Caixas (sem borda, com camadas atrás) ---------- */
 .card{
   position:relative;
   border:none;
@@ -125,7 +121,6 @@ h2.rotulo{font-size:16px;font-weight:500;margin-bottom:4px}
   padding:12px 16px 14px;
 }
 
-/* ---------- Eventos próximos ---------- */
 .dia-titulo{font-size:19px;font-weight:400;margin:8px 0 6px}
 .dia-titulo:first-child{margin-top:0}
 .evento{display:flex;align-items:center;gap:12px;margin-bottom:6px}
@@ -158,7 +153,6 @@ h2.rotulo{font-size:16px;font-weight:500;margin-bottom:4px}
 .badge.concluido{background:#4b7a4b}
 .vazio{font-size:16px;color:#777;padding:10px 0}
 
-/* ---------- Calendário + painel ---------- */
 .baixo{
   display:grid;
   grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);
@@ -241,7 +235,6 @@ td.hoje .num{
 .marca.tarefa{background:#7a1f3d}
 .marca.prova{background:#1f1f7a}
 
-/* ---------- Painel: tarefas do dia ---------- */
 .painel{
   min-height:320px;
   box-shadow:
@@ -391,7 +384,6 @@ td.hoje .num{
 .btn-salvar{background:#7a1f3d;color:#fff}
 .btn-cancelar{background:#d5d5d5}
 
-/* ---------- Ícones (Flaticon UIcons) ---------- */
 .fi{display:inline-flex;line-height:1}
 .nav-item i{font-size:30px}
 .evento .icone i{font-size:20px}
@@ -399,8 +391,3 @@ td.hoje .num{
 .icone-mini i{font-size:13px}
 .marca i{font-size:9px}
 
-/* ---------- Responsivo ---------- */
-@media (max-width:1200px){
-  .baixo{grid-template-columns:minmax(0,1fr)}
-  .painel{min-height:160px}
-}
