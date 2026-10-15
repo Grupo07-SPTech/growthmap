@@ -1,126 +1,192 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growth Map | Usuarios</title>
-    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/usuarios.css">
-    <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Growth Map | Lista de Usuários</title>
+  <link rel="stylesheet"
+    href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/usuarios.css">
+  <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
+
   <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
-  <i class="fi fi-rr-menu-burger"></i>
-</button>
-<div class="sidebar">
-  <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
-  <div class="nav-indicador" id="nav-indicador"></div>
+    <i class="fi fi-rr-menu-burger"></i>
+  </button>
 
-  <div class="nav-item">
-    <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
-  </div>
-  <div class="nav-item">
-    <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
-  </div>
-  <div class="nav-item">
-    <a href="./filial.html"><i class="fi fi-rr-home"></i></a>
-  </div>
-  <div class="nav-item">
-    <a href="./dashboardDiretorGeral.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
-  </div>
-  <div class="nav-item ativo">
-    <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
-  </div>
+  <div class="sidebar">
+    <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
+    <div class="nav-indicador" id="nav-indicador"></div>
 
-  <div class="perfil"><a href="perfilUsuario.html"></a></div>
-  <div class="sair"><a href="../index.html">Sair</a></div>
-</div>
-<div class="conteudo">
-  <div class="topo-pagina">
-    <h1 class="titulo">Lista de <span>Usuários</span></h1>
-    <a href="./cadastroProfessor.html" class="btn-novo">
-      <i class="fi fi-rr-plus"></i> Cadastrar Usuário
+    <div class="nav-item">
+      <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./filiais.html"><i class="fi fi-rr-home"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./dashboardDiretorGeral.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
+    </div>
+    <div class="nav-item ativo">
+      <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
+    </div>
+    <a href="perfilUsuario.html">
+      <div class="perfil"></div>
     </a>
+    <div class="sair"><a href="../index.html">Sair</a></div>
   </div>
 
-  <div class="card filtros-card">
-    <div class="filtros-grid">
-      <div class="form-grupo">
-        <label>Município:</label>
-        <select id="filtro-municipio">
-          <option value="">Todos os municípios</option>
-          <option value="Santo André">Santo André</option>
-          <option value="São Paulo">São Paulo</option>
-          <option value="São Bernardo do Campo">São Bernardo do Campo</option>
-        </select>
+  <div class="conteudo">
+    <div class="topo-pagina">
+      <h1 class="titulo">Gerenciamento de <span>Usuários</span></h1>
+      <div class="acoes-topo">
+        <a href="./permissoes.html" class="btn-permissoes" title="Gerenciar Cargos e Permissões">
+          <i class="fi fi-rr-shield-check"></i> Gerenciar Permissões
+        </a>
+        <a href="./cadastroProfessor.html" class="btn-novo">
+          <i class="fi fi-rr-plus"></i> Cadastrar Usuário
+        </a>
       </div>
+    </div>
 
-      <div class="form-grupo">
-        <label>Área:</label>
-        <select id="filtro-area">
-          <option value="">Todas as áreas</option>
-          <option value="Ciências Exatas">Ciências Exatas</option>
-          <option value="Ciências Naturais">Ciências Naturais</option>
-          <option value="Ciências Humanas">Ciências Humanas</option>
-          <option value="Linguagens">Linguagens</option>
-        </select>
+    <div class="card filtros-card">
+      <div class="filtros-grid">
+        <div class="form-grupo">
+          <label>Município:</label>
+          <select id="filtro-municipio">
+            <option value="">Todos os municípios</option>
+            <option value="Santo André">Santo André</option>
+            <option value="São Paulo">São Paulo</option>
+            <option value="São Bernardo do Campo">São Bernardo do Campo</option>
+          </select>
+        </div>
+
+        <div class="form-grupo">
+          <label>Área:</label>
+          <select id="filtro-area">
+            <option value="">Todas as áreas</option>
+            <option value="Ciências Exatas">Ciências Exatas</option>
+            <option value="Ciências Naturais">Ciências Naturais</option>
+            <option value="Ciências Humanas">Ciências Humanas</option>
+            <option value="Linguagens">Linguagens</option>
+          </select>
+        </div>
+
+        <div class="form-grupo">
+          <label>Cargo / Permissão:</label>
+          <select id="filtro-cargo">
+            <option value="">Todos os cargos</option>
+            <option value="Professor">Professor</option>
+            <option value="Coordenador">Coordenador</option>
+            <option value="Diretor">Diretor</option>
+            <option value="Diretor Geral">Diretor Geral</option>
+          </select>
+        </div>
       </div>
+    </div>
 
-      <div class="form-grupo">
-        <label>Cargo:</label>
-        <select id="filtro-cargo">
-          <option value="">Todos os cargos</option>
-          <option value="Professor">Professor</option>
-          <option value="Diretor">Diretor</option>
-          <option value="Coordenador">Coordenador</option>
-        </select>
+    <div class="card tabela-card">
+      <table class="tabela-dados">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Cargo / Permissão</th>
+            <th>Área</th>
+            <th>Município</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Carlos Alberto Souza</td>
+            <td>carlos.souza@growthmap.com</td>
+            <td>Professor</td>
+            <td>Ciências Exatas</td>
+            <td>Santo André</td>
+            <td class="acoes-celula">
+              <a href="./professor.html?id=1" class="btn-acao" title="Editar"><i class="fi fi-rr-edit"></i> Editar</a>
+              <button class="btn-acao excluir" onclick="excluirUsuario(1)" title="Excluir"><i
+                  class="fi fi-rr-trash"></i> Excluir</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Ana Paula Lima</td>
+            <td>ana.lima@growthmap.com</td>
+            <td>Coordenador</td>
+            <td>Linguagens</td>
+            <td>São Paulo</td>
+            <td class="acoes-celula">
+              <a href="./professor.html?id=2" class="btn-acao" title="Editar"><i class="fi fi-rr-edit"></i> Editar</a>
+              <button class="btn-acao excluir" onclick="excluirUsuario(2)" title="Excluir"><i
+                  class="fi fi-rr-trash"></i> Excluir</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="mensagem-vazia" style="display: none; text-align: center; padding: 25px; color: #666; font-size: 15px;">
+        Nenhum usuário encontrado com os filtros selecionados.
       </div>
     </div>
   </div>
 
-  <div class="card tabela-card">
-    <table class="tabela-dados">
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>E-mail</th>
-          <th>Cargo</th>
-          <th>Área</th>
-          <th>Município</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Carlos Alberto Souza</td>
-          <td>carlos.souza@growthmap.com</td>
-          <td><span class="badge vinho">Professor</span></td>
-          <td>Ciências Exatas</td>
-          <td>Santo André</td>
-          <td>
-            <a href="#" class="btn-acao" title="Editar"><i class="fi fi-rr-edit"></i> Editar</a>
-            <button class="btn-acao excluir" title="Excluir"><i class="fi fi-rr-trash"></i> Excluir</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Ana Paula Lima</td>
-          <td>ana.lima@growthmap.com</td>
-          <td><span class="badge azul">Coordenador</span></td>
-          <td>Linguagens</td>
-          <td>São Paulo</td>
-          <td>
-            <a href="#" class="btn-acao" title="Editar"><i class="fi fi-rr-edit"></i> Editar</a>
-            <button class="btn-acao excluir" title="Excluir"><i class="fi fi-rr-trash"></i> Excluir</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+  <script src="../js/menu.js"></script>
+  <script>
+    const filtroMun = document.getElementById('filtro-municipio');
+    const filtroArea = document.getElementById('filtro-area');
+    const filtroCargo = document.getElementById('filtro-cargo');
+    const msgVazia = document.getElementById('mensagem-vazia');
 
-<script src="./js/menu.js"></script>
-    
+    function aplicarFiltros() {
+      const munVal = filtroMun.value.toLowerCase();
+      const areaVal = filtroArea.value.toLowerCase();
+      const cargoVal = filtroCargo.value.toLowerCase();
+
+      const linhas = document.querySelectorAll('.tabela-dados tbody tr');
+      let visiveis = 0;
+
+      linhas.forEach(linha => {
+        const cargo = linha.children[2].innerText.toLowerCase();
+        const area = linha.children[3].innerText.toLowerCase();
+        const municipio = linha.children[4].innerText.toLowerCase();
+
+        const matchMun = !munVal || municipio.includes(munVal);
+        const matchArea = !areaVal || area.includes(areaVal);
+        const matchCargo = !cargoVal || cargo.includes(cargoVal);
+
+        if (matchMun && matchArea && matchCargo) {
+          linha.style.display = '';
+          visiveis++;
+        } else {
+          linha.style.display = 'none';
+        }
+      });
+
+      if (visiveis === 0) {
+        msgVazia.style.display = 'block';
+      } else {
+        msgVazia.style.display = 'none';
+      }
+    }
+
+    filtroMun.addEventListener('change', aplicarFiltros);
+    filtroArea.addEventListener('change', aplicarFiltros);
+    filtroCargo.addEventListener('change', aplicarFiltros);
+
+    function excluirUsuario(id) {
+      if (confirm('Tem certeza que deseja excluir este usuário?')) {
+        alert('Usuário excluído com sucesso!');
+      }
+    }
+  </script>
 </body>
+
 </html>
