@@ -110,6 +110,23 @@
   outline:none;
 }
 
+.select-permissao {
+  border: 1.5px solid #7a1f3d;
+  background: #ebebeb;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  border-radius: 6px;
+  color: #1a1a1a;
+  outline: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+.select-permissao:focus {
+  border-color: #4d1226;
+  background: #fff;
+}
+
 .tabela-dados{
   width:100%;
   border-collapse:collapse;
@@ -129,16 +146,6 @@
   border-bottom:1px solid #eee;
   color:#444;
 }
-
-.badge{
-  padding:4px 10px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:500;
-  color:#fff;
-}
-.badge.vinho{background:#7a1f3d;}
-.badge.azul{background:#1f1f7a;}
 
 .acoes-celula{
   display:flex;
@@ -165,3 +172,28 @@
   color:#7a1f3d;
 }
 .btn-acao.excluir:hover{background:rgba(122,31,61,.15)}
+
+.acoes-topo {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn-permissoes {
+  background: rgba(122,31,61,.12);
+  color: #7a1f3d;
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: background .2s;
+  border: 1.5px solid #7a1f3d;
+}
+.btn-permissoes:hover {
+  background: rgba(122,31,61,.22);
+}

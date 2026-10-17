@@ -1,0 +1,180 @@
+.conteudo{
+  margin-left:100px;
+  padding:40px 60px 40px 40px;
+  transition:margin-left .3s ease;
+  max-width:1200px;
+}
+
+.topo-pagina{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:24px;
+  flex-wrap:wrap;
+  gap:16px;
+}
+
+.titulo{
+  font-size:36px;
+  font-weight:300;
+  margin:0;
+}
+.titulo span{
+  font-weight:700;
+  color:#7a1f3d;
+  padding:0 8px;
+  background:linear-gradient(transparent 58%, rgba(122,31,61,.25) 58%);
+  border-radius:4px;
+}
+
+.btn-novo{
+  background:#7a1f3d;
+  color:#fff;
+  padding:10px 20px;
+  border-radius:20px;
+  font-size:14px;
+  font-weight:500;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border:none;
+  cursor:pointer;
+  box-shadow:0 4px 10px rgba(122,31,61,.25);
+  transition:background .2s;
+}
+.btn-novo:hover{background:#4d1226}
+
+.card{
+  background:rgba(255,255,255,.88);
+  border-radius:18px;
+  padding:24px;
+  box-shadow: 10px 10px 0 rgba(122,31,61,.22), 20px 20px 0 rgba(122,31,61,.10), 0 12px 28px rgba(122,31,61,.12);
+  margin-bottom:24px;
+}
+
+.tabela-dados{
+  width:100%;
+  border-collapse:collapse;
+  text-align:left;
+  font-size:15px;
+}
+
+.tabela-dados th{
+  padding:12px;
+  border-bottom:2px solid #ddd;
+  font-weight:600;
+  color:#333;
+}
+
+.tabela-dados td{
+  padding:12px;
+  border-bottom:1px solid #eee;
+  color:#444;
+}
+
+.badge{
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:500;
+  color:#fff;
+}
+.badge.vinho{background:#7a1f3d;}
+
+.acoes-celula{
+  display:flex;
+  gap:8px;
+}
+
+.btn-acao{
+  background:rgba(31,31,122,.08);
+  border:none;
+  cursor:pointer;
+  font-size:13px;
+  color:#1f1f7a;
+  padding:6px 12px;
+  border-radius:6px;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  font-weight:500;
+}
+.btn-acao:hover{background:rgba(31,31,122,.15)}
+.btn-acao.excluir{
+  background:rgba(122,31,61,.08);
+  color:#7a1f3d;
+}
+.btn-acao.excluir:hover{background:rgba(122,31,61,.15)}
+
+/* Estilização do Modal de Cadastro / Edição */
+.modal-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-card{
+  background: #fff;
+  border-radius: 18px;
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.modal-titulo{
+  font-size: 22px;
+  font-weight: 600;
+  color: #7a1f3d;
+  margin-bottom: 20px;
+}
+
+.form-grupo{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.form-grupo label{
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-grupo input, .form-grupo select{
+  border: 2px solid #7a1f3d;
+  background: #ebebeb;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  border-radius: 8px;
+  outline: none;
+}
+
+.form-acoes{
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn-salvar, .btn-limpar{
+  padding: 10px 24px;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-salvar{background:#7a1f3d;color:#fff}
+.btn-salvar:hover{background:#4d1226}
+
+.btn-limpar{background:#d5d5d5;color:#333}
+.btn-limpar:hover{background:#c0c0c0}
