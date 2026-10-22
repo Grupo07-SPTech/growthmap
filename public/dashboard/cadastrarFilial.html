@@ -1,136 +1,476 @@
-<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Growth Map | Cadastro de Filial</title>
-<link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
-<link rel="stylesheet" href="./css/cadastrarFilial.css">
-<link rel="stylesheet" href="./css/style.css">
-<link rel="icon" href="./assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Growth Map | Cadastro de Filial</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
+    />
+    <link rel="stylesheet" href="./css/cadastrarFilial.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link
+      rel="icon"
+      href="./assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
-  <i class="fi fi-rr-menu-burger"></i>
-</button>
-  <div class="sidebar">
-    <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
-    <div class="nav-indicador" id="nav-indicador"></div>
+      <i class="fi fi-rr-menu-burger"></i>
+    </button>
+    <div class="sidebar">
+      <img
+        class="logo"
+        src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png"
+        alt="Logo"
+      />
+      <div class="nav-indicador" id="nav-indicador"></div>
 
-    <div class="nav-item ativo">
-      <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
+      <div class="nav-item ativo">
+        <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
+      </div>
+      <div class="nav-item">
+        <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
+      </div>
+      <div class="nav-item ativo">
+        <a href="./filiais.html"><i class="fi fi-rr-home"></i></a>
+      </div>
+      <div class="nav-item">
+        <a href="./dashboardDiretorGeral.html"
+          ><i class="fi fi-rr-chart-pie-alt"></i
+        ></a>
+      </div>
+      <div class="nav-item">
+        <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
+      </div>
+      <a href="perfilUsuario.html">
+        <div class="perfil"></div>
+      </a>
+      <div class="sair"><a href="../index.html">Sair</a></div>
     </div>
-    <div class="nav-item">
-      <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
+
+    <div class="conteudo">
+      <h1 class="titulo">Cadastro de <span>Filial</span></h1>
+
+      <div class="card form-card">
+        <form id="form-filial" novalidate>
+          <div class="form-grupo">
+            <label>Nome da Filial:</label>
+            <input
+              type="text"
+              id="f_nome"
+              required
+              placeholder="Ex.: Growth Map - Unidade Centro"
+            />
+          </div>
+
+          <div class="form-linha">
+            <div class="form-grupo">
+              <label>CNPJ:</label>
+              <input
+                type="text"
+                id="f_cnpj"
+                required
+                placeholder="00.000.000/0001-00"
+                oninput="aplicarMascaraCnpj(this)"
+              />
+            </div>
+            <div class="form-grupo">
+              <label>Telefone:</label>
+              <input
+                type="text"
+                id="f_tel"
+                placeholder="(00) 00000-0000"
+                oninput="aplicarMascaraTelefone(this)"
+              />
+            </div>
+          </div>
+
+          <div class="form-linha">
+            <div class="form-grupo" style="flex: 1">
+              <label>CEP:</label>
+              <input
+                type="text"
+                id="f_cep"
+                placeholder="00000-000"
+                oninput="aplicarMascaraCep(this); if (obterDigitos(this.value, 8).length === 8) buscarEnderecoPorCep()"
+              />
+            </div>
+            <div class="form-grupo" style="flex: 3">
+              <label>Logradouro (Rua, Av., etc.):</label>
+              <input type="text" id="f_rua" placeholder="Ex.: Av. Industrial" />
+            </div>
+          </div>
+
+          <div class="form-linha">
+            <div class="form-grupo" style="flex: 1">
+              <label>Número:</label>
+              <input type="text" id="f_num" placeholder="Ex.: 3330" />
+            </div>
+            <div class="form-grupo" style="flex: 2">
+              <label>Bairro:</label>
+              <input type="text" id="f_bairro" placeholder="Ex.: Centro" />
+            </div>
+          </div>
+
+          <div class="form-linha">
+            <div class="form-grupo" style="flex: 2">
+              <label>Cidade:</label>
+              <input type="text" id="f_cidade" placeholder="Ex.: Santo André" />
+            </div>
+            <div class="form-grupo" style="flex: 1">
+              <label>Estado (UF):</label>
+              <select id="f_estado" required>
+                <option value="" disabled selected>Selecione...</option>
+                <option value="AC">AC</option>
+                <option value="AL">AL</option>
+                <option value="AP">AP</option>
+                <option value="AM">AM</option>
+                <option value="BA">BA</option>
+                <option value="CE">CE</option>
+                <option value="DF">DF</option>
+                <option value="ES">ES</option>
+                <option value="GO">GO</option>
+                <option value="MA">MA</option>
+                <option value="MT">MT</option>
+                <option value="MS">MS</option>
+                <option value="MG">MG</option>
+                <option value="PA">PA</option>
+                <option value="PB">PB</option>
+                <option value="PR">PR</option>
+                <option value="PE">PE</option>
+                <option value="PI">PI</option>
+                <option value="RJ">RJ</option>
+                <option value="RN">RN</option>
+                <option value="RS">RS</option>
+                <option value="RO">RO</option>
+                <option value="RR">RR</option>
+                <option value="SC">SC</option>
+                <option value="SP">SP</option>
+                <option value="SE">SE</option>
+                <option value="TO">TO</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-acoes">
+            <button type="submit" class="btn-salvar">Cadastrar Filial</button>
+            <button type="reset" class="btn-limpar">Limpar</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <div class="nav-item ativo">
-      <a href="./filiais.html"><i class="fi fi-rr-home"></i></a>
-    </div>
-    <div class="nav-item">
-      <a href="./dashboardDiretorGeral.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
-    </div>
-    <div class="nav-item">
-      <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
-    </div>
-    <a href="perfilUsuario.html">
-      <div class="perfil"></div>
-    </a>
-    <div class="sair"><a href="../index.html">Sair</a></div>
-  </div>
 
-<div class="conteudo">
-  <h1 class="titulo">Cadastro de <span>Filial</span></h1>
+    <script src="./js/menu.js"></script>
 
-  <div class="card form-card">
-    <form id="form-filial">
-      <div class="form-grupo">
-        <label>Nome da Filial:</label>
-        <input type="text" id="f-nome" required placeholder="Ex.: Growth Map - Unidade Centro">
-      </div>
+    <script>
+      function validarNome(f_nome, id) {
+        f_nome = f_nome.trim();
 
-      <div class="form-linha">
-        <div class="form-grupo">
-          <label>CNPJ:</label>
-          <input type="text" id="f-cnpj" required placeholder="00.000.000/0001-00">
-        </div>
-        <div class="form-grupo">
-          <label>Telefone:</label>
-          <input type="text" id="f-tel" placeholder="(00) 00000-0000">
-        </div>
-      </div>
+        if (f_nome.length < 3) {
+          mostrarErroCampo(id, "Digite o nome da filial com pelo menos 3 caracteres.");
+          return false;
+        }
 
-      <div class="form-linha">
-        <div class="form-grupo" style="flex: 1;">
-          <label>CEP:</label>
-          <input type="text" id="f-cep" placeholder="00000-000">
-        </div>
-        <div class="form-grupo" style="flex: 3;">
-          <label>Logradouro (Rua, Av., etc.):</label>
-          <input type="text" id="f-rua" placeholder="Ex.: Av. Industrial">
-        </div>
-      </div>
+        limparErroCampo(id);
+        return true;
+      }
 
-      <div class="form-linha">
-        <div class="form-grupo" style="flex: 1;">
-          <label>Número:</label>
-          <input type="text" id="f-num" placeholder="Ex.: 3330">
-        </div>
-        <div class="form-grupo" style="flex: 2;">
-          <label>Bairro:</label>
-          <input type="text" id="f-bairro" placeholder="Ex.: Centro">
-        </div>
-      </div>
+      function validarCnpj(f_cnpj, id) {
+        f_cnpj = f_cnpj.replace(/\D/g, "");
 
-      <div class="form-linha">
-        <div class="form-grupo" style="flex: 2;">
-          <label>Cidade:</label>
-          <input type="text" id="f-cidade" placeholder="Ex.: Santo André">
-        </div>
-        <div class="form-grupo" style="flex: 1;">
-          <label>Estado (UF):</label>
-          <select id="f-estado" required>
-            <option value="">Selecione...</option>
-            <option value="AC">AC</option>
-            <option value="AL">AL</option>
-            <option value="AP">AP</option>
-            <option value="AM">AM</option>
-            <option value="BA">BA</option>
-            <option value="CE">CE</option>
-            <option value="DF">DF</option>
-            <option value="ES">ES</option>
-            <option value="GO">GO</option>
-            <option value="MA">MA</option>
-            <option value="MT">MT</option>
-            <option value="MS">MS</option>
-            <option value="MG">MG</option>
-            <option value="PA">PA</option>
-            <option value="PB">PB</option>
-            <option value="PR">PR</option>
-            <option value="PE">PE</option>
-            <option value="PI">PI</option>
-            <option value="RJ">RJ</option>
-            <option value="RN">RN</option>
-            <option value="RS">RS</option>
-            <option value="RO">RO</option>
-            <option value="RR">RR</option>
-            <option value="SC">SC</option>
-            <option value="SP">SP</option>
-            <option value="SE">SE</option>
-            <option value="TO">TO</option>
-          </select>
-        </div>
-      </div>
+        if (f_cnpj.length != 14) {
+          mostrarErroCampo(id, "Confira o CNPJ. Ele deve ter 14 números e não pode repetir o mesmo número.");
+          return false;
+        }
 
-      <div class="form-acoes">
-        <button type="submit" class="btn-salvar">Cadastrar Filial</button>
-        <button type="reset" class="btn-limpar">Limpar</button>
-      </div>
-    </form>
-  </div>
-</div>
+        let todosIguais = true;
 
-<script src="./js/menu.js"></script>
-</body>
+        for (let i = 1; i < f_cnpj.length; i++) {
+          if (f_cnpj[i] != f_cnpj[0]) {
+            todosIguais = false;
+          }
+        }
+        if (todosIguais) {
+          mostrarErroCampo(id, "Confira o CNPJ. Ele deve ter 14 números e não pode repetir o mesmo número.");
+          return false;
+        }
+
+        limparErroCampo(id);
+        return true;
+      }
+
+      function validarTelefone(f_tel, id) {
+        f_tel = f_tel.replace(/\D/g, "");
+
+        if (f_tel.length == 0) {
+          limparErroCampo(id);
+          return true;
+        }
+
+        if (f_tel.length != 10 && f_tel.length != 11) {
+          mostrarErroCampo(id, "Confira o telefone. Inclua o DDD e informe 10 ou 11 números.");
+          return false;
+        }
+
+        limparErroCampo(id);
+        return true;
+      }
+
+      function validarCep(f_cep, id) {
+        f_cep = f_cep.replace(/\D/g, "");
+
+        if (f_cep.length == 0) {
+          limparErroCampo(id);
+          return true;
+        }
+
+        if (f_cep.length != 8) {
+          mostrarErroCampo(id, "Confira o CEP. Ele deve conter 8 números.");
+          return false;
+        }
+
+        limparErroCampo(id);
+        return true;
+      }
+
+      function validarRua(f_rua, id) {
+        f_rua = f_rua.trim();
+
+        if (f_rua.length === 0) {
+          limparErroCampo(id);
+          return true;
+        }
+
+        let ruaNormalizada = f_rua
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase();
+        let tiposLogradouro = /^(rua|r\.?|avenida|av\.?|alameda|al\.?|travessa|trav\.?|trv\.?|rodovia|rod\.?|estrada|estr\.?|praca|pca\.?|pc\.?|largo|lg\.?|viela|via|passagem)\s+/;
+
+        if (f_rua.length < 2 || !tiposLogradouro.test(ruaNormalizada)) {
+          mostrarErroCampo(id, "Informe um tipo de via, como Rua, Avenida ou Travessa, seguido do nome.");
+          return false;
+        }
+
+        limparErroCampo(id);
+        return true;
+      }
+
+      function validarNumero(f_num, id) {
+        f_num = f_num.trim();
+
+        if (f_num.length == 0) {
+          limparErroCampo(id);
+          return true;
+        }
+
+        let numeroValido = true;
+
+        for (let i = 0; i < f_num.length; i++) {
+          let caractere = f_num[i];
+          let ehNumero = caractere >= "0" && caractere <= "9";
+          let ehLetra =
+            (caractere >= "A" && caractere <= "Z") ||
+            (caractere >= "a" && caractere <= "z");
+
+          if (!ehNumero && !(ehLetra && i == f_num.length - 1)) {
+            numeroValido = false;
+          }
+        }
+
+        if (!numeroValido) {
+          mostrarErroCampo(id, "Confira o número do endereço. Use números e, se necessário, uma letra no final.");
+          return false;
+        }
+
+        limparErroCampo(id);
+        return true;
+      }
+
+      function validarBairro(f_bairro, id) {
+        if (f_bairro.trim().length > 0 && f_bairro.trim().length < 2) {
+          mostrarErroCampo(id, "Informe um bairro com pelo menos 2 caracteres ou deixe em branco.");
+          return false;
+        }
+
+        limparErroCampo(id);
+        return true;
+      }
+
+      function validarCidade(f_cidade, id) {
+        if (f_cidade.trim().length > 0 && f_cidade.trim().length < 2) {
+          mostrarErroCampo(id, "Informe uma cidade com pelo menos 2 caracteres ou deixe em branco.");
+          return false;
+        }
+
+        limparErroCampo(id);
+        return true;
+      }
+
+      function validarEstado(f_estado, id) {
+        if (f_estado.length != 2 || f_estado != f_estado.toUpperCase()) {
+          mostrarErroCampo(id, "Selecione o estado da filial.");
+          return false;
+        }
+
+        limparErroCampo(id);
+        return true;
+      }
+
+      function mostrarErroCampo(id, mensagem) {
+        let campo = document.getElementById(id);
+        let grupo = campo.closest(".form-grupo");
+        let erro = document.getElementById(id + "-erro");
+
+        if (!erro) {
+          erro = document.createElement("small");
+          erro.id = id + "-erro";
+          erro.className = "mensagem-erro";
+          erro.setAttribute("role", "alert");
+          campo.insertAdjacentElement("afterend", erro);
+        }
+
+        erro.textContent = mensagem;
+        campo.setAttribute("aria-invalid", "true");
+        campo.setAttribute("aria-describedby", erro.id);
+        grupo.classList.add("campo-invalido");
+      }
+
+      function limparErroCampo(id) {
+        let campo = document.getElementById(id);
+        let erro = document.getElementById(id + "-erro");
+
+        if (erro) erro.remove();
+        campo.removeAttribute("aria-invalid");
+        campo.removeAttribute("aria-describedby");
+        campo.closest(".form-grupo").classList.remove("campo-invalido");
+      }
+
+      function obterDigitos(valor, limite) {
+        let numeros = "";
+
+        for (let i = 0; i < valor.length; i++) {
+          let caractere = valor[i];
+
+          if (caractere >= "0" && caractere <= "9") {
+            numeros += caractere;
+          }
+
+          if (numeros.length == limite) {
+            break;
+          }
+        }
+
+        return numeros;
+      }
+
+      function aplicarMascaraTelefone(f_tel) {
+        let numeros = obterDigitos(f_tel.value, 11);
+        let formatado = "";
+
+        if (numeros.length > 0) {
+          formatado = "(" + numeros.slice(0, 2);
+        }
+        if (numeros.length >= 3) {
+          formatado += ") " + numeros.slice(2, numeros.length == 11 ? 7 : 6);
+        }
+        if (numeros.length > 6 && numeros.length <= 10) {
+          formatado += "-" + numeros.slice(6);
+        } else if (numeros.length > 7) {
+          formatado += "-" + numeros.slice(7);
+        }
+
+        f_tel.value = formatado;
+      }
+
+      function aplicarMascaraCnpj(f_cnpj) {
+        let numeros = obterDigitos(f_cnpj.value, 14);
+        let formatado = numeros.slice(0, 2);
+
+        if (numeros.length > 2) {
+          formatado += "." + numeros.slice(2, 5);
+        }
+        if (numeros.length > 5) {
+          formatado += "." + numeros.slice(5, 8);
+        }
+        if (numeros.length > 8) {
+          formatado += "/" + numeros.slice(8, 12);
+        }
+        if (numeros.length > 12) {
+          formatado += "-" + numeros.slice(12, 14);
+        }
+
+        f_cnpj.value = formatado;
+      }
+
+      function aplicarMascaraCep(f_cep) {
+        let numeros = obterDigitos(f_cep.value, 8);
+        let formatado = numeros.slice(0, 5);
+
+        if (numeros.length > 5) {
+          formatado += "-" + numeros.slice(5, 8);
+        }
+
+        f_cep.value = formatado;
+      }
+
+      async function buscarEnderecoPorCep() {
+        let cep = obterDigitos(document.getElementById("f_cep").value, 8);
+
+        if (cep.length !== 8) {
+          return;
+        }
+
+        try {
+          let resposta = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+
+          if (!resposta.ok) {
+            throw new Error("Falha na consulta do CEP");
+          }
+
+          let endereco = await resposta.json();
+
+          if (endereco.erro) {
+            mostrarErroCampo("f_cep", "CEP não encontrado.");
+            return;
+          }
+
+          document.getElementById("f_rua").value = endereco.logradouro || "";
+          document.getElementById("f_bairro").value = endereco.bairro || "";
+          document.getElementById("f_cidade").value = endereco.localidade || "";
+          document.getElementById("f_estado").value = endereco.uf || "";
+        } catch (erro) {
+          mostrarErroCampo("f_cep", "Não foi possível consultar o CEP. Tente novamente.");
+        }
+      }
+
+      document.getElementById("form-filial").addEventListener("submit", function (evento) {
+        let formularioValido = true;
+
+        if (!validarNome(document.getElementById("f_nome").value, "f_nome")) formularioValido = false;
+        if (!validarCnpj(document.getElementById("f_cnpj").value, "f_cnpj")) formularioValido = false;
+        if (!validarTelefone(document.getElementById("f_tel").value, "f_tel")) formularioValido = false;
+        if (!validarCep(document.getElementById("f_cep").value, "f_cep")) formularioValido = false;
+        if (!validarRua(document.getElementById("f_rua").value, "f_rua")) formularioValido = false;
+        if (!validarNumero(document.getElementById("f_num").value, "f_num")) formularioValido = false;
+        if (!validarBairro(document.getElementById("f_bairro").value, "f_bairro")) formularioValido = false;
+        if (!validarCidade(document.getElementById("f_cidade").value, "f_cidade")) formularioValido = false;
+        if (!validarEstado(document.getElementById("f_estado").value, "f_estado")) formularioValido = false;
+
+        if (!formularioValido) {
+          evento.preventDefault();
+        }
+      });
+
+      document.getElementById("form-filial").addEventListener("reset", function () {
+        ["f_nome", "f_cnpj", "f_tel", "f_cep", "f_rua", "f_num", "f_bairro", "f_cidade", "f_estado"].forEach(limparErroCampo);
+      });
+    </script>
+  </body>
 </html>
