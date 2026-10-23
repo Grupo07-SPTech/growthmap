@@ -58,7 +58,7 @@
       <h1 class="titulo">Cadastro de <span>Filial</span></h1>
 
       <div class="card form-card">
-        <form id="form-filial" novalidate>
+        <form id="form-filial" onreset="limparErrosFormulario()" novalidate>
           <div class="form-grupo">
             <label>Nome da Filial:</label>
             <input
@@ -77,7 +77,7 @@
                 id="f_cnpj"
                 required
                 placeholder="00.000.000/0001-00"
-                oninput="aplicarMascaraCnpj(this)"
+                oninput="aplicarMascaraCnpj()"
               />
             </div>
             <div class="form-grupo">
@@ -86,7 +86,7 @@
                 type="text"
                 id="f_tel"
                 placeholder="(00) 00000-0000"
-                oninput="aplicarMascaraTelefone(this)"
+                oninput="aplicarMascaraTelefone()"
               />
             </div>
           </div>
@@ -98,7 +98,7 @@
                 type="text"
                 id="f_cep"
                 placeholder="00000-000"
-                oninput="aplicarMascaraCep(this); if (obterDigitos(this.value, 8).length === 8) buscarEnderecoPorCep()"
+                oninput="aplicarMascaraCep(); buscarEnderecoPorCep()"
               />
             </div>
             <div class="form-grupo" style="flex: 3">
@@ -159,7 +159,7 @@
           </div>
 
           <div class="form-acoes">
-            <button type="submit" class="btn-salvar">Cadastrar Filial</button>
+            <button type="button" class="btn-salvar" onclick="cadastrar()">Cadastrar Filial</button>
             <button type="reset" class="btn-limpar">Limpar</button>
           </div>
         </form>
@@ -242,18 +242,54 @@
       function validarRua(f_rua, id) {
         f_rua = f_rua.trim();
 
-        if (f_rua.length === 0) {
+        if (f_rua.length == 0) {
           limparErroCampo(id);
           return true;
         }
 
-        let ruaNormalizada = f_rua
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .toLowerCase();
-        let tiposLogradouro = /^(rua|r\.?|avenida|av\.?|alameda|al\.?|travessa|trav\.?|trv\.?|rodovia|rod\.?|estrada|estr\.?|praca|pca\.?|pc\.?|largo|lg\.?|viela|via|passagem)\s+/;
+        let partesRua = f_rua.toLowerCase().split(" ");
+        let tipoLogradouro = partesRua[0];
+        let temTipoLogradouro;
 
-        if (f_rua.length < 2 || !tiposLogradouro.test(ruaNormalizada)) {
+        switch (tipoLogradouro) {
+          case "rua":
+          case "r":
+          case "r.":
+          case "avenida":
+          case "av":
+          case "av.":
+          case "alameda":
+          case "al":
+          case "al.":
+          case "travessa":
+          case "trav":
+          case "trav.":
+          case "trv":
+          case "trv.":
+          case "rodovia":
+          case "rod":
+          case "rod.":
+          case "estrada":
+          case "estr":
+          case "estr.":
+          case "praça":
+          case "pca":
+          case "pca.":
+          case "pc":
+          case "pc.":
+          case "largo":
+          case "lg":
+          case "lg.":
+          case "viela":
+          case "via":
+          case "passagem":
+            temTipoLogradouro = true;
+            break;
+          default:
+            temTipoLogradouro = false;
+        }
+
+        if (f_rua.length < 2 || !temTipoLogradouro || partesRua.length < 2) {
           mostrarErroCampo(id, "Informe um tipo de via, como Rua, Avenida ou Travessa, seguido do nome.");
           return false;
         }
@@ -324,9 +360,9 @@
       }
 
       function mostrarErroCampo(id, mensagem) {
-        let campo = document.getElementById(id);
+        let campo = window[id];
         let grupo = campo.closest(".form-grupo");
-        let erro = document.getElementById(id + "-erro");
+        let erro = window[id + "-erro"];
 
         if (!erro) {
           erro = document.createElement("small");
@@ -343,8 +379,8 @@
       }
 
       function limparErroCampo(id) {
-        let campo = document.getElementById(id);
-        let erro = document.getElementById(id + "-erro");
+        let campo = window[id];
+        let erro = window[id + "-erro"];
 
         if (erro) erro.remove();
         campo.removeAttribute("aria-invalid");
@@ -370,7 +406,8 @@
         return numeros;
       }
 
-      function aplicarMascaraTelefone(f_tel) {
+      function aplicarMascaraTelefone() {
+        let f_tel = window.f_tel;
         let numeros = obterDigitos(f_tel.value, 11);
         let formatado = "";
 
@@ -389,7 +426,8 @@
         f_tel.value = formatado;
       }
 
-      function aplicarMascaraCnpj(f_cnpj) {
+      function aplicarMascaraCnpj() {
+        let f_cnpj = window.f_cnpj;
         let numeros = obterDigitos(f_cnpj.value, 14);
         let formatado = numeros.slice(0, 2);
 
@@ -409,7 +447,8 @@
         f_cnpj.value = formatado;
       }
 
-      function aplicarMascaraCep(f_cep) {
+      function aplicarMascaraCep() {
+        let f_cep = window.f_cep;
         let numeros = obterDigitos(f_cep.value, 8);
         let formatado = numeros.slice(0, 5);
 
@@ -421,9 +460,10 @@
       }
 
       async function buscarEnderecoPorCep() {
-        let cep = obterDigitos(document.getElementById("f_cep").value, 8);
+        let f_cep = window.f_cep;
+        let cep = obterDigitos(f_cep.value, 8);
 
-        if (cep.length !== 8) {
+        if (cep.length != 8) {
           return;
         }
 
@@ -441,36 +481,78 @@
             return;
           }
 
-          document.getElementById("f_rua").value = endereco.logradouro || "";
-          document.getElementById("f_bairro").value = endereco.bairro || "";
-          document.getElementById("f_cidade").value = endereco.localidade || "";
-          document.getElementById("f_estado").value = endereco.uf || "";
+          f_rua.value = endereco.logradouro || "";
+          f_bairro.value = endereco.bairro || "";
+          f_cidade.value = endereco.localidade || "";
+          f_estado.value = endereco.uf || "";
         } catch (erro) {
           mostrarErroCampo("f_cep", "Não foi possível consultar o CEP. Tente novamente.");
         }
       }
 
-      document.getElementById("form-filial").addEventListener("submit", function (evento) {
+      function cadastrar() {
         let formularioValido = true;
 
-        if (!validarNome(document.getElementById("f_nome").value, "f_nome")) formularioValido = false;
-        if (!validarCnpj(document.getElementById("f_cnpj").value, "f_cnpj")) formularioValido = false;
-        if (!validarTelefone(document.getElementById("f_tel").value, "f_tel")) formularioValido = false;
-        if (!validarCep(document.getElementById("f_cep").value, "f_cep")) formularioValido = false;
-        if (!validarRua(document.getElementById("f_rua").value, "f_rua")) formularioValido = false;
-        if (!validarNumero(document.getElementById("f_num").value, "f_num")) formularioValido = false;
-        if (!validarBairro(document.getElementById("f_bairro").value, "f_bairro")) formularioValido = false;
-        if (!validarCidade(document.getElementById("f_cidade").value, "f_cidade")) formularioValido = false;
-        if (!validarEstado(document.getElementById("f_estado").value, "f_estado")) formularioValido = false;
+        if (!validarNome(f_nome.value, "f_nome")) formularioValido = false;
+        if (!validarCnpj(f_cnpj.value, "f_cnpj")) formularioValido = false;
+        if (!validarTelefone(f_tel.value, "f_tel")) formularioValido = false;
+        if (!validarCep(f_cep.value, "f_cep")) formularioValido = false;
+        if (!validarRua(f_rua.value, "f_rua")) formularioValido = false;
+        if (!validarNumero(f_num.value, "f_num")) formularioValido = false;
+        if (!validarBairro(f_bairro.value, "f_bairro")) formularioValido = false;
+        if (!validarCidade(f_cidade.value, "f_cidade")) formularioValido = false;
+        if (!validarEstado(f_estado.value, "f_estado")) formularioValido = false;
 
         if (!formularioValido) {
-          evento.preventDefault();
+          return;
         }
-      });
 
-      document.getElementById("form-filial").addEventListener("reset", function () {
+        let nome = f_nome.value.trim();
+        let cnpj = obterDigitos(f_cnpj.value, 14);
+        let telefone = obterDigitos(f_tel.value, 11);
+        let cep = obterDigitos(f_cep.value, 8);
+        let rua = f_rua.value.trim();
+        let numero = f_num.value.trim();
+        let bairro = f_bairro.value.trim();
+        let cidade = f_cidade.value.trim();
+        let estado = f_estado.value;
+
+        return fetch("/filial/cadastrar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nome: nome,
+            cnpj: cnpj,
+            telefone: telefone,
+            cep: cep,
+            rua: rua,
+            numero: numero,
+            bairro: bairro,
+            cidade: cidade,
+            estado: estado,
+          }),
+        })
+          .then(function (resposta) {
+            if (resposta.ok) {
+              alert("Filial cadastrada com sucesso!");
+              window.location = "./filiais.html";
+            } else {
+              resposta.text().then(function (texto) {
+                alert(texto);
+              });
+            }
+          })
+          .catch(function (erro) {
+            console.log("#ERRO:", erro);
+            alert("Não foi possível cadastrar a filial. Tente novamente.");
+          });
+      }
+
+      function limparErrosFormulario() {
         ["f_nome", "f_cnpj", "f_tel", "f_cep", "f_rua", "f_num", "f_bairro", "f_cidade", "f_estado"].forEach(limparErroCampo);
-      });
+      }
     </script>
   </body>
 </html>
