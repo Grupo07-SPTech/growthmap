@@ -41,6 +41,100 @@
     </a>
     <div class="sair"><a href="../index.html">Sair</a></div>
   </div>
+  <div class="nav-item">
+    <a href="../usuarios.html"><i class="fi fi-rr-users"></i></a>
+  </div>
+
+  <div class="perfil"></div>
+  <div class="sair"><a href="../index.html">Sair</a></div>
+</div>
+
+    <script src="../js/menu.js"></script>
+    <script>
+        // Base de dados simulada para vincular Municípios ao Estado correspondente
+        const municipiosPorEstado = {
+            SP: [
+                { value: "mairipora", text: "Mairiporã" },
+                { value: "atibaia", text: "Atibaia" },
+                { value: "guarulhos", text: "Guarulhos" },
+                { value: "francisco-morato", text: "Francisco Morato" },
+                { value: "campinas", text: "Campinas" },
+                { value: "santos", text: "Santos" },
+                { value: "sao-paulo", text: "São Paulo (Capital)" }
+            ],
+            RJ: [
+                { value: "rio-de-janeiro", text: "Rio de Janeiro (Capital)" },
+                { value: "niteroi", text: "Niterói" },
+                { value: "petropolis", text: "Petrópolis" },
+                { value: "duque-de-caxias", text: "Duque de Caxias" }
+            ],
+            MG: [
+                { value: "belo-horizonte", text: "Belo Horizonte (Capital)" },
+                { value: "uberlandia", text: "Uberlândia" },
+                { value: "ouropreto", text: "Ouro Preto" },
+                { value: "juiz-de-fora", text: "Juiz de Fora" }
+            ],
+            PR: [
+                { value: "curitiba", text: "Curitiba (Capital)" },
+                { value: "londrina", text: "Londrina" },
+                { value: "maringa", text: "Maringá" },
+                { value: "foz-do-iguacu", text: "Foz do Iguaçu" }
+            ]
+        };
+
+        // Função que atualiza as opções do select de municípios baseado no estado selecionado
+        function atualizarMunicipios() {
+            const selectEstado = document.getElementById('select-estado');
+            const selectMunicipio = document.getElementById('select-municipio');
+            const estadoSelecionado = selectEstado.value;
+
+            // Limpa as opções atuais
+            selectMunicipio.innerHTML = '';
+
+            // Busca os municípios do estado correspondente
+            const listaMunicipios = municipiosPorEstado[estadoSelecionado] || [];
+
+            // Popula o select de municípios
+            listaMunicipios.forEach(mun => {
+                const option = document.createElement('option');
+                option.value = mun.value;
+                option.textContent = mun.text;
+                selectMunicipio.appendChild(option);
+            });
+        }
+
+        // Executa ao carregar a página para preencher com o estado padrão (SP)
+        window.onload = function() {
+            atualizarMunicipios();
+        };
+
+        // Inicialização do Gráfico de Radar
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: ['Matemática', 'Linguagens', 'Humanas', 'Natureza', 'Redação'],
+                datasets: [{
+                    label: 'Município Selecionado',
+                    data: [512, 505, 498, 480, 580],
+                    backgroundColor: 'rgba(122, 31, 61, 0.2)',
+                    borderColor: '#7a1f3d',
+                    borderWidth: 2
+                }, {
+                    label: 'Média do Estado',
+                    data: [554, 530, 520, 510, 620],
+                    backgroundColor: 'rgba(31, 31, 122, 0.05)',
+                    borderColor: '#1f1f7a',
+                    borderWidth: 1.5,
+                    borderDash: [4, 4]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { r: { suggestedMin: 400, suggestedMax: 700 } }
+            }
+        });
 
     <!-- CONTEÚDO PRINCIPAL DA DASHBOARD QUE FALTAVA -->
     <main class="main-content" style="margin-left: 90px; padding: 32px; width: calc(100% - 90px);">
