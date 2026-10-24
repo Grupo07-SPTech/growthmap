@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Growth Map | Gerenciamento de Permissões</title>
+<link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+<link rel="stylesheet" href="./css/style.css">
+<link rel="stylesheet" href="./css/permissoes.css">
+<link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
+  <i class="fi fi-rr-menu-burger"></i>
+</button>
+
+  <div class="sidebar">
+    <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
+    <div class="nav-indicador" id="nav-indicador"></div>
+
+    <div class="nav-item ativo">
+      <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./filiais.html"><i class="fi fi-rr-home"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./dashboardDiretorGeral.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
+    </div>
+    <a href="perfilUsuario.html">
+      <div class="perfil"></div>
+    </a>
+    <div class="sair"><a href="../index.html">Sair</a></div>
+  </div>
+
+<div class="conteudo">
+  <div class="topo-pagina">
+    <h1 class="titulo">Gerenciamento de <span>Permissões</span></h1>
+    <button type="button" class="btn-novo" id="btn-abrir-modal">
+      <i class="fi fi-rr-plus"></i> Novo Cargo / Permissão
+    </button>
+  </div>
+
+  <!-- Tabela do CRUD de Permissões -->
+  <div class="card tabela-card">
+    <table class="tabela-dados">
+      <thead>
+        <tr>
+          <th>Nome do Cargo</th>
+          <th>Descrição do Perfil</th>
+          <th>Nível de Acesso</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabela-permissoes-corpo">
+        <!-- Preenchido via JavaScript -->
+      </tbody>
+    </table>
+    <div id="mensagem-vazia" style="display: none; text-align: center; padding: 25px; color: #666; font-size: 15px;">
+      Nenhuma permissão cadastrada.
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Cadastro / Edição de Permissão -->
+<div id="modal-permissao" class="modal-overlay" style="display: none;">
+  <div class="modal-card">
+    <h2 id="modal-titulo" class="modal-titulo">Cadastrar Novo Cargo</h2>
+    <form id="form-permissao">
+      <input type="hidden" id="permissao-id">
+      
+      <div class="form-grupo">
+        <label>Nome do Cargo:</label>
+        <input type="text" id="p-nome" required placeholder="Ex.: Coordenador Pedagógico">
+      </div>
+
+      <div class="form-grupo">
+        <label>Descrição:</label>
+        <input type="text" id="p-descricao" required placeholder="Ex.: Acesso a relatórios e gestão de turmas">
+      </div>
+
+      <div class="form-grupo">
+        <label>Nível Hierárquico / Acesso:</label>
+        <select id="p-nivel" required>
+          <option value="Básico (Professor)">Básico (Professor)</option>
+          <option value="Intermediário (Coordenador)">Intermediário (Coordenador)</option>
+          <option value="Avançado (Diretor)">Avançado (Diretor)</option>
+          <option value="Total (Diretor Geral)">Total (Diretor Geral)</option>
+        </select>
+      </div>
+
+      <div class="form-acoes">
+        <button type="submit" class="btn-salvar">Salvar Cargo</button>
+        <button type="button" id="btn-fechar-modal" class="btn-limpar">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+    
+<script src="../js/menu.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  if (!localStorage.getItem('gm_permissoes')) {
+    localStorage.setItem('gm_permissoes', JSON.stringify([
+      { id: 1, nome: 'Professor', descricao: 'Lança notas, frequências e visualiza calendário', nivel: 'Básico (Professor)' },
+      { id: 2, nome: 'Coordenador', descricao: 'Gerencia professores e turmas da filial', nivel: 'Intermediário (Coordenador)' },
+      { id: 3, nome: 'Diretor', descricao: 'Administra a unidade escolar completa', nivel: 'Avançado (Diretor)' },
+      { id: 4, nome: 'Diretor Geral', descricao: 'Acesso irrestrito a todas as filiais e painéis', nivel: 'Total (Diretor Geral)' }
+    ]));
+  }
+
+  const tbody = document.getElementById('tabela-permissoes-corpo');
+  const modal = document.getElementById('modal-permissao');
+  const btnAbrir = document.getElementById('btn-abrir-modal');
+  const btnFechar = document.getElementById('btn-fechar-modal');
+  const form = document.getElementById('form-permissao');
+  const modalTitulo = document.getElementById('modal-titulo');
+  const msgVazia = document.getElementById('mensagem-vazia');
+
+  function renderTabela() {
+    const permissoes = JSON.parse(localStorage.getItem('gm_permissoes')) || [];
+    
+    if (!permissoes.length) {
+      tbody.innerHTML = '';
+      msgVazia.style.display = 'block';
+      return;
+    }
+    msgVazia.style.display = 'none';
+
+    tbody.innerHTML = permissoes.map(p => `
+      <tr>
+        <td><strong>${p.nome}</strong></td>
+        <td>${p.descricao}</td>
+        <td><span class="badge vinho">${p.nivel}</span></td>
+        <td class="acoes-celula">
+          <button class="btn-acao" onclick="editarPermissao(${p.id})" title="Editar"><i class="fi fi-rr-edit"></i> Editar</button>
+          <button class="btn-acao excluir" onclick="excluirPermissao(${p.id})" title="Excluir"><i class="fi fi-rr-trash"></i> Excluir</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  btnAbrir.addEventListener('click', () => {
+    document.getElementById('permissao-id').value = '';
+    document.getElementById('p-nome').value = '';
+    document.getElementById('p-descricao').value = '';
+    document.getElementById('p-nivel').selectedIndex = 0;
+    modalTitulo.textContent = 'Cadastrar Novo Cargo';
+    modal.style.display = 'flex';
+  });
+
+  btnFechar.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    let permissoes = JSON.parse(localStorage.getItem('gm_permissoes')) || [];
+    const id = document.getElementById('permissao-id').value;
+
+    const dados = {
+      id: id ? Number(id) : Date.now(),
+      nome: document.getElementById('p-nome').value,
+      descricao: document.getElementById('p-descricao').value,
+      nivel: document.getElementById('p-nivel').value
+    };
+
+    if (id) {
+      const index = permissoes.findIndex(p => p.id == id);
+      if (index !== -1) permissoes[index] = dados;
+    } else {
+      permissoes.push(dados);
+    }
+
+    localStorage.setItem('gm_permissoes', JSON.stringify(permissoes));
+    modal.style.display = 'none';
+    renderTabela();
+  });
+
+  window.editarPermissao = function(id) {
+    const permissoes = JSON.parse(localStorage.getItem('gm_permissoes')) || [];
+    const p = permissoes.find(item => item.id == id);
+    if (p) {
+      document.getElementById('permissao-id').value = p.id;
+      document.getElementById('p-nome').value = p.nome;
+      document.getElementById('p-descricao').value = p.descricao;
+      document.getElementById('p-nivel').value = p.nivel;
+      modalTitulo.textContent = 'Editar Cargo / Permissão';
+      modal.style.display = 'flex';
+    }
+  };
+
+  window.excluirPermissao = function(id) {
+    if (confirm('Tem certeza que deseja excluir este cargo?')) {
+      let permissoes = JSON.parse(localStorage.getItem('gm_permissoes')) || [];
+      permissoes = permissoes.filter(p => p.id != id);
+      localStorage.setItem('gm_permissoes', JSON.stringify(permissoes));
+      renderTabela();
+    }
+  };
+
+  renderTabela();
+});
+</script>
+</body>
+</html>

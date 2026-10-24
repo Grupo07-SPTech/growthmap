@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Growth Map | Acesso rápido</title>
+  <link rel="stylesheet"
+    href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <link rel="stylesheet" href="../css/acessoRapido.css">
+  <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
+    <i class="fi fi-rr-menu-burger"></i>
+  </button>
+  <div class="sidebar">
+    <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
+    <div class="nav-indicador" id="nav-indicador"></div>
+
+    <div class="nav-item ativo">
+      <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./filiais.html"><i class="fi fi-rr-home"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./dashboardDiretorGeral.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
+    </div>
+    <a href="perfilUsuario.html">
+      <div class="perfil"></div>
+    </a>
+    <div class="sair"><a href="../index.html">Sair</a></div>
+  </div>
+
+  <div class="conteudo">
+    <div class="saudacao" id="saudacao"></div>
+    <h1 class="titulo">Acesso <span>rápido</span></h1>
+
+    <div class="busca">
+      <i class="fi fi-rr-search"></i>
+      <input type="text" id="busca" placeholder="Buscar serviço..." autocomplete="off">
+    </div>
+
+    <div class="grade" id="grade"></div>
+  </div>
+
+  <script>
+    const servicos = [
+      { nome: 'Painel de eventos', desc: 'Calendário de eventos proximos.', icone: 'fi-rr-calendar', href: './painelEventos.html', cor: 'vinho' },
+      { nome: 'Dashboard', desc: 'Indicadores e desempenho das turmas/unidades.', icone: 'fi-rr-chart-pie-alt', href: '.dashboardProfessor.html', cor: 'azul' },
+      { nome: 'Usuários', desc: 'Professores e permissões.', icone: 'fi-rr-users', href: './usuarios.html', cor: 'vinho' },
+      { nome: 'Configurações', desc: 'Preferências da conta e da plataforma.', icone: 'fi-rr-settings', href: './perfilUsuario.html', cor: 'azul' }
+    ];
+
+    const agora = new Date();
+    const h = agora.getHours();
+    const saud = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+    const dataTxt = agora.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+    document.getElementById('saudacao').textContent =
+      saud + ' · ' + dataTxt.charAt(0).toUpperCase() + dataTxt.slice(1);
+
+    const grade = document.getElementById('grade');
+
+    function renderServicos(filtro = '') {
+      const f = filtro.trim().toLowerCase();
+      const lista = servicos.filter(s =>
+        s.nome.toLowerCase().includes(f) || s.desc.toLowerCase().includes(f));
+
+      if (!lista.length) {
+        grade.innerHTML = '<p class="vazio">Nenhum serviço encontrado.</p>';
+        return;
+      }
+
+      grade.innerHTML = lista.map(s => `
+    <a class="servico ${s.cor}" href="${s.href}">
+      <span class="servico-icone"><i class="fi ${s.icone}"></i></span>
+      <span class="servico-nome">${s.nome}</span>
+      <span class="servico-desc">${s.desc}</span>
+      <span class="servico-seta"><i class="fi fi-rr-arrow-small-right"></i></span>
+    </a>`).join('');
+    }
+
+    document.getElementById('busca').addEventListener('input', e => renderServicos(e.target.value));
+    renderServicos();
+
+    const btnMenu = document.getElementById('btn-menu');
+    const overlay = document.getElementById('overlay');
+
+    if (window.innerWidth <= 900) document.body.classList.add('menu-fechado');
+
+    btnMenu.addEventListener('click', () => {
+      document.body.classList.toggle('menu-fechado');
+    });
+    overlay.addEventListener('click', () => {
+      document.body.classList.add('menu-fechado');
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Growth Map | Cadastro de Professor</title>
+<link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+<link rel="stylesheet" href="./css/cadastrarProfessor.css">
+<link rel="stylesheet" href="./css/style.css">
+<link rel="icon" href="./assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
+  <i class="fi fi-rr-menu-burger"></i>
+</button>
+  <div class="sidebar">
+    <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
+    <div class="nav-indicador" id="nav-indicador"></div>
+
+    <div class="nav-item">
+      <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./filiais.html"><i class="fi fi-rr-home"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./dashboardProfessor.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
+    </div>
+    <div class="nav-item ativo">
+      <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
+    </div>
+    <a href="perfilUsuario.html">
+      <div class="perfil"></div>
+    </a>
+    <div class="sair"><a href="../index.html">Sair</a></div>
+  </div>
+
+<div class="conteudo">
+  <h1 class="titulo">Cadastro de <span>Professor</span></h1>
+
+  <div class="card form-card">
+    <form id="form-professor">
+      <div class="form-grupo">
+        <label>Nome Completo:</label>
+        <input type="text" id="p-nome" required placeholder="Ex.: Carlos Alberto Souza">
+      </div>
+
+      <div class="form-linha">
+        <div class="form-grupo">
+          <label>E-mail Institucional:</label>
+          <input type="email" id="p-email" required placeholder="carlos.souza@growthmap.com">
+        </div>
+        <div class="form-grupo">
+          <label>CPF:</label>
+          <input type="text" id="p-cpf" required placeholder="000.000.000-00">
+        </div>
+      </div>
+
+      <div class="form-linha">
+        <div class="form-grupo">
+          <label>Área de Atuação:</label>
+          <select id="p-area" required>
+            <option value="">Selecione a área...</option>
+            <option value="Ciências Exatas">Ciências Exatas</option>
+            <option value="Ciências Naturais">Ciências Naturais</option>
+            <option value="Ciências Humanas">Ciências Humanas</option>
+            <option value="Linguagens">Linguagens</option>
+          </select>
+        </div>
+
+        <div class="form-grupo">
+          <label>Filial Vinculada:</label>
+          <select id="p-filial" required>
+            <option value="">Selecione a filial...</option>
+            <option value="1">Growth Map - Unidade Centro</option>
+            <option value="2">Growth Map - Unidade Paulista</option>
+            <option value="3">Growth Map - Unidade ABC</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-acoes">
+        <button type="submit" class="btn-salvar">Cadastrar Professor</button>
+        <button type="reset" class="btn-limpar">Limpar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="./js/menu.js"></script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+.teste{
+    color: white; 
+    border-radius: 10px;
+    font-size: 16px; 
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    
+
+}
+
+.upper{
+align-items:center;
+display: flex;
+justify-content:space-between;
+justify-items: center;
+}
+
+.card_upper{
+width: 150px;
+height: 35 px;
+border-radius: 10px;
+background-color: #7a1f3d;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+
+.kpis{
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.conteudo_kpis{
+    width: 247px;
+    height: 150px;
+    border-radius: 10px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    font-size: 12px;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.evolucao_medias_pai{
+    display: flex;
+}
+
+.evolucao_medias{
+    width: 1050px;
+    height: 380px; /* Aumentei um pouco a altura para acomodar o conteúdo perfeitamente */
+    background-color: white;
+    display: flex;
+    flex-direction: column;      /* ESSENCIAL: Joga os blocos (texto, botões, gráfico) um abaixo do outro */
+    justify-content: flex-start; /* Alinha o conteúdo ao topo */
+    align-items: flex-start;     /* Alinha tudo à esquerda */
+    margin-top: 30px;
+    margin-left: 10px;
+    border-radius: 16px;
+    padding: 24px;
+    gap: 20px;                   /* Espaçamento uniforme entre o texto, os botões e o gráfico */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.evolucao_medias_text{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.button_pai{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.evolucao_medias_button{
+    height: 36px;
+    padding: 0 18px;
+    background-color: white;
+    border: 1px solid #d9b8c2;
+    color: #7a1f3d;
+    border-radius: 20px;      
+    font-family: "Poppins", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.evolucao_medias_button:hover, 
+.evolucao_medias_button.ativo{
+    background-color: #7a1f3d;
+    color: white;
+    border-color: #7a1f3d;
+}
+
+.dashboard-1_pai {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-start; /* Alinha os cards à esquerda, acompanhando o restante da página */
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 20px;                   /* Espaçamento elegante entre os dois cards */
+    padding: 5px;
+    margin-left: 10px;
+}
+
+.acompanhamento {
+    width: 780px;
+    height: 275px;
+    border-radius: 16px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;               /* Dá respiro para o conteúdo não colar nas bordas */
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.equipe {
+    width: 480px;
+    height: 275px;
+    border-radius: 16px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;               /* Dá respiro para o conteúdo não colar nas bordas */
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Estilos auxiliares para o cabeçalho interno dos cards */
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-header h3 {
+    color: #7a1f3d;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: "Poppins", sans-serif;
+}
+
+.card-descricao {
+    color: #666;
+    font-size: 13px;
+    font-family: "Poppins", sans-serif;
+}
+
+
+
+.dashboard-2_pai {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 20px;                   /* Espaçamento elegante entre os dois cards */
+    padding: 5px;
+    margin-left: 10px;
+}
+
+/* Estilo compartilhado para os dois cards */
+.card-alerta, .card-atividade {
+    width: 610px;                /* Ajuste proporcional para caberem lado a lado perfeitamente */
+    height: 300px;
+    border-radius: 16px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Cabeçalho alinhado no canto superior esquerdo */
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-header h3 {
+    color: #7a1f3d;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Área interna para centralizar o ícone de aviso e os textos de "vazio" */
+.card-vazio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 8px;
+}
+
+.card-vazio span {
+    color: #888;
+    font-size: 13px;
+    font-family: "Poppins", sans-serif;
+}
+
+.card-vazio .endpoint {
+    color: #b5b5b5;
+    font-size: 11px;
+    font-family: "Poppins", sans-serif;
+}

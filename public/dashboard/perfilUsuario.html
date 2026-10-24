@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Growth Map | Meu Perfil</title>
+<link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+<link rel="stylesheet" href="./css/style.css">
+<link rel="stylesheet" href="./css/perfilUsuario.css">
+<link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
+  <i class="fi fi-rr-menu-burger"></i>
+</button>
+
+  <div class="sidebar">
+    <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
+    <div class="nav-indicador" id="nav-indicador"></div>
+
+    <div class="nav-item ativo">
+      <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./filiais.html"><i class="fi fi-rr-home"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./dashboardDiretorGeral.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
+    </div>
+    <div class="nav-item">
+      <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
+    </div>
+    <a href="perfilUsuario.html">
+      <div class="perfil"></div>
+    </a>
+    <div class="sair"><a href="../index.html">Sair</a></div>
+  </div>
+
+<div class="conteudo">
+  <div class="topo-pagina">
+    <h1 class="titulo">Meu <span>Perfil</span></h1>
+    <div class="acoes-topo">
+      <button type="button" id="btn-editar-perfil" class="btn-acao-topo"><i class="fi fi-rr-edit"></i> Editar Dados</button>
+      <button type="button" id="btn-excluir-conta" class="btn-acao-topo excluir"><i class="fi fi-rr-trash"></i> Excluir Conta</button>
+    </div>
+  </div>
+
+  <div class="card perfil-card">
+    <div class="perfil-cabecalho">
+      <div class="avatar-grande"></div>
+      <div>
+        <h2 id="view-nome" class="nome-usuario">Carregando...</h2>
+        <p id="view-cargo" class="cargo-usuario">-</p>
+      </div>
+    </div>
+
+    <!-- Visualização de Dados -->
+    <div id="modo-visualizacao" class="perfil-info">
+      <div class="info-grupo">
+        <span class="info-label">E-mail Institucional</span>
+        <span id="info-email" class="info-valor">-</span>
+      </div>
+      <div class="info-grupo">
+        <span class="info-label">CPF</span>
+        <span id="info-cpf" class="info-valor">-</span>
+      </div>
+      <div class="info-grupo">
+        <span class="info-label">Área de Atuação</span>
+        <span id="info-area" class="info-valor">-</span>
+      </div>
+      <div class="info-grupo">
+        <span class="info-label">Filial Vinculada</span>
+        <span id="info-filial" class="info-valor">-</span>
+      </div>
+    </div>
+
+    <form id="form-editar-perfil" class="form-perfil oculto">
+      <div class="form-grupo">
+        <label>Nome Completo:</label>
+        <input type="text" id="p-nome" required>
+      </div>
+
+      <div class="form-linha">
+        <div class="form-grupo">
+          <label>E-mail Institucional:</label>
+          <input type="email" id="p-email" required>
+        </div>
+        <div class="form-grupo">
+          <label>CPF:</label>
+          <input type="text" id="p-cpf" required>
+        </div>
+      </div>
+
+      <div class="form-linha">
+        <div class="form-grupo">
+          <label>Área de Atuação:</label>
+          <select id="p-area" required>
+            <option value="Ciências Exatas">Ciências Exatas</option>
+            <option value="Ciências Naturais">Ciências Naturais</option>
+            <option value="Ciências Humanas">Ciências Humanas</option>
+            <option value="Linguagens">Linguagens</option>
+          </select>
+        </div>
+
+        <div class="form-grupo">
+          <label>Filial Vinculada:</label>
+          <select id="p-filial" required>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-acoes">
+        <button type="submit" class="btn-salvar">Salvar Alterações</button>
+        <button type="button" id="btn-cancelar" class="btn-limpar">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+    
+<script src="../js/menu.js"></script>
+</body>
+</html>
