@@ -1,3 +1,5 @@
+/* Estilos específicos para a Dashboard do Professor - Growth Map */
+/* Cabeçalho de Filtros */
 .dash-header {
 display: flex;
 justify-content: space-between;
@@ -9,7 +11,7 @@ box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 border: 1px solid rgba(122, 31, 61, 0.1);
 flex-wrap: wrap;
 gap: 16px;
-margin-bottom: 32px; 
+margin-bottom: 32px;
 }
 .dash-title h1 {
 font-size: 22px;
@@ -53,12 +55,12 @@ transition: border-color 0.2s;
 .filter-group select:focus {
 border-color: #7a1f3d;
 }
-/* KPIs Grid - Com mais distância /
+
 .kpi-grid {
 display: grid;
 grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-gap: 24px; /* Aumenta o espaço entre os cards de KPIs /
-margin-bottom: 36px; /* DISTÂNCIA CONSIDERÁVEL entre os KPIs e os Gráficos /
+gap: 24px;
+margin-bottom: 36px;
 }
 .kpi-card {
 background: #ffffff;
@@ -92,7 +94,7 @@ font-size: 12px;
 font-weight: 500;
 color: #555;
 }
-/* Charts Grid /
+
 .charts-grid {
 display: grid;
 grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
