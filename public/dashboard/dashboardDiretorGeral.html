@@ -106,37 +106,8 @@
           <p>Pontos, média das 4 áreas objetivas. Cada município corresponde a uma unidade da rede.</p>
         </div>
 
-        <div class="city-bars" role="img" aria-label="Diferença de pontuação por município">
-          <div class="city-row negative">
-            <div class="city-label"><strong>Itu</strong><span>1 unidade</span></div>
-            <div class="bar-axis"><span class="zero-line"></span><span class="bar neg" style="--value: 76%;"></span>
-            </div>
-            <strong class="bar-number">-23</strong>
-          </div>
-          <div class="city-row negative">
-            <div class="city-label"><strong>Sorocaba</strong><span>1 unidade</span></div>
-            <div class="bar-axis"><span class="zero-line"></span><span class="bar neg" style="--value: 66%;"></span>
-            </div>
-            <strong class="bar-number">-20</strong>
-          </div>
-          <div class="city-row negative">
-            <div class="city-label"><strong>Piracicaba</strong><span>1 unidade</span></div>
-            <div class="bar-axis"><span class="zero-line"></span><span class="bar neg" style="--value: 24%;"></span>
-            </div>
-            <strong class="bar-number">-7</strong>
-          </div>
-          <div class="city-row positive">
-            <div class="city-label"><strong>Jundiaí</strong><span>1 unidade</span></div>
-            <div class="bar-axis"><span class="zero-line"></span><span class="bar pos" style="--value: 20%;"></span>
-            </div>
-            <strong class="bar-number">+6</strong>
-          </div>
-          <div class="city-row positive">
-            <div class="city-label"><strong>Campinas</strong><span>1 unidade</span></div>
-            <div class="bar-axis"><span class="zero-line"></span><span class="bar pos" style="--value: 36%;"></span>
-            </div>
-            <strong class="bar-number">+11</strong>
-          </div>
+        <div class="director-chart-container network-chart-container">
+          <canvas id="graficoMunicipios"></canvas>
         </div>
 
         <div class="legend">
@@ -243,6 +214,8 @@
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <script src="../js/dashboardDiretorCharts.js"></script>
   <script src="../js/menu.js"></script>
 </body>
 
