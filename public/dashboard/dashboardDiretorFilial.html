@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growth Map | Dashboard Empresa</title>
-    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/dashboardDiretorFilial.css">
-    <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growth Map | Dashboard Empresa</title>
+  <link rel="stylesheet"
+    href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/dashboardDiretorFilial.css">
+  <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-<button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
-  <i class="fi fi-rr-menu-burger"></i>
-</button>
+  <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
+    <i class="fi fi-rr-menu-burger"></i>
+  </button>
   <div class="sidebar">
     <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
     <div class="nav-indicador" id="nav-indicador"></div>
@@ -38,7 +41,196 @@
     </a>
     <div class="sair"><a href="../index.html">Sair</a></div>
   </div>
-    
-<script src="../js/menu.js"></script>
+
+  <main class="conteudo diretor-dashboard">
+    <header class="dash-header">
+      <div class="dash-title">
+        <a class="back-link" href="./dashboardDiretorGeral.html"><i class="fi fi-rr-arrow-left"></i> Visão rede</a>
+        <span class="eyebrow">Growth Map · Visão da unidade</span>
+        <h1>Unidade Sorocaba</h1>
+        <p>Análise local de desempenho, capacidade docente e aderência do planejamento pedagógico.</p>
+      </div>
+
+      <div class="dash-controls">
+        <nav class="view-switch" aria-label="Alternar visão do diretor">
+          <a class="view-button" href="./dashboardDiretorGeral.html">Visão rede</a>
+          <a class="view-button ativo" href="./dashboardDiretorFilial.html">Visão filial</a>
+        </nav>
+        <div class="filter-group">
+          <label for="unidade">Unidade</label>
+          <select id="unidade">
+            <option selected>Sorocaba</option>
+            <option>Itu</option>
+            <option>Piracicaba</option>
+            <option>Jundiaí</option>
+            <option>Campinas</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="ano-enem">Ano do ENEM</label>
+          <select id="ano-enem">
+            <option selected>2025</option>
+            <option>2024</option>
+            <option>2023</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <div class="info-banner">
+      <i class="fi fi-rr-info"></i>
+      <span>As notas do ENEM são do município de Sorocaba, não dos alunos desta unidade.</span>
+    </div>
+
+    <section class="kpi-grid" aria-label="Indicadores principais da unidade">
+      <article class="kpi-card warning">
+        <span class="kpi-title">DIFERENÇA VS. ESTADO</span>
+        <strong class="kpi-value">−20 pts</strong>
+        <span class="kpi-footer">Média das 4 áreas objetivas. Área mais fraca: Matemática (−41 pts).</span>
+      </article>
+
+      <article class="kpi-card">
+        <span class="kpi-title">BASE DE CANDIDATOS</span>
+        <strong class="kpi-value">9.840</strong>
+        <span class="kpi-footer">Participantes do ENEM 2025 no município, +3,2% em relação a 2024.</span>
+      </article>
+
+      <article class="kpi-card danger coverage-card">
+        <span class="kpi-title">COBERTURA DE PROFESSORES</span>
+        <strong class="kpi-value">0 prof.</strong>
+        <span class="kpi-footer">Na área de menor média: Matemática.</span>
+        <div class="coverage-tags"><span>Ling. 3</span><span>Hum. 2</span><span>Nat. 1</span><span class="alert">Mat.
+            0</span><span>Red. 1</span></div>
+      </article>
+
+      <article class="kpi-card warning">
+        <span class="kpi-title">ADERÊNCIA PEDAGÓGICA</span>
+        <strong class="kpi-value">8%</strong>
+        <span class="kpi-footer">1 de 12 eventos do período está na área de menor média: Matemática.</span>
+      </article>
+    </section>
+
+    <section class="branch-grid top-grid">
+      <article class="chart-card area-chart-card">
+        <div class="chart-header">
+          <h2>Município, estado e rede por área</h2>
+          <p>Média no ENEM (escala de 0 a 700) em Sorocaba, no estado e nos municípios atendidos pela rede.</p>
+        </div>
+
+        <div class="grouped-bars" role="img" aria-label="Comparativo das notas do ENEM por área">
+          <div class="y-grid"><span>650</span><span>600</span><span>550</span><span>500</span><span>450</span></div>
+          <div class="bar-groups">
+            <div class="bar-group">
+              <div class="bars"><span class="score city" style="--score:531" data-value="531"></span><span
+                  class="score state" style="--score:540" data-value="540"></span><span class="score network"
+                  style="--score:541" data-value="541"></span></div><strong>Linguagens</strong>
+            </div>
+            <div class="bar-group">
+              <div class="bars"><span class="score city" style="--score:550" data-value="550"></span><span
+                  class="score state" style="--score:556" data-value="556"></span><span class="score network"
+                  style="--score:560" data-value="560"></span></div><strong>Humanas</strong>
+            </div>
+            <div class="bar-group">
+              <div class="bars"><span class="score city" style="--score:484" data-value="484"></span><span
+                  class="score state" style="--score:506" data-value="506"></span><span class="score network"
+                  style="--score:500" data-value="500"></span></div><strong>Natureza</strong>
+            </div>
+            <div class="bar-group">
+              <div class="bars"><span class="score city" style="--score:487" data-value="487"></span><span
+                  class="score state" style="--score:528" data-value="528"></span><span class="score network"
+                  style="--score:516" data-value="516"></span></div><strong>Matemática</strong>
+            </div>
+            <div class="bar-group">
+              <div class="bars"><span class="score city" style="--score:592" data-value="592"></span><span
+                  class="score state" style="--score:610" data-value="610"></span><span class="score network"
+                  style="--score:608" data-value="608"></span></div><strong>Redação</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="legend"><span><i class="legend-dot city"></i>Sorocaba</span><span><i
+              class="legend-dot state"></i>Estado</span><span><i class="legend-dot network"></i>Média da rede</span>
+        </div>
+      </article>
+
+      <article class="chart-card effort-card">
+        <div class="chart-header">
+          <h2>Necessidade x esforço por área</h2>
+          <p>Diferença do município vs. estado ao lado do número de eventos da unidade.</p>
+        </div>
+
+        <div class="effort-table">
+          <div class="effort-head"><span>Área</span><span>Diferença vs. estado</span><span>Eventos</span></div>
+          <div class="effort-row"><strong>Linguagens</strong>
+            <div class="need"><i style="--need:22%"></i><b>−9</b></div>
+            <div class="events"><i style="--events:83%"></i><b>5</b></div>
+          </div>
+          <div class="effort-row"><strong>Humanas</strong>
+            <div class="need"><i style="--need:15%"></i><b>−6</b></div>
+            <div class="events"><i style="--events:50%"></i><b>3</b></div>
+          </div>
+          <div class="effort-row"><strong>Natureza</strong>
+            <div class="need"><i style="--need:54%"></i><b>−22</b></div>
+            <div class="events"><i style="--events:34%"></i><b>2</b></div>
+          </div>
+          <div class="effort-row priority"><strong>Matemática</strong>
+            <div class="need"><i style="--need:100%"></i><b>−41</b></div>
+            <div class="events"><i style="--events:17%"></i><b>1</b></div>
+          </div>
+          <div class="effort-row"><strong>Redação</strong>
+            <div class="need"><i style="--need:44%"></i><b>−18</b></div>
+            <div class="events"><i style="--events:17%"></i><b>1</b></div>
+          </div>
+        </div>
+        <p class="chart-note"><i class="fi fi-rr-bulb"></i>A linha destacada combina a maior necessidade com o menor
+          esforço registrado.</p>
+      </article>
+    </section>
+
+    <section class="branch-grid bottom-grid">
+      <article class="chart-card evolution-card">
+        <div class="chart-header">
+          <h2>Evolução do município por área</h2>
+          <p>Média no ENEM de 2023 a 2025. A última coluna mostra a variação no período.</p>
+        </div>
+
+        <div class="evolution-table">
+          <div class="evolution-row evolution-head">
+            <span></span><span>2023</span><span>2024</span><span>2025</span><span>Variação</span></div>
+          <div class="evolution-row"><strong>Linguagens</strong><span class="grade g3">522</span><span
+              class="grade g3">527</span><span class="grade g3">531</span><b class="positive">+9</b></div>
+          <div class="evolution-row"><strong>Humanas</strong><span class="grade g4">541</span><span
+              class="grade g4">546</span><span class="grade g4">550</span><b class="positive">+9</b></div>
+          <div class="evolution-row"><strong>Natureza</strong><span class="grade g1">478</span><span
+              class="grade g1">481</span><span class="grade g1">484</span><b class="positive">+6</b></div>
+          <div class="evolution-row"><strong>Matemática</strong><span class="grade g2">498</span><span
+              class="grade g2">492</span><span class="grade g1">487</span><b class="negative">−11</b></div>
+          <div class="evolution-row"><strong>Redação</strong><span class="grade g5">575</span><span
+              class="grade g5">584</span><span class="grade g5">592</span><b class="positive">+17</b></div>
+        </div>
+
+        <div class="grade-legend"><span><i class="g1"></i>até 490</span><span><i class="g2"></i>491 a 520</span><span><i
+              class="g3"></i>521 a 550</span><span><i class="g4"></i>551 a 580</span><span><i class="g5"></i>acima de
+            580</span></div>
+      </article>
+
+      <article class="chart-card quick-read-card">
+        <div class="chart-header">
+          <h2>Leitura rápida: Matemática</h2>
+          <p>Resumo do principal ponto de atenção para a coordenação.</p>
+        </div>
+        <div class="quick-stat"><strong>−41</strong><span>pontos abaixo do estado, com queda de 11 pontos desde
+            2023</span></div>
+        <div class="quick-stat"><strong>0</strong><span>professores cadastrados na área nesta unidade</span></div>
+        <div class="quick-stat"><strong>1/12</strong><span>eventos do período agendados na área</span></div>
+        <div class="decision-note"><i class="fi fi-rr-shield-check"></i>
+          <p>A plataforma mostra a evidência. A decisão de priorizar continua com a coordenação.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="../js/menu.js"></script>
 </body>
+
 </html>

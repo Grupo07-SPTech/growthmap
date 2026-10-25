@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growth Map | Dashboard Empresa</title>
-    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/dashboardDiretorGeral.css">
-    <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growth Map | Dashboard Empresa</title>
+  <link rel="stylesheet"
+    href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/dashboardDiretorGeral.css">
+  <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
   <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
-  <i class="fi fi-rr-menu-burger"></i>
-</button>
+    <i class="fi fi-rr-menu-burger"></i>
+  </button>
   <div class="sidebar">
     <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
     <div class="nav-indicador" id="nav-indicador"></div>
@@ -38,7 +41,209 @@
     </a>
     <div class="sair"><a href="../index.html">Sair</a></div>
   </div>
-    
-<script src="../js/menu.js"></script>
+
+  <main class="conteudo diretor-dashboard">
+    <header class="dash-header">
+      <div class="dash-title">
+        <span class="eyebrow">Growth Map · Visão estratégica</span>
+        <h1>Dashboard do Diretor</h1>
+        <p>Panorama da rede com desempenho regional, cobertura pedagógica e oportunidades de expansão.</p>
+      </div>
+
+      <div class="dash-controls">
+        <nav class="view-switch" aria-label="Alternar visão do diretor">
+          <a class="view-button ativo" href="./dashboardDiretorGeral.html">Visão rede</a>
+          <a class="view-button" href="./dashboardDiretorFilial.html">Visão filial</a>
+        </nav>
+        <div class="filter-group">
+          <label for="ano-enem">Ano do ENEM</label>
+          <select id="ano-enem">
+            <option selected>2025</option>
+            <option>2024</option>
+            <option>2023</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <div class="info-banner">
+      <i class="fi fi-rr-info"></i>
+      <span>As notas do ENEM representam os municípios onde as unidades estão localizadas, não os alunos de cada
+        unidade.</span>
+    </div>
+
+    <section class="kpi-grid" aria-label="Indicadores principais da rede">
+      <article class="kpi-card warning">
+        <span class="kpi-title">DIFERENÇA VS. ESTADO</span>
+        <strong class="kpi-value">-3 pts</strong>
+        <span class="kpi-footer">Média das 4 áreas objetivas dos 5 municípios atendidos, ponderada por
+          participantes.</span>
+      </article>
+
+      <article class="kpi-card">
+        <span class="kpi-title">BASE DE CANDIDATOS</span>
+        <strong class="kpi-value">33.440</strong>
+        <span class="kpi-footer">Participantes do ENEM 2025 nos municípios atendidos pela rede.</span>
+      </article>
+
+      <article class="kpi-card warning">
+        <span class="kpi-title">COBERTURA DE PROFESSORES</span>
+        <strong class="kpi-value">3 de 5</strong>
+        <span class="kpi-footer">Unidades sem professor na área de menor média do município.</span>
+      </article>
+
+      <article class="kpi-card danger">
+        <span class="kpi-title">ADERÊNCIA PEDAGÓGICA</span>
+        <strong class="kpi-value">58%</strong>
+        <span class="kpi-footer">29 de 50 eventos do período estão na área de menor média do município.</span>
+      </article>
+    </section>
+
+    <section class="network-grid">
+      <article class="chart-card city-gap-card">
+        <div class="chart-header">
+          <h2>Diferença vs. estado por município atendido</h2>
+          <p>Pontos, média das 4 áreas objetivas. Cada município corresponde a uma unidade da rede.</p>
+        </div>
+
+        <div class="city-bars" role="img" aria-label="Diferença de pontuação por município">
+          <div class="city-row negative">
+            <div class="city-label"><strong>Itu</strong><span>1 unidade</span></div>
+            <div class="bar-axis"><span class="zero-line"></span><span class="bar neg" style="--value: 76%;"></span>
+            </div>
+            <strong class="bar-number">-23</strong>
+          </div>
+          <div class="city-row negative">
+            <div class="city-label"><strong>Sorocaba</strong><span>1 unidade</span></div>
+            <div class="bar-axis"><span class="zero-line"></span><span class="bar neg" style="--value: 66%;"></span>
+            </div>
+            <strong class="bar-number">-20</strong>
+          </div>
+          <div class="city-row negative">
+            <div class="city-label"><strong>Piracicaba</strong><span>1 unidade</span></div>
+            <div class="bar-axis"><span class="zero-line"></span><span class="bar neg" style="--value: 24%;"></span>
+            </div>
+            <strong class="bar-number">-7</strong>
+          </div>
+          <div class="city-row positive">
+            <div class="city-label"><strong>Jundiaí</strong><span>1 unidade</span></div>
+            <div class="bar-axis"><span class="zero-line"></span><span class="bar pos" style="--value: 20%;"></span>
+            </div>
+            <strong class="bar-number">+6</strong>
+          </div>
+          <div class="city-row positive">
+            <div class="city-label"><strong>Campinas</strong><span>1 unidade</span></div>
+            <div class="bar-axis"><span class="zero-line"></span><span class="bar pos" style="--value: 36%;"></span>
+            </div>
+            <strong class="bar-number">+11</strong>
+          </div>
+        </div>
+
+        <div class="legend">
+          <span><i class="legend-dot below"></i>Abaixo do estado</span>
+          <span><i class="legend-dot above"></i>Acima do estado</span>
+        </div>
+      </article>
+
+      <article class="chart-card heatmap-card">
+        <div class="chart-header">
+          <h2>Diferença vs. estado por município e área</h2>
+          <p>Pontos. Mostra em qual área cada praça apresenta maior necessidade.</p>
+        </div>
+
+        <div class="heatmap-table">
+          <div class="heatmap-row heatmap-head">
+            <span></span><span>Linguagens</span><span>Humanas</span><span>Natureza</span><span>Matemática</span><span>Redação</span>
+          </div>
+          <div class="heatmap-row"><strong>Itu</strong><span class="h neg2">-14</span><span
+              class="h neg2">-12</span><span class="h neg3">-28</span><span class="h neg4">-38</span><span
+              class="h neg3">-27</span></div>
+          <div class="heatmap-row"><strong>Sorocaba</strong><span class="h neutral">−9</span><span
+              class="h neutral">-6</span><span class="h neg3">-22</span><span class="h neg4">-41</span><span
+              class="h neg2">-18</span></div>
+          <div class="heatmap-row"><strong>Piracicaba</strong><span class="h neutral">−3</span><span
+              class="h neutral">-2</span><span class="h neutral">-9</span><span class="h neg2">-14</span><span
+              class="h neutral">-6</span></div>
+          <div class="heatmap-row"><strong>Jundiaí</strong><span class="h neutral">+8</span><span
+              class="h neutral">+10</span><span class="h neutral">+3</span><span class="h neutral">+4</span><span
+              class="h neutral">+5</span></div>
+          <div class="heatmap-row"><strong>Campinas</strong><span class="h pos2">+12</span><span
+              class="h pos2">+15</span><span class="h neutral">+8</span><span class="h neutral">+10</span><span
+              class="h pos2">+14</span></div>
+        </div>
+
+        <div class="heat-legend">
+          <span><i class="heat-swatch neg4"></i>≤ -30</span>
+          <span><i class="heat-swatch neg2"></i>-30 a -10</span>
+          <span><i class="heat-swatch neutral"></i>-10 a +10</span>
+          <span><i class="heat-swatch pos2"></i>+10 a +30</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="chart-card opportunity-card">
+      <div class="chart-header opportunity-header">
+        <div>
+          <h2>Mapa de oportunidade de expansão</h2>
+          <p>Índice de 0 a 100 por município: participantes x déficit vs. estado, normalizado. Mede necessidade
+            pedagógica e volume, não poder de compra.</p>
+        </div>
+        <span class="score-pill">Índice 0-100</span>
+      </div>
+
+      <div class="opportunity-layout">
+        <div class="opportunity-map" role="img" aria-label="Mapa esquemático de oportunidade de expansão">
+          <span class="map-grid-line vertical v1"></span><span class="map-grid-line vertical v2"></span><span
+            class="map-grid-line vertical v3"></span>
+          <span class="map-grid-line horizontal h1"></span><span class="map-grid-line horizontal h2"></span><span
+            class="map-grid-line horizontal h3"></span>
+          <span class="hotspot hs1"></span><span class="hotspot hs2"></span><span class="hotspot hs3"></span><span
+            class="hotspot hs4"></span>
+          <span class="map-point itu"><i></i><b>Itu</b></span>
+          <span class="map-point sorocaba"><i></i><b>Sorocaba</b></span>
+          <span class="map-point jundiai"><i></i><b>Jundiaí</b></span>
+          <span class="map-point campinas"><i></i><b>Campinas</b></span>
+          <span class="map-point piracicaba"><i></i><b>Piracicaba</b></span>
+          <small>Esquema ilustrativo. O mapa real usa a malha municipal do IBGE.</small>
+        </div>
+
+        <div class="opportunity-list">
+          <h3>Maiores oportunidades</h3>
+          <div class="opp-row"><span class="rank">1</span>
+            <div class="opp-name"><strong>Hortolândia</strong><small>sem unidade</small></div>
+            <div class="opp-bar"><i style="--score:91%"></i></div><strong>91</strong>
+          </div>
+          <div class="opp-row"><span class="rank">2</span>
+            <div class="opp-name"><strong>Sorocaba</strong><small class="served">atendido</small></div>
+            <div class="opp-bar"><i style="--score:84%"></i></div><strong>84</strong>
+          </div>
+          <div class="opp-row"><span class="rank">3</span>
+            <div class="opp-name"><strong>Sumaré</strong><small>sem unidade</small></div>
+            <div class="opp-bar"><i style="--score:80%"></i></div><strong>80</strong>
+          </div>
+          <div class="opp-row"><span class="rank">4</span>
+            <div class="opp-name"><strong>Votorantim</strong><small>sem unidade</small></div>
+            <div class="opp-bar"><i style="--score:73%"></i></div><strong>73</strong>
+          </div>
+          <div class="opp-row"><span class="rank">5</span>
+            <div class="opp-name"><strong>Itu</strong><small class="served">atendido</small></div>
+            <div class="opp-bar"><i style="--score:69%"></i></div><strong>69</strong>
+          </div>
+          <div class="opp-row"><span class="rank">6</span>
+            <div class="opp-name"><strong>Salto</strong><small>sem unidade</small></div>
+            <div class="opp-bar"><i style="--score:61%"></i></div><strong>61</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="map-legend">
+        <span>Baixa</span><i class="gradient-scale"></i><span>Alta oportunidade</span><span
+          class="existing-unit"><i></i>Unidade existente</span>
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/menu.js"></script>
 </body>
+
 </html>
