@@ -694,4 +694,23 @@
     .evolution-row {
         grid-template-columns: 80px repeat(3, 1fr) 43px
     }
+
+    .director-chart-container {
+        position: relative;
+        width: 100%;
+        height: 315px;
+        min-height: 250px;
+    }
+
+    .director-chart-container canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    @media (max-width: 760px) {
+        .director-chart-container {
+            height: 285px;
+        }
+    }
 }
