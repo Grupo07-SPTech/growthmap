@@ -9,11 +9,14 @@
     <link rel="stylesheet" href="./css/dashboardCoordenador.css">
     <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 <body>
     <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
   <i class="fi fi-rr-menu-burger"></i>
 </button>
+
   <div class="sidebar">
     <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
     <div class="nav-indicador" id="nav-indicador"></div>
@@ -39,10 +42,6 @@
     <div class="sair"><a href="../index.html">Sair</a></div>
   </div>
 
-<script src="../js/menu.js"></script>
-
-  <script src="../js/menu.js"></script>
-
   
 <div class="conteudo">
   <div class="upper">
@@ -53,6 +52,8 @@
 
     <div style="color: white; font-size: 15px;" class="card_upper">Unidade: Brás</div>
   </div>
+
+  
 
   <div class="kpis">
     <div class="conteudo_kpis">
@@ -77,8 +78,6 @@
   </div>
 
   <div class="evolucao_medias">
-  
-  <!-- Bloco de Texto (Título e Descrição) -->
   <div class="evolucao_medias_text">
     <div class="text_pai" style="display: flex; align-items: center; gap: 8px;">
       <i class="fi fi-rr-chart-line-up" style="color: #7a1f3d; font-size: 20px;"></i>
@@ -90,25 +89,25 @@
   </div>
 
   <div class="button_pai" style="display: flex; gap: 10px; flex-wrap: wrap;">
-    <button class="evolucao_medias_button ativo" style="background-color: #7a1f3d; color: white;">Todas</button>
-    <button class="evolucao_medias_button">C.Natureza</button>
-    <button class="evolucao_medias_button">C.Humanas</button>
-    <button class="evolucao_medias_button">Linguagens</button>
-    <button class="evolucao_medias_button">Matemática</button>
-    <button class="evolucao_medias_button">Redação</button>
-  </div>
+  <button class="evolucao_medias_button ativo">C.Natureza</button>
+  <button class="evolucao_medias_button">C.Humanas</button>
+  <button class="evolucao_medias_button">Linguagens</button>
+  <button class="evolucao_medias_button">Matemática</button>
+  <button class="evolucao_medias_button">Redação</button>
+</div>
+    <div id="chart"></div>
   </div>
 
 
  <div class="dashboard-1">
   <div class="dashboard-1_pai">
-    
 
     <div class="acompanhamento">
       <div class="card-header">
         <h3>Painel de Acompanhamento</h3>
       </div>
       <p class="card-descricao">Acompanhe o registro das atividades e o progresso da unidade.</p>
+       <div id="chartA"></div>
     </div>
     
     <div class="equipe">
@@ -116,6 +115,44 @@
         <h3>Equipe da Unidade</h3>
       </div>
       <p class="card-descricao">Membros e coordenadores responsáveis.</p>
+      <div class="lista-equipe">
+  <div class="membro">
+    <div class="avatar">MS</div>
+    <div class="membro-info">
+      <span class="membro-nome">Maria Souza</span>
+      <span class="membro-cargo">Coordenadora</span>
+    </div>
+    <span class="tag tag-coord">Coordenação</span>
+  </div>
+
+  <div class="membro">
+    <div class="avatar">JL</div>
+    <div class="membro-info">
+      <span class="membro-nome">João Lima</span>
+      <span class="membro-cargo">Professor de Matemática</span>
+    </div>
+    <span class="tag">Professor</span>
+  </div>
+
+  <div class="membro">
+    <div class="avatar">AC</div>
+    <div class="membro-info">
+      <span class="membro-nome">Ana Costa</span>
+      <span class="membro-cargo">Professora de Biologia</span>
+    </div>
+    <span class="tag">Professor</span>
+  </div>
+
+  <div class="membro">
+    <div class="avatar">AC</div>
+    <div class="membro-info">
+      <span class="membro-nome">Rafael Pereira</span>
+      <span class="membro-cargo">Professor de Química</span>
+    </div>
+    <span class="tag">Professor</span>
+  </div>
+
+</div>
     </div>
 
   </div>
@@ -133,28 +170,221 @@
       <div class="card-header">
         <h3>Alertas Configurados</h3>
       </div>
+      <div id="chartE"></div>
     </div>
 
     
     <div class="card-atividade">
       <div class="card-header">
         <h3>Atividade Recente</h3>
+      </div>
+      <div class="lista-atividade">
+  <div class="atividade-item">
+    <div class="atividade-icone"><i class="fi fi-rr-chart-line-up"></i></div>
+    <div class="atividade-texto">
+      <span class="atividade-titulo">Novo acompanhamento registrado</span>
+      <span class="atividade-sub">Maria Souza · Biológicas</span>
     </div>
-      
+    <span class="atividade-tempo">há 2h</span>
+  </div>
+
+  <div class="atividade-item">
+    <div class="atividade-icone"><i class="fi fi-rr-bell"></i></div>
+    <div class="atividade-texto">
+      <span class="atividade-titulo">Alerta gerado</span>
+      <span class="atividade-sub">Queda na média de C.Natureza</span>
+    </div>
+    <span class="atividade-tempo">há 5h</span>
+  </div>
+
+
+  <div class="atividade-item">
+    <div class="atividade-icone"><i class="fi fi-rr-edit"></i></div>
+    <div class="atividade-texto">
+      <span class="atividade-titulo">Registro atualizado</span>
+      <span class="atividade-sub">João Lima · Matemática</span>
+    </div>
+    <span class="atividade-tempo">3 dias</span>
+  </div>
+</div>
      
     </div>
 
   </div>
 </div>
-</div>
-
-
-
 
 </div>
 
+
+
+
+</div>
+<script src="../js/menu.js"></script>
+<script>
+  const VINHO = '#7a1f3d';
+
+  /* Configurações comuns a todos os gráficos */
+  const base = {
+    chart: {
+      type: 'line',
+      zoom: { enabled: false },
+      toolbar: { show: false },
+      fontFamily: 'Poppins, sans-serif',
+    },
+    dataLabels: { enabled: false },
+    stroke: { curve: 'smooth', width: 3 },
+    markers: { size: 4 },
+    grid: { borderColor: '#f1f1f1' },
+    legend: { position: 'top', horizontalAlign: 'right' },
+  };
+
+  const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+
+  /* Dashboard da evolução das médias do enem */
+const anos = ['2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'];
+
+const notas = {
+  'C.Natureza': [450, 495, 500, 490, 510, 530, 565, 605],
+  'C.Humanas':  [510, 530, 530, 525, 560, 570, 560, 590],
+  'Linguagens': [540, 555, 560, 570, 575, 605, 610, 595],
+  'Matemática': [580, 585, 600, 580, 595, 610, 605, 620],
+  'Redação':    [560, 575, 590, 570, 600, 620, 640, 660],
+};
+
+const metas = {
+  'C.Natureza': 520,
+  'C.Humanas':  550,
+  'Linguagens': 580,
+  'Matemática': 610,
+  'Redação':    620,
+};
+
+function linhaMeta(area) {
+  return [{
+    y: metas[area],
+    borderColor: '#2ba84a',
+    strokeDashArray: 6,
+    label: {
+      text: 'Meta: ' + metas[area],
+      position: 'left',
+      textAnchor: 'start',
+      style: { color: '#fff', background: '#2ba84a', fontSize: '11px' },
+    },
+  }];
+}
+
+const chart = new ApexCharts(document.querySelector('#chart'), {
+  series: [{ name: 'C.Natureza', data: notas['C.Natureza'] }],
+  chart: { height: 320, type: 'line', zoom: { enabled: false }, toolbar: { show: false }, fontFamily: 'Poppins, sans-serif' },
+  colors: ['#7a1f3d'],
+  stroke: { curve: 'smooth', width: 3 },
+  markers: { size: 4 },
+  dataLabels: { enabled: false },
+  grid: { borderColor: '#f1f1f1' },
+  xaxis: { categories: anos },
+  yaxis: { min: 400, max: 700 },
+  annotations: { yaxis: linhaMeta('C.Natureza') },
+  legend: { show: false },
+
+   responsive: [{
+    breakpoint: 600,
+    options: {
+      chart: { height: 240 },
+      markers: { size: 3 },
+    },
+  }],
+});
+chart.render();
+
+/* Filtros por área */
+const botoes = document.querySelectorAll('.evolucao_medias_button');
+
+botoes.forEach(botao => {
+  botao.addEventListener('click', () => {
+    botoes.forEach(b => b.classList.remove('ativo'));
+    botao.classList.add('ativo');
+
+    const area = botao.textContent.trim();
+    chart.updateOptions({
+      series: [{ name: area, data: notas[area] }],
+      annotations: { yaxis: linhaMeta(area) },
+    });
+  });
+});
+
+
+ 
+
+
+
+ new ApexCharts(document.querySelector('#chartA'), {
+  ...base,
+  chart: { ...base.chart, height: 350 },
+  series: [{ name: 'Registros', data: [4, 5, 8, 9, 5, 6, 4, 9, 7, 6, 8, 9] }],
+  colors: [VINHO],
+  xaxis: { categories: meses },
+  yaxis: { title: { text: 'Registros por mês' }, min: 0, max: 12, tickAmount: 6 },
+  annotations: {
+    yaxis: [{
+      y: 7,
+      borderColor: '#2ba84a',
+      strokeDashArray: 6,
+      label: {
+        text: 'Meta: 7',
+        position: 'left',
+        textAnchor: 'start',
+        style: { color: '#fff', background: '#2ba84a', fontSize: '11px' },
+      },
+    }],
+  },
+  legend: { show: false },
+
+   responsive: [{
+    breakpoint: 600,
+    options: {
+      chart: { height: 240 },
+      yaxis: { title: { text: undefined }, min: 0, max: 12, tickAmount: 6 },
+    },
+  }],
+}).render();
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  /* ===== 3. Alertas configurados ===== */
+  new ApexCharts(document.querySelector('#chartE'), {
+    ...base,
+    chart: { ...base.chart, height: 230 },
+    series: [{ name: 'Alertas', data: [1, 2, 3, 2, 3, 1, 5, 6, 2, 3, 3, 3] }],
+    colors: ['#7a1f3d'],
+    xaxis: { categories: meses },
+    yaxis: { title: { text: 'Alertas' }, min: 0, tickAmount: 4 },
+    legend: { show: false },
+
+     responsive: [{
+    breakpoint: 600,
+    options: {
+      chart: { height: 220 },
+      yaxis: { title: { text: undefined }, min: 0, tickAmount: 4 },
+    },
+  }],
+  }).render();
+
+  
+</script>
 </body>
 </html>
-  
+
 </body>
 </html>

@@ -18,7 +18,7 @@ justify-items: center;
 
 .card_upper{
 width: 150px;
-height: 35 px;
+height: 35px;
 border-radius: 10px;
 background-color: #7a1f3d;
 display: flex;
@@ -53,17 +53,17 @@ align-items: center;
 
 .evolucao_medias{
     width: 1050px;
-    height: 380px; /* Aumentei um pouco a altura para acomodar o conteúdo perfeitamente */
+    height: 500px; 
     background-color: white;
     display: flex;
-    flex-direction: column;      /* ESSENCIAL: Joga os blocos (texto, botões, gráfico) um abaixo do outro */
-    justify-content: flex-start; /* Alinha o conteúdo ao topo */
-    align-items: flex-start;     /* Alinha tudo à esquerda */
+    flex-direction: column;      
+    justify-content: flex-start;
+    align-items: flex-start;     
     margin-top: 30px;
     margin-left: 10px;
     border-radius: 16px;
     padding: 24px;
-    gap: 20px;                   /* Espaçamento uniforme entre o texto, os botões e o gráfico */
+    gap: 20px;                   
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
@@ -103,39 +103,39 @@ align-items: center;
 .dashboard-1_pai {
     margin-top: 30px;
     display: flex;
-    justify-content: flex-start; /* Alinha os cards à esquerda, acompanhando o restante da página */
+    justify-content: flex-start; 
     align-items: flex-start;
     flex-direction: row;
-    gap: 20px;                   /* Espaçamento elegante entre os dois cards */
+    gap: 20px;                   
     padding: 5px;
     margin-left: 10px;
 }
 
 .acompanhamento {
     width: 780px;
-    height: 275px;
+    height: 480px;
     border-radius: 16px;
     background-color: white;
     display: flex;
     flex-direction: column;
-    padding: 24px;               /* Dá respiro para o conteúdo não colar nas bordas */
+    padding: 24px;               
     gap: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .equipe {
     width: 480px;
-    height: 275px;
+    height: 480px;
     border-radius: 16px;
     background-color: white;
     display: flex;
     flex-direction: column;
-    padding: 24px;               /* Dá respiro para o conteúdo não colar nas bordas */
+    padding: 24px;               
     gap: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-/* Estilos auxiliares para o cabeçalho interno dos cards */
+
 .card-header {
     display: flex;
     align-items: center;
@@ -163,14 +163,14 @@ align-items: center;
     justify-content: flex-start;
     align-items: flex-start;
     flex-direction: row;
-    gap: 20px;                   /* Espaçamento elegante entre os dois cards */
+    gap: 20px;                  
     padding: 5px;
     margin-left: 10px;
 }
 
-/* Estilo compartilhado para os dois cards */
+
 .card-alerta, .card-atividade {
-    width: 610px;                /* Ajuste proporcional para caberem lado a lado perfeitamente */
+    width: 610px;                
     height: 300px;
     border-radius: 16px;
     background-color: white;
@@ -180,7 +180,7 @@ align-items: center;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-/* Cabeçalho alinhado no canto superior esquerdo */
+
 .card-header {
     display: flex;
     align-items: center;
@@ -194,7 +194,7 @@ align-items: center;
     font-family: "Poppins", sans-serif;
 }
 
-/* Área interna para centralizar o ícone de aviso e os textos de "vazio" */
+
 .card-vazio {
     display: flex;
     flex-direction: column;
@@ -214,4 +214,280 @@ align-items: center;
     color: #b5b5b5;
     font-size: 11px;
     font-family: "Poppins", sans-serif;
+}
+
+.evolucao_medias {
+    width: 100%; 
+}
+
+#chart {
+    width: 100%;
+}
+
+
+
+.acompanhamento {
+    width: 100%; 
+}
+
+#chartA {
+    width: 100%; 
+    height: 100%;
+}
+
+
+
+.card-alerta {
+    width: 100%; 
+    color: #7a1f3d;
+}
+
+#chartE {
+    width: 100%;
+    height: 100%;
+    color: #7a1f3d;
+}
+
+.lista-equipe {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.membro {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 8px;
+    border-radius: 10px;
+    font-family: "Poppins", sans-serif;
+}
+
+.membro:hover { background-color: #faf3f5; }
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: #7a1f3d;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.membro-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.membro-nome { color: #333; font-size: 13px; font-weight: 500; }
+.membro-cargo { color: #888; font-size: 11px; }
+
+.tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background-color: #f3e4e9;
+    color: #7a1f3d;
+}
+
+.tag-coord { background-color: #7a1f3d; color: white; }
+.tag-monitor { background-color: #f1f1f1; color: #666; }
+
+
+.lista-atividade {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 12px;
+    overflow-y: auto;
+}
+
+.atividade-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 4px;
+    border-bottom: 1px solid #f1f1f1;
+    font-family: "Poppins", sans-serif;
+}
+
+.atividade-item:last-child { border-bottom: none; }
+
+.atividade-icone {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background-color: #f3e4e9;
+    color: #7a1f3d;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.atividade-texto {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.atividade-titulo { color: #333; font-size: 13px; font-weight: 500; }
+.atividade-sub { color: #888; font-size: 11px; }
+.atividade-tempo { color: #aaa; font-size: 11px; white-space: nowrap; }
+
+html {
+    scroll-behavior: smooth;
+}
+
+#evolucao, #acompanhamento, #equipe, #alertas, #atividade {
+    scroll-margin-top: 20px;
+}
+
+.ancoras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+.ancoras a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: white;
+    border: 1px solid #d9b8c2;
+    border-radius: 20px;
+    color: #7a1f3d;
+    font-family: "Poppins", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.ancoras a:hover {
+    background-color: #7a1f3d;
+    color: white;
+    border-color: #7a1f3d;
+}
+
+@media (max-width: 1024px) {
+    .kpis {
+        flex-wrap: wrap;
+        gap: 16px;
+        justify-content: center;
+    }
+
+    .conteudo_kpis {
+        width: calc(50% - 16px);
+        min-width: 200px;
+    }
+
+    .dashboard-1_pai,
+    .dashboard-2_pai {
+        flex-direction: column;
+        margin-left: 0;
+    }
+
+    .acompanhamento,
+    .equipe,
+    .card-alerta,
+    .card-atividade {
+        width: 100%;
+        height: auto;
+    }
+
+    .lista-equipe,
+    .lista-atividade {
+        max-height: 360px;
+    }
+}
+
+@media (max-width: 600px) {
+    .upper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .card_upper {
+        height: 35px;
+    }
+
+    .kpis {
+        gap: 12px;
+    }
+
+    .conteudo_kpis {
+        width: 100%;
+        height: auto;
+        padding: 20px 12px;
+        gap: 10px;
+    }
+
+    .evolucao_medias {
+        height: auto;
+        margin-left: 0;
+        padding: 16px;
+    }
+
+    .acompanhamento,
+    .equipe,
+    .card-alerta,
+    .card-atividade {
+        padding: 16px;
+    }
+
+    .dashboard-1_pai,
+    .dashboard-2_pai {
+        padding: 0;
+        margin-top: 20px;
+    }
+
+    .button_pai {
+        flex-wrap: nowrap !important;
+        overflow-x: auto;
+        width: 100%;
+        padding-bottom: 6px;
+    }
+
+    .evolucao_medias_button {
+        flex-shrink: 0;
+    }
+
+    
+    .evolucao_medias_text p,
+    .card-descricao {
+        font-size: 12px !important;
+    }
+
+    .membro {
+        gap: 10px;
+        padding: 8px 4px;
+    }
+
+    .atividade-item {
+        gap: 10px;
+    }
+}
+
+.evolucao_medias,
+.acompanhamento,
+.card-alerta,
+.card-atividade,
+.equipe {
+    box-sizing: border-box;
 }
