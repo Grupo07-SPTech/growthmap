@@ -75,6 +75,8 @@
                      sessionStorage.NOME_EMPRESA = empresa.nome;
                      sessionStorage.EMAIL_EMPRESA = empresa.email;
                      sessionStorage.CNPJ_EMPRESA = empresa.cnpj;
+                     
+                     sessionStorage.setItem("CARGO_USUARIO", empresa.cargo || "Diretor Geral");
 
                      window.location = "./dashboard/acessoRapido.html";
                   });
