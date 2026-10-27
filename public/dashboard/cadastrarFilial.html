@@ -169,6 +169,8 @@
     <script src="./js/menu.js"></script>
 
     <script>
+      let codigoIbgeMunicipio = "";
+
       function validarNome(f_nome, id) {
         f_nome = f_nome.trim();
 
@@ -485,6 +487,7 @@
           f_bairro.value = endereco.bairro || "";
           f_cidade.value = endereco.localidade || "";
           f_estado.value = endereco.uf || "";
+          codigoIbgeMunicipio = endereco.ibge || "";
         } catch (erro) {
           mostrarErroCampo("f_cep", "Não foi possível consultar o CEP. Tente novamente.");
         }
@@ -516,6 +519,7 @@
         let bairro = f_bairro.value.trim();
         let cidade = f_cidade.value.trim();
         let estado = f_estado.value;
+        let idEmpresa = sessionStorage.getItem("ID_EMPRESA");
 
         return fetch("/filial/cadastrar", {
           method: "POST",
@@ -532,6 +536,8 @@
             bairro: bairro,
             cidade: cidade,
             estado: estado,
+            coMunicipio: codigoIbgeMunicipio,
+            idEmpresa: idEmpresa,
           }),
         })
           .then(function (resposta) {
