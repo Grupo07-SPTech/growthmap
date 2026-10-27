@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growth Map | Filiais </title>
+    <title>Growth Map | Filiais</title>
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/filiais.css">
     <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body onload="atualizarPagina()">
   <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
-  <i class="fi fi-rr-menu-burger"></i>
-</button>
+    <i class="fi fi-rr-menu-burger"></i>
+  </button>
   <div class="sidebar">
     <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
     <div class="nav-indicador" id="nav-indicador"></div>
@@ -39,66 +39,270 @@
     <div class="sair"><a href="../index.html">Sair</a></div>
   </div>
 
-<div class="conteudo">
-  <div class="topo-pagina">
-    <h1 class="titulo">Lista de <span>Filiais</span></h1>
-    <a href="./cadastrarFilial.html" class="btn-novo">
-      <i class="fi fi-rr-plus"></i> Cadastrar Filial
-    </a>
-  </div>
+  <div class="conteudo">
+    <div class="topo-pagina">
+      <h1 class="titulo">Lista de <span>Filiais</span></h1>
+      <a href="./cadastrarFilial.html" class="btn-novo">
+        <i class="fi fi-rr-plus"></i> Cadastrar Filial
+      </a>
+    </div>
 
-  <div class="card filtros-card">
-    <div class="form-grupo" style="max-width: 350px;">
-      <label>Filtrar por Município:</label>
-      <select id="filtro-municipio">
-        <option value="">Todos os municípios</option>
-        <option value="Santo André">Santo André</option>
-        <option value="São Paulo">São Paulo</option>
-        <option value="São Bernardo do Campo">São Bernardo do Campo</option>
-      </select>
+    <div class="card filtros-card">
+      <div class="form-grupo" style="max-width: 350px;">
+        <label>Filtrar por Município:</label>
+        <select id="filtro-municipio" onchange="filtrarFiliais()">
+          <option value="">Todos os municípios</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card tabela-card">
+      <table class="tabela-dados">
+        <thead>
+          <tr>
+            <th>Nome da Filial</th>
+            <th>CNPJ</th>
+            <th>Município</th>
+            <th>Estado</th>
+            <th>Endereço</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-filiais">
+          <!-- Dados injetados via JavaScript -->
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <div class="card tabela-card">
-    <table class="tabela-dados">
-      <thead>
-        <tr>
-          <th>Nome da Filial</th>
-          <th>CNPJ</th>
-          <th>Município</th>
-          <th>Estado</th>
-          <th>Telefone</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Growth Map - Unidade Centro</td>
-          <td>12.345.678/0001-99</td>
-          <td>Santo André</td>
-          <td>SP</td>
-          <td>(11) 4433-2211</td>
-          <td>
-            <a href="#" class="btn-acao" title="Editar"><i class="fi fi-rr-edit"></i> Editar</a>
-            <button class="btn-acao excluir" title="Excluir"><i class="fi fi-rr-trash"></i> Excluir</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Growth Map - Unidade Paulista</td>
-          <td>98.765.432/0001-11</td>
-          <td>São Paulo</td>
-          <td>SP</td>
-          <td>(11) 3222-1144</td>
-          <td>
-            <a href="#" class="btn-acao" title="Editar"><i class="fi fi-rr-edit"></i> Editar</a>
-            <button class="btn-acao excluir" title="Excluir"><i class="fi fi-rr-trash"></i> Excluir</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- Modal de Edição -->
+  <div id="modal-editar" class="modal-overlay">
+    <div class="modal-card">
+      <h2>Editar Filial</h2>
+      <input type="hidden" id="edit-id">
+      <input type="hidden" id="edit-ibge">
+      
+      <div class="form-grupo">
+        <label>Nome da Filial:</label>
+        <input type="text" id="edit-nome" class="form-input">
+      </div>
+      <div class="form-grupo">
+        <label>CNPJ:</label>
+        <input type="text" id="edit-cnpj" class="form-input">
+      </div>
+      <div class="form-grupo">
+        <label>CEP:</label>
+        <input type="text" id="edit-cep" class="form-input" oninput="buscarCepEdicao()">
+      </div>
+      <div class="form-linha" style="display: flex; gap: 10px;">
+        <div class="form-grupo" style="flex: 3;">
+          <label>Rua:</label>
+          <input type="text" id="edit-rua" class="form-input">
+        </div>
+        <div class="form-grupo" style="flex: 1;">
+          <label>Número:</label>
+          <input type="text" id="edit-num" class="form-input">
+        </div>
+      </div>
+      <div class="form-linha" style="display: flex; gap: 10px;">
+        <div class="form-grupo" style="flex: 2;">
+          <label>Bairro:</label>
+          <input type="text" id="edit-bairro" class="form-input">
+        </div>
+        <div class="form-grupo" style="flex: 2;">
+          <label>Cidade:</label>
+          <input type="text" id="edit-cidade" class="form-input">
+        </div>
+        <div class="form-grupo" style="flex: 1;">
+          <label>UF:</label>
+          <input type="text" id="edit-estado" class="form-input">
+        </div>
+      </div>
+
+      <div class="modal-acoes">
+        <button class="btn-salvar" onclick="salvarEdicao()">Salvar Alterações</button>
+        <button class="btn-limpar" onclick="fecharModal()">Cancelar</button>
+      </div>
+    </div>
   </div>
-</div>
     
-<script src="../js/menu.js"></script>
+  <script src="../js/menu.js"></script>
+  <script>
+    let listaFiliaisGlobal = [];
+    let ibgeEdicaoAtual = "";
+
+    function atualizarPagina() {
+      let idEmpresa = sessionStorage.getItem("ID_EMPRESA");
+
+      if (!idEmpresa) {
+        alert("Sessão expirada. Faça login novamente.");
+        window.location = "../index.html";
+        return;
+      }
+
+      fetch(`/filial/listar/${idEmpresa}`)
+        .then(function (resposta) {
+          if (resposta.ok) {
+            resposta.json().then(function (respostaJson) {
+              listaFiliaisGlobal = respostaJson;
+              exibirFiliais(listaFiliaisGlobal);
+              popularFiltroMunicipios(listaFiliaisGlobal);
+            });
+          } else {
+            console.error("Erro ao listar filiais.");
+          }
+        })
+        .catch(function (erro) {
+          console.error("Erro na requisição: ", erro);
+        });
+    }
+
+    function exibirFiliais(filiais) {
+      let tbody = document.getElementById("tabela-filiais");
+      tbody.innerHTML = "";
+
+      if (filiais.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;">Nenhuma filial cadastrada.</td></tr>`;
+        return;
+      }
+
+      for (let i = 0; i < filiais.length; i++) {
+        let filial = filiais[i];
+        let cnpjFormatado = filial.cnpj ? filial.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5") : "";
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${filial.nome}</td>
+            <td>${cnpjFormatado}</td>
+            <td>${filial.nome_municipio}</td>
+            <td>${filial.uf}</td>
+            <td>${filial.endereco}</td>
+            <td>
+              <button class="btn-acao" title="Editar" onclick="abrirModal(${filial.id})"><i class="fi fi-rr-edit"></i> Editar</button>
+              <button class="btn-acao excluir" title="Excluir" onclick="excluirFilial(${filial.id})"><i class="fi fi-rr-trash"></i> Excluir</button>
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    function popularFiltroMunicipios(filiais) {
+      let selectFiltro = document.getElementById("filtro-municipio");
+      let municipiosUnicos = [];
+
+      selectFiltro.innerHTML = `<option value="">Todos os municípios</option>`;
+
+      for (let i = 0; i < filiais.length; i++) {
+        let municipio = filiais[i].nome_municipio;
+        if (!municipiosUnicos.includes(municipio)) {
+          municipiosUnicos.push(municipio);
+          selectFiltro.innerHTML += `<option value="${municipio}">${municipio}</option>`;
+        }
+      }
+    }
+
+    function filtrarFiliais() {
+      let municipioSelecionado = document.getElementById("filtro-municipio").value;
+
+      if (municipioSelecionado === "") {
+        exibirFiliais(listaFiliaisGlobal);
+      } else {
+        let filiaisFiltradas = listaFiliaisGlobal.filter(function (filial) {
+          return filial.nome_municipio === municipioSelecionado;
+        });
+        exibirFiliais(filiaisFiltradas);
+      }
+    }
+
+    function excluirFilial(id) {
+      if (confirm("Tem certeza de que deseja excluir esta filial?")) {
+        fetch(`/filial/deletar/${id}`, {
+          method: "DELETE",
+        })
+          .then(function (resposta) {
+            if (resposta.ok) {
+              alert("Filial excluída com sucesso!");
+              atualizarPagina();
+            } else {
+              alert("Erro ao excluir a filial.");
+            }
+          })
+          .catch(function (erro) {
+            console.error("Erro: ", erro);
+          });
+      }
+    }
+
+    function abrirModal(id) {
+      let filial = listaFiliaisGlobal.find(f => f.id == id);
+      if (!filial) return;
+
+      document.getElementById("edit-id").value = filial.id;
+      document.getElementById("edit-nome").value = filial.nome;
+      document.getElementById("edit-cnpj").value = filial.cnpj;
+      ibgeEdicaoAtual = filial.co_municipio;
+      document.getElementById("edit-cidade").value = filial.nome_municipio;
+      document.getElementById("edit-estado").value = filial.uf;
+      document.getElementById("edit-rua").value = filial.endereco.split(",")[0] || "";
+
+      document.getElementById("modal-editar").style.display = "flex";
+    }
+
+    function fecharModal() {
+      document.getElementById("modal-editar").style.display = "none";
+    }
+
+    async function buscarCepEdicao() {
+      let cepInput = document.getElementById("edit-cep").value.replace(/\D/g, "");
+      if (cepInput.length !== 8) return;
+
+      try {
+        let resposta = await fetch(`https://viacep.com.br/ws/${cepInput}/json/`);
+        let dados = await resposta.json();
+
+        if (!dados.erro) {
+          document.getElementById("edit-rua").value = dados.logradouro || "";
+          document.getElementById("edit-bairro").value = dados.bairro || "";
+          document.getElementById("edit-cidade").value = dados.localidade || "";
+          document.getElementById("edit-estado").value = dados.uf || "";
+          ibgeEdicaoAtual = dados.ibge;
+        }
+      } catch (e) {
+        console.error("Erro ao buscar CEP", e);
+      }
+    }
+
+    function salvarEdicao() {
+      let id = document.getElementById("edit-id").value;
+      let nome = document.getElementById("edit-nome").value;
+      let cnpj = document.getElementById("edit-cnpj").value.replace(/\D/g, "");
+      let cep = document.getElementById("edit-cep").value.replace(/\D/g, "");
+      let rua = document.getElementById("edit-rua").value;
+      let numero = document.getElementById("edit-num").value;
+      let bairro = document.getElementById("edit-bairro").value;
+      let cidade = document.getElementById("edit-cidade").value;
+      let estado = document.getElementById("edit-estado").value;
+
+      fetch(`/filial/atualizar/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nome, cnpj, cep, rua, numero, bairro, cidade, estado, coMunicipio: ibgeEdicaoAtual
+        }),
+      })
+        .then(function (resposta) {
+          if (resposta.ok) {
+            alert("Filial atualizada com sucesso!");
+            fecharModal();
+            atualizarPagina();
+          } else {
+            alert("Erro ao atualizar filial.");
+          }
+        })
+        .catch(function (erro) {
+          console.error("Erro: ", erro);
+        });
+    }
+  </script>
 </body>
 </html>
