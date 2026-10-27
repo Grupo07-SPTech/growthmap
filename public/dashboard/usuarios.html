@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Growth Map | Lista de Usuários</title>
-  <link rel="stylesheet"
-    href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
-  <link rel="stylesheet" href="./css/style.css">
-  <link rel="stylesheet" href="./css/usuarios.css">
-  <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Map | Gerenciamento de Utilizadores</title>
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/usuarios.css">
+    <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
-<body>
-
+<body onload="atualizarPagina()">
   <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
     <i class="fi fi-rr-menu-burger"></i>
   </button>
-
   <div class="sidebar">
     <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
     <div class="nav-indicador" id="nav-indicador"></div>
@@ -33,7 +28,7 @@
       <a href="./filiais.html"><i class="fi fi-rr-home"></i></a>
     </div>
     <div class="nav-item">
-      <a href="./dashboardDiretorGeral.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
+      <a href="./dashboardProfessor.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
     </div>
     <div class="nav-item ativo">
       <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
@@ -44,149 +39,305 @@
     <div class="sair"><a href="../index.html">Sair</a></div>
   </div>
 
-  <div class="conteudo">
-    <div class="topo-pagina">
-      <h1 class="titulo">Gerenciamento de <span>Usuários</span></h1>
-      <div class="acoes-topo">
-        <a href="./permissoes.html" class="btn-permissoes" title="Gerenciar Cargos e Permissões">
-          <i class="fi fi-rr-shield-check"></i> Gerenciar Permissões
-        </a>
-        <a href="./cadastroProfessor.html" class="btn-novo">
-          <i class="fi fi-rr-plus"></i> Cadastrar Usuário
-        </a>
+<div class="conteudo">
+  <div class="topo-pagina">
+    <h1 class="titulo">Gerenciamento de <span>Utilizadores</span></h1>
+    <a href="./cadastroProfessor.html" class="btn-novo">
+      <i class="fi fi-rr-plus"></i> Cadastrar Professor
+    </a>
+  </div>
+
+  <div class="card filtros-card" style="margin-bottom: 20px; padding: 20px;">
+    <div class="filtros-container">
+      <div class="form-grupo" style="flex: 1; min-width: 200px; margin-bottom: 0;">
+        <label>Filtrar por Filial:</label>
+        <select id="filtro-filial" onchange="filtrarUsuarios()" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+          <option value="">Todas as filiais</option>
+        </select>
       </div>
-    </div>
-
-    <div class="card filtros-card">
-      <div class="filtros-grid">
-        <div class="form-grupo">
-          <label>Município:</label>
-          <select id="filtro-municipio">
-            <option value="">Todos os municípios</option>
-            <option value="Santo André">Santo André</option>
-            <option value="São Paulo">São Paulo</option>
-            <option value="São Bernardo do Campo">São Bernardo do Campo</option>
-          </select>
-        </div>
-
-        <div class="form-grupo">
-          <label>Área:</label>
-          <select id="filtro-area">
-            <option value="">Todas as áreas</option>
-            <option value="Ciências Exatas">Ciências Exatas</option>
-            <option value="Ciências Naturais">Ciências Naturais</option>
-            <option value="Ciências Humanas">Ciências Humanas</option>
-            <option value="Linguagens">Linguagens</option>
-          </select>
-        </div>
-
-        <div class="form-grupo">
-          <label>Cargo / Permissão:</label>
-          <select id="filtro-cargo">
-            <option value="">Todos os cargos</option>
-            <option value="Professor">Professor</option>
-            <option value="Coordenador">Coordenador</option>
-            <option value="Diretor">Diretor</option>
-            <option value="Diretor Geral">Diretor Geral</option>
-          </select>
-        </div>
+      <div class="form-grupo" style="flex: 1; min-width: 200px; margin-bottom: 0;">
+        <label>Filtrar por Cargo (Permissão):</label>
+        <select id="filtro-cargo" onchange="filtrarUsuarios()" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+          <option value="">Todos os cargos</option>
+        </select>
       </div>
-    </div>
-
-    <div class="card tabela-card">
-      <table class="tabela-dados">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>E-mail</th>
-            <th>Cargo / Permissão</th>
-            <th>Área</th>
-            <th>Município</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Carlos Alberto Souza</td>
-            <td>carlos.souza@growthmap.com</td>
-            <td>Professor</td>
-            <td>Ciências Exatas</td>
-            <td>Santo André</td>
-            <td class="acoes-celula">
-              <a href="./professor.html?id=1" class="btn-acao" title="Editar"><i class="fi fi-rr-edit"></i> Editar</a>
-              <button class="btn-acao excluir" onclick="excluirUsuario(1)" title="Excluir"><i
-                  class="fi fi-rr-trash"></i> Excluir</button>
-            </td>
-          </tr>
-          <tr>
-            <td>Ana Paula Lima</td>
-            <td>ana.lima@growthmap.com</td>
-            <td>Coordenador</td>
-            <td>Linguagens</td>
-            <td>São Paulo</td>
-            <td class="acoes-celula">
-              <a href="./professor.html?id=2" class="btn-acao" title="Editar"><i class="fi fi-rr-edit"></i> Editar</a>
-              <button class="btn-acao excluir" onclick="excluirUsuario(2)" title="Excluir"><i
-                  class="fi fi-rr-trash"></i> Excluir</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div id="mensagem-vazia" style="display: none; text-align: center; padding: 25px; color: #666; font-size: 15px;">
-        Nenhum usuário encontrado com os filtros selecionados.
+      <div class="form-grupo" style="flex: 1; min-width: 200px; margin-bottom: 0;">
+        <label>Filtrar por Área:</label>
+        <select id="filtro-area" onchange="filtrarUsuarios()" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+          <option value="">Todas as áreas</option>
+        </select>
       </div>
     </div>
   </div>
 
-  <script src="../js/menu.js"></script>
-  <script>
-    const filtroMun = document.getElementById('filtro-municipio');
-    const filtroArea = document.getElementById('filtro-area');
-    const filtroCargo = document.getElementById('filtro-cargo');
-    const msgVazia = document.getElementById('mensagem-vazia');
+  <div class="card tabela-card">
+    <table class="tabela-dados">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Cargo / Permissão</th>
+          <th>Área</th>
+          <th>Filial / Município</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabela-usuarios">
+      </tbody>
+    </table>
+  </div>
+</div>
 
-    function aplicarFiltros() {
-      const munVal = filtroMun.value.toLowerCase();
-      const areaVal = filtroArea.value.toLowerCase();
-      const cargoVal = filtroCargo.value.toLowerCase();
+<div id="modal-editar" class="modal-overlay">
+  <div class="modal-card">
+    <h2>Editar Utilizador e Permissões</h2>
+    <input type="hidden" id="edit-id">
+    
+    <div class="form-grupo">
+      <label>Nome Completo:</label>
+      <input type="text" id="edit-nome" class="form-input" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+    </div>
+    <div class="form-grupo">
+      <label>E-mail:</label>
+      <input type="email" id="edit-email" class="form-input" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+    </div>
+    <div class="form-grupo">
+      <label>CPF:</label>
+      <input type="text" id="edit-cpf" class="form-input" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+    </div>
+    <div class="form-grupo">
+      <label>Cargo / Permissão:</label>
+      <select id="edit-cargo" class="form-input" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+      </select>
+    </div>
+    <div class="form-grupo">
+      <label>Área de Atuação:</label>
+      <select id="edit-area" class="form-input" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+        <option value="Ciências Exatas">Ciências Exatas</option>
+        <option value="Ciências Naturais">Ciências Naturais</option>
+        <option value="Ciências Humanas">Ciências Humanas</option>
+        <option value="Linguagens">Linguagens</option>
+      </select>
+    </div>
+    <div class="form-grupo">
+      <label>Filial Vinculada:</label>
+      <select id="edit-filial" class="form-input" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+      </select>
+    </div>
 
-      const linhas = document.querySelectorAll('.tabela-dados tbody tr');
-      let visiveis = 0;
+    <div class="modal-acoes">
+      <button class="btn-salvar" onclick="salvarEdicao()" style="padding: 10px 15px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Salvar Alterações</button>
+      <button class="btn-limpar" onclick="fecharModal()" style="padding: 10px 15px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">Cancelar</button>
+    </div>
+  </div>
+</div>
 
-      linhas.forEach(linha => {
-        const cargo = linha.children[2].innerText.toLowerCase();
-        const area = linha.children[3].innerText.toLowerCase();
-        const municipio = linha.children[4].innerText.toLowerCase();
+<script src="../js/menu.js"></script>
+<script>
+  let listaUsuariosGlobal = [];
+  let listaFiliaisGlobal = [];
 
-        const matchMun = !munVal || municipio.includes(munVal);
-        const matchArea = !areaVal || area.includes(areaVal);
-        const matchCargo = !cargoVal || cargo.includes(cargoVal);
+  function atualizarPagina() {
+    let idEmpresa = sessionStorage.getItem("ID_EMPRESA");
 
-        if (matchMun && matchArea && matchCargo) {
-          linha.style.display = '';
-          visiveis++;
+    if (!idEmpresa || idEmpresa === "undefined" || idEmpresa === "null") {
+      alert("Sessão expirada. Faça login novamente.");
+      window.location.href = "../index.html";
+      return;
+    }
+
+    fetch(`/filial/listar/${idEmpresa}`)
+      .then(res => res.json())
+      .then(filiais => {
+        listaFiliaisGlobal = filiais;
+        popularFiltroFiliais();
+        popularSelectFiliaisEdicao();
+        return fetch(`/professor/listar/${idEmpresa}`);
+      })
+      .then(res => res.json())
+      .then(usuarios => {
+        listaUsuariosGlobal = usuarios;
+        exibirUsuarios(listaUsuariosGlobal);
+        popularFiltrosDinamicos(listaUsuariosGlobal);
+      })
+      .catch(err => console.error("Erro ao carregar dados: ", err));
+  }
+
+  function exibirUsuarios(usuarios) {
+    let tbody = document.getElementById("tabela-usuarios");
+    tbody.innerHTML = "";
+
+    if (usuarios.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;">Nenhum utilizador encontrado com os filtros selecionados.</td></tr>`;
+      return;
+    }
+
+    let cargoLogado = sessionStorage.getItem("CARGO_USUARIO") || "";
+    let ehDiretorGeralOuAdmin = cargoLogado === "Diretor Geral" || cargoLogado === "Administrador";
+    let ehDiretorFilial = cargoLogado === "Diretor";
+    let temPermissao = ehDiretorGeralOuAdmin || ehDiretorFilial;
+
+    for (let i = 0; i < usuarios.length; i++) {
+      let usuario = usuarios[i];
+
+      let botoesAcoes = temPermissao ? `
+        <button class="btn-acao" title="Editar" onclick="abrirModal(${usuario.id})"><i class="fi fi-rr-edit"></i> Editar</button>
+        <button class="btn-acao excluir" title="Excluir" onclick="excluirUsuario(${usuario.id})"><i class="fi fi-rr-trash"></i> Excluir</button>
+      ` : `<span style="color: #888; font-size: 13px;">Apenas visualização</span>`;
+
+      tbody.innerHTML += `
+        <tr>
+          <td>${usuario.nome}</td>
+          <td>${usuario.email}</td>
+          <td>${usuario.cargo || 'Professor'}</td>
+          <td>${usuario.area_atuacao || '-'}</td>
+          <td>${usuario.nome_unidade} (${usuario.nome_municipio || '-'})</td>
+          <td>${botoesAcoes}</td>
+        </tr>
+      `;
+    }
+  }
+
+  function popularFiltroFiliais() {
+    let selectFiltro = document.getElementById("filtro-filial");
+    selectFiltro.innerHTML = `<option value="">Todas as filiais</option>`;
+
+    for (let i = 0; i < listaFiliaisGlobal.length; i++) {
+      let filial = listaFiliaisGlobal[i];
+      selectFiltro.innerHTML += `<option value="${filial.id}">${filial.nome}</option>`;
+    }
+  }
+
+  function popularFiltrosDinamicos(usuarios) {
+    let selectCargo = document.getElementById("filtro-cargo");
+    let selectArea = document.getElementById("filtro-area");
+
+    let cargosUnicos = [];
+    let areasUnicas = [];
+
+    selectCargo.innerHTML = `<option value="">Todos os cargos</option>`;
+    selectArea.innerHTML = `<option value="">Todas as áreas</option>`;
+
+    for (let i = 0; i < usuarios.length; i++) {
+      let cargo = usuarios[i].cargo || 'Professor';
+      let area = usuarios[i].area_atuacao;
+
+      if (cargo && !cargosUnicos.includes(cargo)) {
+        cargosUnicos.push(cargo);
+        selectCargo.innerHTML += `<option value="${cargo}">${cargo}</option>`;
+      }
+      if (area && !areasUnicas.includes(area)) {
+        areasUnicas.push(area);
+        selectArea.innerHTML += `<option value="${area}">${area}</option>`;
+      }
+    }
+  }
+
+  function filtrarUsuarios() {
+    let filialSelecionada = document.getElementById("filtro-filial").value;
+    let cargoSelecionado = document.getElementById("filtro-cargo").value;
+    let areaSelecionada = document.getElementById("filtro-area").value;
+
+    let usuariosFiltrados = listaUsuariosGlobal.filter(function (usuario) {
+      let matchFilial = filialSelecionada === "" || usuario.id_unidade == filialSelecionada;
+      let cargoUsuario = usuario.cargo || 'Professor';
+      let matchCargo = cargoSelecionado === "" || cargoUsuario === cargoSelecionado;
+      let matchArea = areaSelecionada === "" || usuario.area_atuacao === areaSelecionada;
+
+      return matchFilial && matchCargo && matchArea;
+    });
+
+    exibirUsuarios(usuariosFiltrados);
+  }
+
+  function popularSelectFiliaisEdicao() {
+    let select = document.getElementById("edit-filial");
+    select.innerHTML = "";
+    for (let i = 0; i < listaFiliaisGlobal.length; i++) {
+      let filial = listaFiliaisGlobal[i];
+      select.innerHTML += `<option value="${filial.id}">${filial.nome}</option>`;
+    }
+  }
+
+  function abrirModal(id) {
+    let usuario = listaUsuariosGlobal.find(u => u.id == id);
+    if (!usuario) return;
+
+    document.getElementById("edit-id").value = usuario.id;
+    document.getElementById("edit-nome").value = usuario.nome;
+    document.getElementById("edit-email").value = usuario.email;
+    document.getElementById("edit-cpf").value = usuario.cpf || "";
+    document.getElementById("edit-area").value = usuario.area_atuacao || "Ciências Exatas";
+    document.getElementById("edit-filial").value = usuario.id_unidade;
+
+    let cargoLogado = sessionStorage.getItem("CARGO_USUARIO") || "Diretor";
+    let selectCargo = document.getElementById("edit-cargo");
+    selectCargo.innerHTML = "";
+
+    if (cargoLogado === "Administrador" || cargoLogado === "Diretor Geral") {
+      selectCargo.innerHTML += `
+        <option value="Professor">Professor</option>
+        <option value="Coordenador">Coordenador</option>
+        <option value="Diretor">Diretor</option>
+        <option value="Administrador">Administrador</option>
+        <option value="Diretor Geral">Diretor Geral</option>
+      `;
+    } else {
+      selectCargo.innerHTML += `
+        <option value="Professor">Professor</option>
+        <option value="Coordenador">Coordenador</option>
+      `;
+    }
+
+    document.getElementById("edit-cargo").value = usuario.cargo || "Professor";
+    document.getElementById("modal-editar").style.display = "flex";
+  }
+
+  function fecharModal() {
+    document.getElementById("modal-editar").style.display = "none";
+  }
+
+  function salvarEdicao() {
+    let id = document.getElementById("edit-id").value;
+    let nome = document.getElementById("edit-nome").value;
+    let email = document.getElementById("edit-email").value;
+    let cpf = document.getElementById("edit-cpf").value.replace(/\D/g, "");
+    let cargo = document.getElementById("edit-cargo").value;
+    let area = document.getElementById("edit-area").value;
+    let idUnidade = document.getElementById("edit-filial").value;
+    let cargoUsuarioLogado = sessionStorage.getItem("CARGO_USUARIO");
+
+    fetch(`/professor/atualizar/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome, email, cpf, cargo, area, idUnidade, cargoUsuarioLogado })
+    })
+      .then(res => {
+        if (res.ok) {
+          alert("Utilizador e permissões atualizados com sucesso!");
+          fecharModal();
+          atualizarPagina();
         } else {
-          linha.style.display = 'none';
+          res.text().then(texto => alert(texto));
         }
-      });
+      })
+      .catch(err => console.error("Erro: ", err));
+  }
 
-      if (visiveis === 0) {
-        msgVazia.style.display = 'block';
-      } else {
-        msgVazia.style.display = 'none';
-      }
+  function excluirUsuario(id) {
+    if (confirm("Tem certeza de que deseja excluir este utilizador?")) {
+      fetch(`/professor/deletar/${id}`, { method: "DELETE" })
+        .then(res => {
+          if (res.ok) {
+            alert("Utilizador excluído com sucesso!");
+            atualizarPagina();
+          } else {
+            alert("Erro ao excluir o utilizador.");
+          }
+        })
+        .catch(err => console.error("Erro: ", err));
     }
-
-    filtroMun.addEventListener('change', aplicarFiltros);
-    filtroArea.addEventListener('change', aplicarFiltros);
-    filtroCargo.addEventListener('change', aplicarFiltros);
-
-    function excluirUsuario(id) {
-      if (confirm('Tem certeza que deseja excluir este usuário?')) {
-        alert('Usuário excluído com sucesso!');
-      }
-    }
-  </script>
+  }
+</script>
 </body>
-
 </html>
