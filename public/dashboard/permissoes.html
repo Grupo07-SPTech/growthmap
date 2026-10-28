@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Growth Map | Gerenciamento de Permissões</title>
-  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <link rel="stylesheet"
+    href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/permissoes.css">
   <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
@@ -46,7 +47,9 @@
   <div class="conteudo">
     <div class="topo-pagina">
       <h1 class="titulo">Gerenciamento de <span>Permissões</span></h1>
-      <button type="button" id="btn-abrir-modal" class="btn-acao-topo" style="background-color: #7b1e3a; color: #fff; border: none; border-radius: 8px; padding: 10px 18px; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class="fi fi-rr-plus"></i> Novo Cargo / Permissão</button>
+      <button type="button" id="btn-abrir-modal" class="btn-acao-topo"
+        style="background-color: #7b1e3a; color: #fff; border: none; border-radius: 8px; padding: 10px 18px; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i
+          class="fi fi-rr-plus"></i> Novo Cargo / Permissão</button>
     </div>
 
     <div class="card tabela-card">
@@ -59,30 +62,7 @@
             <th>Ações</th>
           </tr>
         </thead>
-        <tbody id="tabela-permissoes-corpo">
-          <tr>
-            <td>Diretor Geral</td>
-            <td><span class="badge administrativo">Administrativo</span></td>
-            <td>Painel, Filiais, Gráficos, Usuários</td>
-            <td>
-              <div class="acoes-tabela">
-                <button class="btn-acao editar" title="Editar"><i class="fi fi-rr-edit"></i> Editar</button>
-                <button class="btn-acao excluir" title="Excluir"><i class="fi fi-rr-trash"></i> Excluir</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>Professor</td>
-            <td><span class="badge operacional">Operacional</span></td>
-            <td>Painel de Eventos, Filiais</td>
-            <td>
-              <div class="acoes-tabela">
-                <button class="btn-acao editar" title="Editar"><i class="fi fi-rr-edit"></i> Editar</button>
-                <button class="btn-acao excluir" title="Excluir"><i class="fi fi-rr-trash"></i> Excluir</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+        <tbody id="tabela-permissoes-corpo"></tbody>
       </table>
     </div>
   </div>
@@ -106,12 +86,7 @@
         </div>
         <div class="form-grupo-modal">
           <label>Módulos Permitidos:</label>
-          <div class="checkbox-grupo">
-            <label><input type="checkbox" value="Painel de Eventos"> Painel de Eventos</label>
-            <label><input type="checkbox" value="Filiais"> Filiais</label>
-            <label><input type="checkbox" value="Gráficos / Dashboard"> Gráficos / Dashboard</label>
-            <label><input type="checkbox" value="Gerenciamento de Usuários"> Gerenciamento de Usuários</label>
-          </div>
+          <div class="checkbox-grupo" id="grupo-modulos"></div>
         </div>
         <div class="form-acoes">
           <button type="submit" class="btn-salvar">Salvar</button>
@@ -122,21 +97,7 @@
   </div>
 
   <script src="../js/menu.js"></script>
-  <script>
-    const modal = document.getElementById('modal-permissao');
-    const btnAbrir = document.getElementById('btn-abrir-modal');
-    const btnFechar = document.getElementById('btn-fechar-modal');
-    const form = document.getElementById('form-permissao');
-
-    btnAbrir.addEventListener('click', () => modal.classList.remove('oculto'));
-    btnFechar.addEventListener('click', () => modal.classList.add('oculto'));
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert("Cargo e permissões salvos com sucesso!");
-      modal.classList.add('oculto');
-      form.reset();
-    });
-  </script>
+  <script src="../js/permissoes.js"></script>
 </body>
+
 </html>
