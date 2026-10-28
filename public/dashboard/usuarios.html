@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growth Map | Gerenciamento de Utilizadores</title>
+    <title>Growth Map | Gerenciamento de Usuários</title>
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/usuarios.css">
@@ -11,9 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body onload="atualizarPagina()">
-  <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
+ <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
     <i class="fi fi-rr-menu-burger"></i>
   </button>
+
   <div class="sidebar">
     <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
     <div class="nav-indicador" id="nav-indicador"></div>
@@ -28,7 +29,7 @@
       <a href="./filiais.html"><i class="fi fi-rr-home"></i></a>
     </div>
     <div class="nav-item">
-      <a href="./dashboardProfessor.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
+      <a href="./dashboardDiretorGeral.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
     </div>
     <div class="nav-item ativo">
       <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
@@ -39,98 +40,92 @@
     <div class="sair"><a href="../index.html">Sair</a></div>
   </div>
 
-<div class="conteudo">
-  <div class="topo-pagina">
-    <h1 class="titulo">Gerenciamento de <span>Utilizadores</span></h1>
-    <a href="./cadastroProfessor.html" class="btn-novo">
-      <i class="fi fi-rr-plus"></i> Cadastrar Professor
-    </a>
-  </div>
+  <div class="conteudo">
+    <div class="topo-pagina">
+      <h1 class="titulo">Gerenciamento de <span>Utilizadores</span></h1>
+      <div class="acoes-topo">
+        <a href="permissoes.html" class="btn-acao-topo permissao"><i class="fi fi-rr-lock"></i> Gerenciar Permissões</a>
+        <a href="cadastroUsuario.html">
+          <button type="button" id="btn-novo-usuario" class="btn-acao-topo"><i class="fi fi-rr-user-add"></i>Adicionar Usuário</button>
+        </a>
+      </div>
+    </div>
 
-  <div class="card filtros-card" style="margin-bottom: 20px; padding: 20px;">
+    <!-- Barra de Filtros Funcionais -->
     <div class="filtros-container">
-      <div class="form-grupo" style="flex: 1; min-width: 200px; margin-bottom: 0;">
+      <div class="filtro-grupo">
+        <label>Pesquisar por Nome ou E-mail:</label>
+        <input type="text" id="filtro-busca" placeholder="Digite para pesquisar..." oninput="filtrarUsuarios()">
+      </div>
+      <div class="filtro-grupo">
         <label>Filtrar por Filial:</label>
-        <select id="filtro-filial" onchange="filtrarUsuarios()" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+        <select id="filtro-filial" onchange="filtrarUsuarios()">
           <option value="">Todas as filiais</option>
         </select>
       </div>
-      <div class="form-grupo" style="flex: 1; min-width: 200px; margin-bottom: 0;">
-        <label>Filtrar por Cargo (Permissão):</label>
-        <select id="filtro-cargo" onchange="filtrarUsuarios()" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+      <div class="filtro-grupo">
+        <label>Filtrar por Cargo:</label>
+        <select id="filtro-cargo" onchange="filtrarUsuarios()">
           <option value="">Todos os cargos</option>
         </select>
       </div>
-      <div class="form-grupo" style="flex: 1; min-width: 200px; margin-bottom: 0;">
-        <label>Filtrar por Área:</label>
-        <select id="filtro-area" onchange="filtrarUsuarios()" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+      <div class="filtro-grupo">
+        <label>Filtrar por Área de Atuação:</label>
+        <select id="filtro-area" onchange="filtrarUsuarios()">
           <option value="">Todas as áreas</option>
         </select>
       </div>
     </div>
-  </div>
 
-  <div class="card tabela-card">
-    <table class="tabela-dados">
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>E-mail</th>
-          <th>Cargo / Permissão</th>
-          <th>Área</th>
-          <th>Filial / Município</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="tabela-usuarios">
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div id="modal-editar" class="modal-overlay">
-  <div class="modal-card">
-    <h2>Editar Utilizador e Permissões</h2>
-    <input type="hidden" id="edit-id">
-    
-    <div class="form-grupo">
-      <label>Nome Completo:</label>
-      <input type="text" id="edit-nome" class="form-input" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+    <div class="card tabela-card">
+      <table class="tabela-dados">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Cargo</th>
+            <th>Área de Atuação</th>
+            <th>Filial</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-usuarios">
+          <!-- Conteúdo populado dinamicamente via JavaScript -->
+        </tbody>
+      </table>
     </div>
-    <div class="form-grupo">
+  </div>
+
+  <!-- Modal de Edição -->
+  <div id="modal-editar" class="modal" style="display: none;">
+    <div class="modal-conteudo card">
+      <h2>Editar Utilizador</h2>
+      <input type="hidden" id="edit-id">
+      
+      <label>Nome:</label>
+      <input type="text" id="edit-nome" class="input-modal">
+
       <label>E-mail:</label>
-      <input type="email" id="edit-email" class="form-input" style="width: 100%; padding: 8px; margin-bottom: 10px;">
-    </div>
-    <div class="form-grupo">
-      <label>CPF:</label>
-      <input type="text" id="edit-cpf" class="form-input" style="width: 100%; padding: 8px; margin-bottom: 10px;">
-    </div>
-    <div class="form-grupo">
-      <label>Cargo / Permissão:</label>
-      <select id="edit-cargo" class="form-input" style="width: 100%; padding: 8px; margin-bottom: 10px;">
-      </select>
-    </div>
-    <div class="form-grupo">
-      <label>Área de Atuação:</label>
-      <select id="edit-area" class="form-input" style="width: 100%; padding: 8px; margin-bottom: 10px;">
-        <option value="Ciências Exatas">Ciências Exatas</option>
-        <option value="Ciências Naturais">Ciências Naturais</option>
-        <option value="Ciências Humanas">Ciências Humanas</option>
-        <option value="Linguagens">Linguagens</option>
-      </select>
-    </div>
-    <div class="form-grupo">
-      <label>Filial Vinculada:</label>
-      <select id="edit-filial" class="form-input" style="width: 100%; padding: 8px; margin-bottom: 10px;">
-      </select>
-    </div>
+      <input type="email" id="edit-email" class="input-modal">
 
-    <div class="modal-acoes">
-      <button class="btn-salvar" onclick="salvarEdicao()" style="padding: 10px 15px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Salvar Alterações</button>
-      <button class="btn-limpar" onclick="fecharModal()" style="padding: 10px 15px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">Cancelar</button>
+      <label>CPF:</label>
+      <input type="text" id="edit-cpf" class="input-modal">
+
+      <label>Cargo:</label>
+      <select id="edit-cargo" class="input-modal"></select>
+
+      <label>Área de Atuação:</label>
+      <input type="text" id="edit-area" class="input-modal">
+
+      <label>Filial:</label>
+      <select id="edit-filial" class="input-modal"></select>
+
+      <div class="form-acoes" style="margin-top: 20px;">
+        <button type="button" class="btn-salvar" onclick="salvarEdicao()">Salvar</button>
+        <button type="button" class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+      </div>
     </div>
   </div>
-</div>
 
 <script src="../js/menu.js"></script>
 <script>
@@ -150,7 +145,7 @@
       .then(res => res.json())
       .then(filiais => {
         listaFiliaisGlobal = filiais;
-        popularFiltroFiliais();
+        popularSelectFiliaisFiltro();
         popularSelectFiliaisEdicao();
         return fetch(`/professor/listar/${idEmpresa}`);
       })
@@ -158,7 +153,7 @@
       .then(usuarios => {
         listaUsuariosGlobal = usuarios;
         exibirUsuarios(listaUsuariosGlobal);
-        popularFiltrosDinamicos(listaUsuariosGlobal);
+        popularSelectsDinamicos(listaUsuariosGlobal);
       })
       .catch(err => console.error("Erro ao carregar dados: ", err));
   }
@@ -181,7 +176,7 @@
       let usuario = usuarios[i];
 
       let botoesAcoes = temPermissao ? `
-        <button class="btn-acao" title="Editar" onclick="abrirModal(${usuario.id})"><i class="fi fi-rr-edit"></i> Editar</button>
+        <button class="btn-acao editar" title="Editar" onclick="abrirModal(${usuario.id})"><i class="fi fi-rr-edit"></i> Editar</button>
         <button class="btn-acao excluir" title="Excluir" onclick="excluirUsuario(${usuario.id})"><i class="fi fi-rr-trash"></i> Excluir</button>
       ` : `<span style="color: #888; font-size: 13px;">Apenas visualização</span>`;
 
@@ -191,24 +186,23 @@
           <td>${usuario.email}</td>
           <td>${usuario.cargo || 'Professor'}</td>
           <td>${usuario.area_atuacao || '-'}</td>
-          <td>${usuario.nome_unidade} (${usuario.nome_municipio || '-'})</td>
+          <td>${usuario.nome_unidade || '-'} (${usuario.nome_municipio || '-'})</td>
           <td>${botoesAcoes}</td>
         </tr>
       `;
     }
   }
 
-  function popularFiltroFiliais() {
-    let selectFiltro = document.getElementById("filtro-filial");
-    selectFiltro.innerHTML = `<option value="">Todas as filiais</option>`;
-
+  function popularSelectFiliaisFiltro() {
+    let select = document.getElementById("filtro-filial");
+    select.innerHTML = `<option value="">Todas as filiais</option>`;
     for (let i = 0; i < listaFiliaisGlobal.length; i++) {
       let filial = listaFiliaisGlobal[i];
-      selectFiltro.innerHTML += `<option value="${filial.id}">${filial.nome}</option>`;
+      select.innerHTML += `<option value="${filial.id}">${filial.nome}</option>`;
     }
   }
 
-  function popularFiltrosDinamicos(usuarios) {
+  function popularSelectsDinamicos(usuarios) {
     let selectCargo = document.getElementById("filtro-cargo");
     let selectArea = document.getElementById("filtro-area");
 
@@ -234,17 +228,19 @@
   }
 
   function filtrarUsuarios() {
+    let textoBusca = document.getElementById("filtro-busca").value.toLowerCase();
     let filialSelecionada = document.getElementById("filtro-filial").value;
     let cargoSelecionado = document.getElementById("filtro-cargo").value;
     let areaSelecionada = document.getElementById("filtro-area").value;
 
     let usuariosFiltrados = listaUsuariosGlobal.filter(function (usuario) {
-      let matchFilial = filialSelecionada === "" || usuario.id_unidade == filialSelecionada;
-      let cargoUsuario = usuario.cargo || 'Professor';
-      let matchCargo = cargoSelecionado === "" || cargoUsuario === cargoSelecionado;
-      let matchArea = areaSelecionada === "" || usuario.area_atuacao === areaSelecionada;
+      let nomeMatch = usuario.nome.toLowerCase().includes(textoBusca) || usuario.email.toLowerCase().includes(textoBusca);
+      let filialMatch = filialSelecionada === "" || usuario.id_unidade == filialSelecionada;
+      let cargoUser = usuario.cargo || 'Professor';
+      let cargoMatch = cargoSelecionado === "" || cargoUser === cargoSelecionado;
+      let areaMatch = areaSelecionada === "" || usuario.area_atuacao === areaSelecionada;
 
-      return matchFilial && matchCargo && matchArea;
+      return nomeMatch && filialMatch && cargoMatch && areaMatch;
     });
 
     exibirUsuarios(usuariosFiltrados);

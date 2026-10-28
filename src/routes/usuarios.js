@@ -15,5 +15,16 @@ router.post("/autenticar", function (req, res) {
 /* router.get("/entrar", function (req, res) {
     usuarioController.entrar(req, res);
 }); */
+router.get("/perfil/:idUsuario", function (req, res) {
+    usuarioController.buscarPorId(req, res);
+});
+
+router.put("/editar/:idUsuario", function (req, res) {
+    usuarioController.editarPerfil(req, res);
+});
+
+router.delete("/deletar/:idUsuario", function (req, res) {
+    usuarioController.deletarConta(req, res);
+});
 
 module.exports = router;

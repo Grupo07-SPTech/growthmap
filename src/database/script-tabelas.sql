@@ -40,6 +40,8 @@ CREATE TABLE usuario (
     senha VARCHAR(255) NOT NULL,
     cargo VARCHAR(100) NOT NULL,
     id_unidade INT NOT NULL,
+    area_atuacao VARCHAR(100),
+    cpf CHAR(11),
 
     CONSTRAINT fk_usuario_unidade
         FOREIGN KEY (id_unidade)
@@ -105,4 +107,19 @@ CREATE TABLE logs(
     CONSTRAINT fk_id_usuario
 		FOREIGN KEY (id_usuario)
 		REFERENCES usuario(id)
+);
+
+CREATE TABLE evento (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tipo VARCHAR(50) NOT NULL,            
+    nome VARCHAR(150) NOT NULL,          
+    area VARCHAR(100),                   
+    data DATE NOT NULL,                 
+    rotulo VARCHAR(50),                  
+    feita TINYINT DEFAULT 0,            
+    fk_usuario INT NOT NULL,
+
+    CONSTRAINT fk_evento_usuario
+        FOREIGN KEY (fk_usuario)
+        REFERENCES usuario(id)
 );

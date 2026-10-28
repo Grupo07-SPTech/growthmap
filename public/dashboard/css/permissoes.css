@@ -1,0 +1,331 @@
+.conteudo {
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+.topo-pagina {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.titulo {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c2c2c;
+}
+
+.titulo span {
+  color: #7b1e3a;
+}
+
+
+.tabela-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.tabela-dados {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tabela-dados th {
+  padding: 14px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.tabela-dados td {
+  padding: 16px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge.administrativo {
+  background-color: #fde8ed;
+  color: #7b1e3a;
+}
+
+.badge.operacional {
+  background-color: #e6f4ea;
+  color: #137333;
+}
+
+.acoes-tabela {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-acao {
+  background: #f5f5f5;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.btn-acao.editar:hover {
+  background-color: #7b1e3a;
+  color: #fff;
+}
+
+.btn-acao.excluir:hover {
+  background-color: #d32f2f;
+  color: #fff;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal.oculto {
+  display: none;
+}
+
+.modal-conteudo {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+}
+
+.modal-conteudo h2 {
+  font-size: 20px;
+  color: #2c2c2c;
+  margin-bottom: 20px;
+}
+
+.form-grupo-modal {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-grupo-modal label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+}
+
+.form-grupo-modal input[type="text"],
+.form-grupo-modal select {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-grupo-modal input:focus,
+.form-grupo-modal select:focus {
+  border-color: #7b1e3a;
+}
+
+.checkbox-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 5px;
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.checkbox-grupo label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.form-acoes {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn-salvar {
+  flex: 1;
+  background-color: #7b1e3a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-salvar:hover {
+  background-color: #5d152b;
+}
+
+.btn-cancelar {
+  flex: 1;
+  background-color: #e0e0e0;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-cancelar:hover {
+  background-color: #d0d0d0;
+}
+/* Fundo escuro cobrindo a tela */
+.modal, #modal-editar, #modal-filial {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.modal-conteudo, .card-modal {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-conteudo h2, .card-modal h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2c2c2c;
+  margin-bottom: 5px;
+}
+
+.modal-conteudo label, .card-modal label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+
+.modal-conteudo input, 
+.modal-conteudo select,
+.card-modal input, 
+.card-modal select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.modal-conteudo input:focus, 
+.modal-conteudo select:focus,
+.card-modal input:focus, 
+.card-modal select:focus {
+  border-color: #7b1e3a;
+}
+
+.form-linha {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.form-linha > div, .form-linha > label {
+  flex: 1;
+}
+
+.form-acoes {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.btn-salvar {
+  flex: 1;
+  background-color: #7b1e3a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-salvar:hover {
+  background-color: #5d152b;
+}
+
+.btn-cancelar, .btn-limpar {
+  flex: 1;
+  background-color: #e0e0e0;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-cancelar:hover, .btn-limpar:hover {
+  background-color: #d0d0d0;
+}

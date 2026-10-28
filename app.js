@@ -22,6 +22,7 @@ var medidasRouter = require("./src/routes/medidas");
 var empresasRouter = require("./src/routes/empresas");
 var filialRouter = require("./src/routes/filial");
 var professorRouter = require("./src/routes/professor");
+var eventosRouter = require("./src/routes/eventos");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -36,6 +37,7 @@ app.use("/medidas", medidasRouter);
 app.use("/empresas", empresasRouter);
 app.use("/filial", filialRouter);
 app.use("/professor", professorRouter);
+app.use("/eventos", eventosRouter);
 
 app.listen(PORTA_APP, function () {
   console.log(`
