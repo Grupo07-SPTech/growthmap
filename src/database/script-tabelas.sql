@@ -33,19 +33,28 @@ CREATE TABLE unidade (
         REFERENCES empresa(id)
 );
 
+CREATE TABLE cargo (
+    id_cargo INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    nivel_acesso VARCHAR(30) NOT NULL
+);
+
 CREATE TABLE usuario (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL,
     senha VARCHAR(255) NOT NULL,
-    cargo VARCHAR(100) NOT NULL,
+    fk_cargo INT NOT NULL,
     id_unidade INT NOT NULL,
     area_atuacao VARCHAR(100),
     cpf CHAR(11),
 
     CONSTRAINT fk_usuario_unidade
         FOREIGN KEY (id_unidade)
-        REFERENCES unidade(id)
+        REFERENCES unidade(id),
+    CONSTRAINT fk_usuario_cargo
+        FOREIGN KEY (fk_cargo)
+        REFERENCES cargo (id_cargo)
 );
 
 CREATE TABLE desempenho_regional (
@@ -64,21 +73,17 @@ CREATE TABLE desempenho_regional (
         REFERENCES municipio(co_municipio)
 );
 
-CREATE TABLE painel_acompanhamento (
+CREATE TABLE desempenho_estadual (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL,
-    co_municipio INT NOT NULL,
-    area_conhecimento VARCHAR(20),
-    observacao VARCHAR(255),
-    data_criacao DATETIME,
-
-    CONSTRAINT fk_painel_usuario
-        FOREIGN KEY (id_usuario)
-        REFERENCES usuario(id),
-
-    CONSTRAINT fk_painel_municipio
-        FOREIGN KEY (co_municipio)
-        REFERENCES municipio(co_municipio)
+    uf CHAR(2) NOT NULL,
+    ano SMALLINT NOT NULL,
+    media_cn DECIMAL(6,2),
+    media_ch DECIMAL(6,2),
+    media_lc DECIMAL(6,2),
+    media_mt DECIMAL(6,2),
+    media_redacao DECIMAL(6,2),
+    qtd_participantes INT NOT NULL,
+    UNIQUE (uf, ano)
 );
 
 CREATE TABLE config_notificacao (
@@ -98,7 +103,7 @@ CREATE TABLE config_notificacao (
         REFERENCES usuario(id)
 );
 
-CREATE TABLE logs(
+CREATE TABLE logs_sistema(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
     acao VARCHAR(100) NOT NULL,
@@ -122,4 +127,25 @@ CREATE TABLE evento (
     CONSTRAINT fk_evento_usuario
         FOREIGN KEY (fk_usuario)
         REFERENCES usuario(id)
+);
+
+CREATE TABLE modulo (
+    id_modulo INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE cargo_modulo (
+    fk_cargo INT NOT NULL,
+    fk_modulo INT NOT NULL,
+
+    PRIMARY KEY (fk_cargo, fk_modulo),
+
+    CONSTRAINT fk_cargo_modulo_cargo
+        FOREIGN KEY (fk_cargo)
+        REFERENCES cargo(id_cargo)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_cargo_modulo_modulo
+        FOREIGN KEY (fk_modulo)
+        REFERENCES modulo(id_modulo)
 );
