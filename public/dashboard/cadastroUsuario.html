@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Growth Map | Cadastro de Professor</title>
 <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
-<link rel="stylesheet" href="./css/cadastrarProfessor.css">
+<link rel="stylesheet" href="./css/cadastroUsuario.css">
 <link rel="stylesheet" href="./css/style.css">
 <link rel="icon" href="./assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body onload="carregarFiliais()">
 
     <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
   <i class="fi fi-rr-menu-burger"></i>
@@ -44,7 +44,7 @@
   <h1 class="titulo">Cadastro de <span>Professor</span></h1>
 
   <div class="card form-card">
-    <form id="form-professor">
+    <form id="form-professor" onsubmit="cadastrarProfessor(event)">
       <div class="form-grupo">
         <label>Nome Completo:</label>
         <input type="text" id="p-nome" required placeholder="Ex.: Carlos Alberto Souza">
@@ -57,7 +57,7 @@
         </div>
         <div class="form-grupo">
           <label>CPF:</label>
-          <input type="text" id="p-cpf" required placeholder="000.000.000-00">
+          <input type="text" id="p-cpf" required placeholder="00000000000">
         </div>
       </div>
 
@@ -65,7 +65,7 @@
         <div class="form-grupo">
           <label>Área de Atuação:</label>
           <select id="p-area" required>
-            <option value="">Selecione a área...</option>
+            <option value="" disabled selected>Selecione a área...</option>
             <option value="Ciências Exatas">Ciências Exatas</option>
             <option value="Ciências Naturais">Ciências Naturais</option>
             <option value="Ciências Humanas">Ciências Humanas</option>
@@ -76,10 +76,7 @@
         <div class="form-grupo">
           <label>Filial Vinculada:</label>
           <select id="p-filial" required>
-            <option value="">Selecione a filial...</option>
-            <option value="1">Growth Map - Unidade Centro</option>
-            <option value="2">Growth Map - Unidade Paulista</option>
-            <option value="3">Growth Map - Unidade ABC</option>
+            <option value="" disabled selected>Selecione a filial...</option>
           </select>
         </div>
       </div>
@@ -93,5 +90,70 @@
 </div>
 
 <script src="./js/menu.js"></script>
+<script>
+  function carregarFiliais() {
+    let idEmpresa = sessionStorage.getItem("ID_EMPRESA");
+
+    if (!idEmpresa) {
+      return;
+    }
+
+    fetch(`/filial/listar/${idEmpresa}`)
+      .then(function (resposta) {
+        if (resposta.ok) {
+          resposta.json().then(function (filiais) {
+            let selectFilial = document.getElementById("p-filial");
+            selectFilial.innerHTML = `<option value="" disabled selected>Selecione a filial...</option>`;
+
+            for (let i = 0; i < filiais.length; i++) {
+              let filial = filiais[i];
+              selectFilial.innerHTML += `<option value="${filial.id}">${filial.nome}</option>`;
+            }
+          });
+        }
+      })
+      .catch(function (erro) {
+        console.error("Erro ao carregar filiais: ", erro);
+      });
+  }
+
+  function cadastrarProfessor(event) {
+    event.preventDefault();
+
+    let nome = document.getElementById("p-nome").value;
+    let email = document.getElementById("p-email").value;
+    let cpf = document.getElementById("p-cpf").value.replace(/\D/g, "");
+    let area = document.getElementById("p-area").value;
+    let idUnidade = document.getElementById("p-filial").value;
+
+    fetch("/professor/cadastrar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nome: nome,
+        email: email,
+        cpf: cpf,
+        area: area,
+        idUnidade: idUnidade
+      }),
+    })
+      .then(function (resposta) {
+        if (resposta.ok) {
+          alert("Professor cadastrado com sucesso!");
+          window.location = "./usuarios.html";
+        } else {
+          resposta.text().then(function (texto) {
+            alert(texto);
+          });
+        }
+      })
+      .catch(function (erro) {
+        console.error("#ERRO:", erro);
+        alert("Não foi possível cadastrar o professor. Tente novamente.");
+      });
+  }
+</script>
 </body>
 </html>

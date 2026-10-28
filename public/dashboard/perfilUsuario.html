@@ -20,7 +20,7 @@
     <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
     <div class="nav-indicador" id="nav-indicador"></div>
 
-    <div class="nav-item ativo">
+    <div class="nav-item">
       <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
     </div>
     <div class="nav-item">
@@ -36,7 +36,7 @@
       <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
     </div>
     <a href="perfilUsuario.html">
-      <div class="perfil"></div>
+      <div class="perfil ativo"></div>
     </a>
     <div class="sair"><a href="../index.html">Sair</a></div>
   </div>
@@ -55,7 +55,7 @@
       <div class="avatar-grande"></div>
       <div>
         <h2 id="view-nome" class="nome-usuario">Carregando...</h2>
-        <p id="view-cargo" class="cargo-usuario">-</p>
+        <p id="view-cargo" class="cargo-usuario">Colaborador / Aluno</p>
       </div>
     </div>
 
@@ -73,12 +73,9 @@
         <span class="info-label">Área de Atuação</span>
         <span id="info-area" class="info-valor">-</span>
       </div>
-      <div class="info-grupo">
-        <span class="info-label">Filial Vinculada</span>
-        <span id="info-filial" class="info-valor">-</span>
-      </div>
     </div>
 
+    <!-- Formulário de Edição -->
     <form id="form-editar-perfil" class="form-perfil oculto">
       <div class="form-grupo">
         <label>Nome Completo:</label>
@@ -106,12 +103,6 @@
             <option value="Linguagens">Linguagens</option>
           </select>
         </div>
-
-        <div class="form-grupo">
-          <label>Filial Vinculada:</label>
-          <select id="p-filial" required>
-          </select>
-        </div>
       </div>
 
       <div class="form-acoes">
@@ -123,5 +114,101 @@
 </div>
     
 <script src="../js/menu.js"></script>
+<script>
+  const idUsuario = sessionStorage.ID_USUARIO || 1;
+
+  const viewNome = document.getElementById('view-nome');
+  const viewCargo = document.getElementById('view-cargo');
+  const infoEmail = document.getElementById('info-email');
+  const infoCpf = document.getElementById('info-cpf');
+  const infoArea = document.getElementById('info-area');
+
+  const formPerfil = document.getElementById('form-editar-perfil');
+  const modoVisualizacao = document.getElementById('modo-visualizacao');
+  const btnEditar = document.getElementById('btn-editar-perfil');
+  const btnCancelar = document.getElementById('btn-cancelar');
+  const btnExcluir = document.getElementById('btn-excluir-conta');
+
+  async function carregarPerfil() {
+    try {
+      const res = await fetch(`/usuarios/perfil/${idUsuario}`);
+      if (res.ok) {
+        const user = await res.json();
+
+        viewNome.textContent = user.nome || 'Usuário';
+        infoEmail.textContent = user.email || '-';
+        infoCpf.textContent = user.cpf || 'Não informado';
+        infoArea.textContent = user.area || 'Geral';
+
+        document.getElementById('p-nome').value = user.nome || '';
+        document.getElementById('p-email').value = user.email || '';
+        document.getElementById('p-cpf').value = user.cpf || '';
+        if (user.area) document.getElementById('p-area').value = user.area;
+      }
+    } catch (erro) {
+      console.error("Erro ao carregar perfil:", erro);
+    }
+  }
+
+  btnEditar.addEventListener('click', () => {
+    modoVisualizacao.classList.toggle('oculto');
+    formPerfil.classList.toggle('oculto');
+  });
+
+  btnCancelar.addEventListener('click', () => {
+    modoVisualizacao.classList.toggle('oculto');
+    formPerfil.classList.toggle('oculto');
+  });
+
+  formPerfil.addEventListener('submit', async e => {
+    e.preventDefault();
+    const dadosAtualizados = {
+      nomeServer: document.getElementById('p-nome').value,
+      emailServer: document.getElementById('p-email').value,
+      cpfServer: document.getElementById('p-cpf').value,
+      areaServer: document.getElementById('p-area').value
+    };
+
+    try {
+      const resposta = await fetch(`/usuarios/editar/${idUsuario}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dadosAtualizados)
+      });
+
+      if (resposta.ok) {
+        alert("Perfil atualizado com sucesso!");
+        modoVisualizacao.classList.toggle('oculto');
+        formPerfil.classList.toggle('oculto');
+        carregarPerfil();
+      } else {
+        alert("Erro ao atualizar perfil.");
+      }
+    } catch (erro) {
+      console.error("Erro na requisição:", erro);
+    }
+  });
+
+  btnExcluir.addEventListener('click', async () => {
+    if (confirm("Deseja realmente excluir sua conta? Esta ação não pode ser desfeita.")) {
+      try {
+        const resposta = await fetch(`/usuarios/deletar/${idUsuario}`, {
+          method: 'DELETE'
+        });
+
+        if (resposta.ok) {
+          sessionStorage.clear();
+          window.location.href = '../index.html';
+        } else {
+          alert("Erro ao excluir conta.");
+        }
+      } catch (erro) {
+        console.error("Erro ao excluir:", erro);
+      }
+    }
+  });
+
+  carregarPerfil();
+</script>
 </body>
 </html>

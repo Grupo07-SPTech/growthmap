@@ -55,6 +55,17 @@
   outline:none;
 }
 
+.form-grupo.campo-invalido input,
+.form-grupo.campo-invalido select{
+  border-color:#c62828;
+}
+
+.mensagem-erro{
+  color:#b71c1c;
+  font-size:12px;
+  line-height:1.4;
+}
+
 .form-acoes{
   display:flex;
   gap:12px;

@@ -1,180 +1,331 @@
-.conteudo{
-  margin-left:100px;
-  padding:40px 60px 40px 40px;
-  transition:margin-left .3s ease;
-  max-width:1200px;
+.conteudo {
+  padding: 40px;
+  box-sizing: border-box;
 }
 
-.topo-pagina{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:24px;
-  flex-wrap:wrap;
-  gap:16px;
-}
-
-.titulo{
-  font-size:36px;
-  font-weight:300;
-  margin:0;
-}
-.titulo span{
-  font-weight:700;
-  color:#7a1f3d;
-  padding:0 8px;
-  background:linear-gradient(transparent 58%, rgba(122,31,61,.25) 58%);
-  border-radius:4px;
-}
-
-.btn-novo{
-  background:#7a1f3d;
-  color:#fff;
-  padding:10px 20px;
-  border-radius:20px;
-  font-size:14px;
-  font-weight:500;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  border:none;
-  cursor:pointer;
-  box-shadow:0 4px 10px rgba(122,31,61,.25);
-  transition:background .2s;
-}
-.btn-novo:hover{background:#4d1226}
-
-.card{
-  background:rgba(255,255,255,.88);
-  border-radius:18px;
-  padding:24px;
-  box-shadow: 10px 10px 0 rgba(122,31,61,.22), 20px 20px 0 rgba(122,31,61,.10), 0 12px 28px rgba(122,31,61,.12);
-  margin-bottom:24px;
-}
-
-.tabela-dados{
-  width:100%;
-  border-collapse:collapse;
-  text-align:left;
-  font-size:15px;
-}
-
-.tabela-dados th{
-  padding:12px;
-  border-bottom:2px solid #ddd;
-  font-weight:600;
-  color:#333;
-}
-
-.tabela-dados td{
-  padding:12px;
-  border-bottom:1px solid #eee;
-  color:#444;
-}
-
-.badge{
-  padding:4px 12px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:500;
-  color:#fff;
-}
-.badge.vinho{background:#7a1f3d;}
-
-.acoes-celula{
-  display:flex;
-  gap:8px;
-}
-
-.btn-acao{
-  background:rgba(31,31,122,.08);
-  border:none;
-  cursor:pointer;
-  font-size:13px;
-  color:#1f1f7a;
-  padding:6px 12px;
-  border-radius:6px;
-  display:inline-flex;
-  align-items:center;
-  gap:4px;
-  font-weight:500;
-}
-.btn-acao:hover{background:rgba(31,31,122,.15)}
-.btn-acao.excluir{
-  background:rgba(122,31,61,.08);
-  color:#7a1f3d;
-}
-.btn-acao.excluir:hover{background:rgba(122,31,61,.15)}
-
-/* Estilização do Modal de Cadastro / Edição */
-.modal-overlay{
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 100;
+.topo-pagina {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  padding: 20px;
+  margin-bottom: 30px;
 }
 
-.modal-card{
-  background: #fff;
-  border-radius: 18px;
-  padding: 30px;
+.titulo {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c2c2c;
+}
+
+.titulo span {
+  color: #7b1e3a;
+}
+
+
+.tabela-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.tabela-dados {
   width: 100%;
-  max-width: 500px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  border-collapse: collapse;
+  text-align: left;
 }
 
-.modal-titulo{
-  font-size: 22px;
+.tabela-dados th {
+  padding: 14px 16px;
+  font-size: 13px;
   font-weight: 600;
-  color: #7a1f3d;
+  color: #666;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.tabela-dados td {
+  padding: 16px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge.administrativo {
+  background-color: #fde8ed;
+  color: #7b1e3a;
+}
+
+.badge.operacional {
+  background-color: #e6f4ea;
+  color: #137333;
+}
+
+.acoes-tabela {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-acao {
+  background: #f5f5f5;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.btn-acao.editar:hover {
+  background-color: #7b1e3a;
+  color: #fff;
+}
+
+.btn-acao.excluir:hover {
+  background-color: #d32f2f;
+  color: #fff;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal.oculto {
+  display: none;
+}
+
+.modal-conteudo {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+}
+
+.modal-conteudo h2 {
+  font-size: 20px;
+  color: #2c2c2c;
   margin-bottom: 20px;
 }
 
-.form-grupo{
+.form-grupo-modal {
+  margin-bottom: 16px;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-bottom: 16px;
 }
 
-.form-grupo label{
-  font-size: 14px;
+.form-grupo-modal label {
+  font-size: 13px;
   font-weight: 500;
-  color: #333;
+  color: #444;
 }
 
-.form-grupo input, .form-grupo select{
-  border: 2px solid #7a1f3d;
-  background: #ebebeb;
-  padding: 10px 14px;
-  font-size: 14px;
-  font-family: inherit;
+.form-grupo-modal input[type="text"],
+.form-grupo-modal select {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
   border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
   outline: none;
 }
 
-.form-acoes{
+.form-grupo-modal input:focus,
+.form-grupo-modal select:focus {
+  border-color: #7b1e3a;
+}
+
+.checkbox-grupo {
   display: flex;
-  gap: 12px;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 5px;
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.checkbox-grupo label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.form-acoes {
+  display: flex;
+  gap: 10px;
   margin-top: 24px;
 }
 
-.btn-salvar, .btn-limpar{
-  padding: 10px 24px;
+.btn-salvar {
+  flex: 1;
+  background-color: #7b1e3a;
+  color: #fff;
   border: none;
-  border-radius: 20px;
-  font-size: 14px;
-  font-family: inherit;
-  cursor: pointer;
+  border-radius: 8px;
+  padding: 10px;
   font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-.btn-salvar{background:#7a1f3d;color:#fff}
-.btn-salvar:hover{background:#4d1226}
+.btn-salvar:hover {
+  background-color: #5d152b;
+}
 
-.btn-limpar{background:#d5d5d5;color:#333}
-.btn-limpar:hover{background:#c0c0c0}
+.btn-cancelar {
+  flex: 1;
+  background-color: #e0e0e0;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-cancelar:hover {
+  background-color: #d0d0d0;
+}
+/* Fundo escuro cobrindo a tela */
+.modal, #modal-editar, #modal-filial {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.modal-conteudo, .card-modal {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-conteudo h2, .card-modal h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2c2c2c;
+  margin-bottom: 5px;
+}
+
+.modal-conteudo label, .card-modal label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+
+.modal-conteudo input, 
+.modal-conteudo select,
+.card-modal input, 
+.card-modal select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.modal-conteudo input:focus, 
+.modal-conteudo select:focus,
+.card-modal input:focus, 
+.card-modal select:focus {
+  border-color: #7b1e3a;
+}
+
+.form-linha {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.form-linha > div, .form-linha > label {
+  flex: 1;
+}
+
+.form-acoes {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.btn-salvar {
+  flex: 1;
+  background-color: #7b1e3a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-salvar:hover {
+  background-color: #5d152b;
+}
+
+.btn-cancelar, .btn-limpar {
+  flex: 1;
+  background-color: #e0e0e0;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-cancelar:hover, .btn-limpar:hover {
+  background-color: #d0d0d0;
+}
