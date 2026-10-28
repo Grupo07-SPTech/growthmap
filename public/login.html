@@ -8,7 +8,7 @@
 
    <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&family=Poppins:wght@400;600&display=swap"
       rel="stylesheet">
-  <link rel="icon" href="./assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
+   <link rel="icon" href="./assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
    <link rel="stylesheet" href="./css/login.css">
 </head>
 
@@ -61,11 +61,11 @@
          fetch("/empresas/autenticar", {
             method: "POST",
             headers: {
-                  "Content-Type": "application/json"
+               "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                  email: emailVar,
-                  senha: senhaVar
+               email: emailVar,
+               senha: senhaVar
             })
          })
             .then(function (resposta) {
@@ -75,19 +75,55 @@
                      sessionStorage.NOME_EMPRESA = empresa.nome;
                      sessionStorage.EMAIL_EMPRESA = empresa.email;
                      sessionStorage.CNPJ_EMPRESA = empresa.cnpj;
-                     
+
                      sessionStorage.setItem("CARGO_USUARIO", empresa.cargo || "Diretor Geral");
 
                      window.location = "./dashboard/acessoRapido.html";
                   });
+               } else if (resposta.status == 403) {
+                  // Se não for empresa, tenta como colaborador
+                  fetch("/usuarios/autenticar", {
+                     method: "POST",
+                     headers: {
+                        "Content-Type": "application/json"
+                     },
+                     body: JSON.stringify({
+                        emailServer: emailVar,
+                        senhaServer: senhaVar
+                     })
+                  })
+                     .then(function (respostaUsuario) {
+                        if (respostaUsuario.ok) {
+                           respostaUsuario.json().then(function (usuario) {
+                              sessionStorage.clear();
+
+                              sessionStorage.ID_USUARIO = usuario.id;
+                              sessionStorage.NOME_USUARIO = usuario.nome;
+                              sessionStorage.EMAIL_USUARIO = usuario.email;
+                              sessionStorage.ID_EMPRESA = usuario.empresaId;
+                              sessionStorage.ID_UNIDADE = usuario.unidadeId;
+                              sessionStorage.ID_CARGO = usuario.cargoId;
+                              sessionStorage.CARGO_USUARIO = usuario.cargo;
+                              sessionStorage.NIVEL_ACESSO = usuario.nivelAcesso;
+                              sessionStorage.TIPO_CONTA = "usuario";
+
+                              window.location = "./dashboard/acessoRapido.html";
+                           });
+                        } else {
+                           alert("E-mail ou senha inválidos!");
+                        }
+                     })
+                     .catch(function (erro) {
+                        console.log(erro);
+                        alert("Erro ao autenticar colaborador.");
+                     });
                } else {
-                  resposta.text().then(function (texto) {
-                     alert(texto);
-                  });
+                  alert("Erro ao autenticar empresa.");
                }
             })
             .catch(function (erro) {
-                  console.log("#ERRO:", erro);
+               console.log(erro);
+               alert("Erro de conexão com o servidor.");
             });
 
          return false;

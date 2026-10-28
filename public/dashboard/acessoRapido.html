@@ -39,7 +39,9 @@
     <a href="perfilUsuario.html">
       <div class="perfil"></div>
     </a>
-    <div class="sair"><a href="../index.html">Sair</a></div>
+    <div class="sair">
+      <a href="../index.html" onclick="sessionStorage.clear()">Sair</a>
+    </div>
   </div>
 
   <div class="conteudo">
@@ -101,10 +103,14 @@
     btnMenu.addEventListener('click', () => {
       document.body.classList.toggle('menu-fechado');
     });
-    overlay.addEventListener('click', () => {
+    if (overlay) {
+      overlay.addEventListener('click', () => {
       document.body.classList.add('menu-fechado');
     });
+}
   </script>
+
+  <script src="../js/controleAcesso.js"></script>
 </body>
 
 </html>

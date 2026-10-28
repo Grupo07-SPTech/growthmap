@@ -7,18 +7,18 @@ function cadastrar(req, res) {
     var cargo = req.body.cargo || "Professor";
     var area = req.body.area;
     var idUnidade = req.body.idUnidade;
-    var senha = req.body.senha || "123456";
+    var senha = req.body.senha;
 
-    if (!nome || !email || !cpf || !area || !idUnidade) {
+    if (!nome || !email || !cpf || !area || !idUnidade || !senha) {
         return res.status(400).send("Preencha todos os campos obrigatórios!");
+    } else { 
+        professorModel.cadastrar(nome, email, senha, cargo, area, idUnidade, cpf)
+            .then(resultado => res.json(resultado))
+            .catch(erro => {
+                console.log(erro);
+                res.status(500).json(erro.sqlMessage);
+            });
     }
-
-    professorModel.cadastrar(nome, email, senha, cargo, area, idUnidade, cpf)
-        .then(resultado => res.json(resultado))
-        .catch(erro => {
-            console.log(erro);
-            res.status(500).json(erro.sqlMessage);
-        });
 }
 
 function listarPorEmpresa(req, res) {

@@ -270,20 +270,26 @@
     let selectCargo = document.getElementById("edit-cargo");
     selectCargo.innerHTML = "";
 
-    if (cargoLogado === "Administrador" || cargoLogado === "Diretor Geral") {
-      selectCargo.innerHTML += `
-        <option value="Professor">Professor</option>
-        <option value="Coordenador">Coordenador</option>
-        <option value="Diretor">Diretor</option>
-        <option value="Administrador">Administrador</option>
-        <option value="Diretor Geral">Diretor Geral</option>
-      `;
-    } else {
-      selectCargo.innerHTML += `
-        <option value="Professor">Professor</option>
-        <option value="Coordenador">Coordenador</option>
-      `;
-    }
+    fetch("/permissoes/cargos")
+    .then(function (resposta) {
+        return resposta.json();
+    })
+    .then(function (cargos) {
+        selectCargo.innerHTML = "";
+
+        for (var i = 0; i < cargos.length; i++) {
+            selectCargo.innerHTML += `
+                <option value="${cargos[i].nome}">
+                    ${cargos[i].nome}
+                </option>
+            `;
+        }
+
+        selectCargo.value = usuario.cargo;
+    })
+    .catch(function (erro) {
+        console.log(erro);
+    });
 
     document.getElementById("edit-cargo").value = usuario.cargo || "Professor";
     document.getElementById("modal-editar").style.display = "flex";
@@ -335,5 +341,7 @@
     }
   }
 </script>
+
+<script src="../js/controleAcesso.js"></script>
 </body>
 </html>

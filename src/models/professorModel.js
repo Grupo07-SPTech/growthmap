@@ -2,8 +2,17 @@ var database = require("../database/config");
 
 function cadastrar(nome, email, senha, cargo, area, idUnidade, cpf) {
     var instrucaoSql = `
-        INSERT INTO usuario (nome, email, senha, cargo, id_unidade, cpf, area_atuacao) 
-        VALUES ('${nome}', '${email}', '${senha}', '${cargo}', ${idUnidade}, '${cpf}', '${area}')
+        INSERT INTO usuario
+        (nome, email, senha, fk_cargo, id_unidade, cpf, area_atuacao)
+            VALUES (
+            '${nome}',
+            '${email}',
+            '${senha}',
+            (SELECT id_cargo FROM cargo WHERE nome = '${cargo}' LIMIT 1),
+            ${idUnidade},
+            '${cpf}',
+            '${area}'
+        );
     `;
     console.log("Executando: " + instrucaoSql);
     return database.executar(instrucaoSql);
@@ -34,7 +43,12 @@ function atualizar(id, nome, email, cpf, cargo, area, idUnidade) {
         SET nome = '${nome}', 
             email = '${email}', 
             cpf = '${cpf}', 
-            cargo = '${cargo}', 
+            fk_cargo = (
+                SELECT id_cargo
+                FROM cargo
+                WHERE nome = '${cargo}'
+                LIMIT 1
+            ), 
             area_atuacao = '${area}', 
             id_unidade = ${idUnidade} 
         WHERE id = ${id};
