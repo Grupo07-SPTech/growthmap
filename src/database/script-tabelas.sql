@@ -149,3 +149,9 @@ CREATE TABLE cargo_modulo (
         FOREIGN KEY (fk_modulo)
         REFERENCES modulo(id_modulo)
 );
+
+INSERT INTO modulo (nome) VALUES
+('Painel de Eventos'),
+('Filiais'),
+('Gráficos / Dashboard'),
+('Gerenciamento de Usuários');

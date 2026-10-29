@@ -39,7 +39,9 @@
     <a href="perfilUsuario.html">
       <div class="perfil"></div>
     </a>
-    <div class="sair"><a href="../index.html">Sair</a></div>
+    <div class="sair">
+      <a href="../index.html" onclick="sessionStorage.clear()">Sair</a>
+    </div>
   </div>
 
   <div class="conteudo">
@@ -57,7 +59,7 @@
   <script>
     const servicos = [
       { nome: 'Painel de eventos', desc: 'Calendário de eventos proximos.', icone: 'fi-rr-calendar', href: './painelEventos.html', cor: 'vinho' },
-      { nome: 'Dashboard', desc: 'Indicadores e desempenho das unidades.', icone: 'fi-rr-chart-pie-alt', href: '.dashboardProfessor.html', cor: 'azul' },
+      { nome: 'Dashboard', desc: 'Indicadores e desempenho das unidades.', icone: 'fi-rr-chart-pie-alt', href: './dashboardProfessor.html', cor: 'azul' },
       { nome: 'Usuários', desc: 'Usuários e permissões.', icone: 'fi-rr-users', href: './usuarios.html', cor: 'vinho' },
       { nome: 'Configurações', desc: 'Configurações de conta', icone: 'fi-rr-settings', href: './perfilUsuario.html', cor: 'azul' }
     ];
@@ -101,10 +103,14 @@
     btnMenu.addEventListener('click', () => {
       document.body.classList.toggle('menu-fechado');
     });
-    overlay.addEventListener('click', () => {
+    if (overlay) {
+      overlay.addEventListener('click', () => {
       document.body.classList.add('menu-fechado');
     });
+}
   </script>
+
+  <script src="../js/controleAcesso.js"></script>
 </body>
 
 </html>

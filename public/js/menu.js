@@ -5,7 +5,11 @@ const overlay = document.getElementById('overlay');
 if(window.innerWidth <= 900) document.body.classList.add('menu-fechado');
 
 btnMenu.addEventListener('click', () => document.body.classList.toggle('menu-fechado'));
-overlay.addEventListener('click', () => document.body.classList.add('menu-fechado'));
+if (overlay) {
+    overlay.addEventListener('click', () => {
+        document.body.classList.add('menu-fechado');
+    });
+}
 
 const itensNav = [...document.querySelectorAll('.sidebar .nav-item')];
 const indicador = document.getElementById('nav-indicador');
