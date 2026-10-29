@@ -3,6 +3,14 @@ var cargoLogado = sessionStorage.getItem("CARGO_USUARIO");
 var tipoConta = sessionStorage.getItem("TIPO_CONTA");
 var idCargo = sessionStorage.getItem("ID_CARGO");
 
+function cargoNormalizado(cargo) {
+    return String(cargo || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLocaleLowerCase("pt-BR");
+}
+
+function ehCoordenador() {
+    return cargoNormalizado(cargoLogado).indexOf("coordenador") === 0;
+}
+
 function dashboardDoUsuario() {
     if (cargoLogado == "Diretor Geral" || cargoLogado == "Administrador") {
         return "./dashboardDiretorGeral.html";
@@ -12,7 +20,7 @@ function dashboardDoUsuario() {
         return "./dashboardDiretorFilial.html";
     }
 
-    if (cargoLogado == "Coordenador") {
+    if (ehCoordenador()) {
         return "./dashboardCoordenador.html";
     }
 
@@ -44,13 +52,17 @@ function moduloDaPagina(pagina) {
 }
 
 function coordenadorGerenciaUsuarios(pagina) {
-    return cargoLogado == "Coordenador" &&
+    return ehCoordenador() &&
         (pagina == "usuarios.html" || pagina == "permissoes.html");
 }
 
+function coordenadorAcessaDashboard(pagina) {
+    return ehCoordenador() && pagina == "dashboardCoordenador.html";
+}
+
 function professorAcessaDashboard(pagina) {
-    var cargoNormalizado = (cargoLogado || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLocaleLowerCase("pt-BR");
-    var ehProfessor = cargoNormalizado.indexOf("professor") === 0 || cargoNormalizado.indexOf("professora") === 0;
+    var cargo = cargoNormalizado(cargoLogado);
+    var ehProfessor = cargo.indexOf("professor") === 0 || cargo.indexOf("professora") === 0;
     return ehProfessor && pagina == "dashboardProfessor.html";
 }
 
@@ -66,7 +78,7 @@ function aplicarAcesso(modulos) {
     }
 
     // Bloqueia a navegação direta para módulos não permitidos
-    if (moduloAtual != "" && !permitido && !coordenadorGerenciaUsuarios(pagina) && !professorAcessaDashboard(pagina)) {
+    if (moduloAtual != "" && !permitido && !coordenadorGerenciaUsuarios(pagina) && !coordenadorAcessaDashboard(pagina) && !professorAcessaDashboard(pagina)) {
         alert("Seu cargo não possui acesso a esta página.");
         window.location = "./acessoRapido.html";
         return;
@@ -78,16 +90,19 @@ function aplicarAcesso(modulos) {
     for (var i = 0; i < links.length; i++) {
         var destino = links[i].getAttribute("href");
         var nomePagina = destino.split("/").pop();
-        var modulo = moduloDaPagina(nomePagina);
 
         if (nomePagina.indexOf("dashboard") == 0) {
             links[i].href = dashboardDoUsuario();
+            destino = links[i].getAttribute("href");
+            nomePagina = destino.split("/").pop();
         }
+
+        var modulo = moduloDaPagina(nomePagina);
 
         if (modulo != "" && tipoConta != "empresa") {
             var mostrar = false;
 
-            if (coordenadorGerenciaUsuarios(nomePagina) || professorAcessaDashboard(nomePagina)) {
+            if (coordenadorGerenciaUsuarios(nomePagina) || coordenadorAcessaDashboard(nomePagina) || professorAcessaDashboard(nomePagina)) {
                 mostrar = true;
             }
 
@@ -109,16 +124,19 @@ function aplicarAcesso(modulos) {
     for (var i = 0; i < cards.length; i++) {
         var destinoCard = cards[i].getAttribute("href");
         var paginaCard = destinoCard.split("/").pop();
-        var moduloCard = moduloDaPagina(paginaCard);
 
         if (paginaCard.indexOf("dashboard") == 0) {
             cards[i].href = dashboardDoUsuario();
+            destinoCard = cards[i].getAttribute("href");
+            paginaCard = destinoCard.split("/").pop();
         }
+
+        var moduloCard = moduloDaPagina(paginaCard);
 
         if (moduloCard != "" && tipoConta != "empresa") {
             var exibir = false;
 
-            if (coordenadorGerenciaUsuarios(paginaCard) || professorAcessaDashboard(paginaCard)) {
+            if (coordenadorGerenciaUsuarios(paginaCard) || coordenadorAcessaDashboard(paginaCard) || professorAcessaDashboard(paginaCard)) {
                 exibir = true;
             }
 

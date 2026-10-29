@@ -106,6 +106,14 @@
     </div>
   </div>
 
+  <div id="modal-cadastro-sucesso" class="modal-sucesso" role="dialog" aria-modal="true" aria-labelledby="modal-sucesso-titulo" aria-describedby="modal-sucesso-mensagem">
+    <div class="modal-sucesso-conteudo">
+      <h2 id="modal-sucesso-titulo">Usuário cadastrado com sucesso!</h2>
+      <p id="modal-sucesso-mensagem">Cargo: <strong id="modal-sucesso-cargo"></strong></p>
+      <button type="button" class="btn-modal-sucesso" onclick="irParaUsuarios()">Ir para usuários</button>
+    </div>
+  </div>
+
   <script src="../js/menu.js"></script>
   <script>
     function carregarFiliais() {
@@ -162,8 +170,8 @@
       })
         .then(function (resposta) {
           if (resposta.ok) {
-            alert("Professor cadastrado com sucesso!");
-            window.location = "./usuarios.html";
+            document.getElementById("modal-sucesso-cargo").textContent = cargo;
+            document.getElementById("modal-cadastro-sucesso").style.display = "flex";
           } else {
             resposta.text().then(function (texto) {
               alert(texto);
@@ -174,6 +182,10 @@
           console.error("#ERRO:", erro);
           alert("Erro ao cadastrar usuário.");
         });
+    }
+
+    function irParaUsuarios() {
+      window.location = "./usuarios.html";
     }
 
     function carregarCargos() {
