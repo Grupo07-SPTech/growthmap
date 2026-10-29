@@ -51,6 +51,7 @@
         style="background-color: #7b1e3a; color: #fff; border: none; border-radius: 8px; padding: 10px 18px; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i
           class="fi fi-rr-plus"></i> Novo Cargo / Permissão</button>
     </div>
+    <p id="orientacao-cargos" class="orientacao-cargos"></p>
 
     <div class="card tabela-card">
       <table class="tabela-dados">
@@ -73,8 +74,9 @@
       <h2 id="modal-titulo">Adicionar Novo Cargo</h2>
       <form id="form-permissao">
         <div class="form-grupo-modal">
-          <label>Nome do Cargo:</label>
+          <label id="label-cargo" for="inp-cargo">Nome do Cargo:</label>
           <input type="text" id="inp-cargo" required placeholder="Ex.: Coordenador Pedagógico">
+          <small id="ajuda-cargo"></small>
         </div>
         <div class="form-grupo-modal">
           <label>Nível de Acesso:</label>

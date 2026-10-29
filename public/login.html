@@ -77,6 +77,8 @@
                      sessionStorage.CNPJ_EMPRESA = empresa.cnpj;
 
                      sessionStorage.setItem("CARGO_USUARIO", empresa.cargo || "Diretor Geral");
+                     sessionStorage.setItem("NIVEL_ACESSO", "Administrativo");
+                     sessionStorage.setItem("TIPO_CONTA", "empresa");
 
                      window.location = "./dashboard/acessoRapido.html";
                   });

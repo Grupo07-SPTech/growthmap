@@ -20,10 +20,20 @@ function cadastrar(nome, email, senha, cargo, area, idUnidade, cpf) {
 
 function listarPorEmpresa(idEmpresa) {
     var instrucaoSql = `
-        SELECT u.id, u.nome, u.email, u.cpf, u.cargo, u.area_atuacao, un.nome AS nome_unidade, un.id AS id_unidade, m.nome_municipio 
+        SELECT
+            u.id,
+            u.nome,
+            u.email,
+            u.cpf,
+            c.nome AS cargo,
+            u.area_atuacao,
+            un.nome AS nome_unidade,
+            un.id AS id_unidade,
+            m.nome_municipio
         FROM usuario u 
         JOIN unidade un ON u.id_unidade = un.id 
-        JOIN municipio m ON un.co_municipio = m.co_municipio 
+        LEFT JOIN municipio m ON un.co_municipio = m.co_municipio
+        LEFT JOIN cargo c ON u.fk_cargo = c.id_cargo
         WHERE un.id_empresa = ${idEmpresa};
     `;
     console.log("Executando: " + instrucaoSql);
@@ -33,6 +43,16 @@ function listarPorEmpresa(idEmpresa) {
 function buscarPorId(id) {
     var instrucaoSql = `
         SELECT * FROM usuario WHERE id = ${id};
+    `;
+    return database.executar(instrucaoSql);
+}
+
+function buscarCargoPorUsuario(id) {
+    var instrucaoSql = `
+        SELECT c.nome AS cargo
+        FROM usuario u
+        JOIN cargo c ON u.fk_cargo = c.id_cargo
+        WHERE u.id = ${Number(id)};
     `;
     return database.executar(instrucaoSql);
 }
@@ -68,6 +88,7 @@ module.exports = {
     cadastrar,
     listarPorEmpresa,
     buscarPorId,
+    buscarCargoPorUsuario,
     atualizar,
     deletar
 };

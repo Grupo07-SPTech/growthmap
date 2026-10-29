@@ -43,6 +43,17 @@ function moduloDaPagina(pagina) {
     return "";
 }
 
+function coordenadorGerenciaUsuarios(pagina) {
+    return cargoLogado == "Coordenador" &&
+        (pagina == "usuarios.html" || pagina == "permissoes.html");
+}
+
+function professorAcessaDashboard(pagina) {
+    var cargoNormalizado = (cargoLogado || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLocaleLowerCase("pt-BR");
+    var ehProfessor = cargoNormalizado.indexOf("professor") === 0 || cargoNormalizado.indexOf("professora") === 0;
+    return ehProfessor && pagina == "dashboardProfessor.html";
+}
+
 function aplicarAcesso(modulos) {
     var pagina = window.location.pathname.split("/").pop();
     var moduloAtual = moduloDaPagina(pagina);
@@ -55,7 +66,7 @@ function aplicarAcesso(modulos) {
     }
 
     // Bloqueia a navegação direta para módulos não permitidos
-    if (moduloAtual != "" && !permitido) {
+    if (moduloAtual != "" && !permitido && !coordenadorGerenciaUsuarios(pagina) && !professorAcessaDashboard(pagina)) {
         alert("Seu cargo não possui acesso a esta página.");
         window.location = "./acessoRapido.html";
         return;
@@ -75,6 +86,10 @@ function aplicarAcesso(modulos) {
 
         if (modulo != "" && tipoConta != "empresa") {
             var mostrar = false;
+
+            if (coordenadorGerenciaUsuarios(nomePagina) || professorAcessaDashboard(nomePagina)) {
+                mostrar = true;
+            }
 
             for (var j = 0; j < modulos.length; j++) {
                 if (modulos[j] == modulo) {
@@ -102,6 +117,10 @@ function aplicarAcesso(modulos) {
 
         if (moduloCard != "" && tipoConta != "empresa") {
             var exibir = false;
+
+            if (coordenadorGerenciaUsuarios(paginaCard) || professorAcessaDashboard(paginaCard)) {
+                exibir = true;
+            }
 
             for (var j = 0; j < modulos.length; j++) {
                 if (modulos[j] == moduloCard) {

@@ -142,27 +142,69 @@
     }
 
     fetch(`/filial/listar/${idEmpresa}`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error("Não foi possível carregar as filiais.");
+        return res.json();
+      })
       .then(filiais => {
         listaFiliaisGlobal = filiais;
         popularSelectFiliaisFiltro();
         popularSelectFiliaisEdicao();
         return fetch(`/professor/listar/${idEmpresa}`);
       })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error("Não foi possível carregar os usuários.");
+        return res.json();
+      })
       .then(usuarios => {
-        listaUsuariosGlobal = usuarios;
+        listaUsuariosGlobal = filtrarPorHierarquia(Array.isArray(usuarios) ? usuarios : []);
         exibirUsuarios(listaUsuariosGlobal);
         popularSelectsDinamicos(listaUsuariosGlobal);
       })
       .catch(err => console.error("Erro ao carregar dados: ", err));
   }
 
+  function normalizarCargo(cargo) {
+    return String(cargo || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLocaleLowerCase("pt-BR");
+  }
+
+  function ehCargoProfessor(cargo) {
+    let normalizado = normalizarCargo(cargo);
+    return normalizado.indexOf("professor") === 0 || normalizado.indexOf("professora") === 0;
+  }
+
+  function ehCargoCoordenacao(cargo) {
+    let normalizado = normalizarCargo(cargo);
+    return normalizado.indexOf("coordenador") === 0 || normalizado.indexOf("coordenadora") === 0;
+  }
+
+  function ehNivelAdministrativo(nivel) {
+    return normalizarCargo(nivel) === "administrativo";
+  }
+
+  function filtrarPorHierarquia(usuarios) {
+    let cargoLogado = normalizarCargo(sessionStorage.getItem("CARGO_USUARIO"));
+    let ehDiretor = cargoLogado.indexOf("diretor") === 0;
+    let ehCoordenador = cargoLogado.indexOf("coordenador") === 0;
+
+    if (!ehDiretor && !ehCoordenador) return usuarios;
+
+    return usuarios.filter(function (usuario) {
+      let cargoUsuario = normalizarCargo(usuario.cargo);
+      let usuarioEhDiretor = cargoUsuario.indexOf("diretor") === 0;
+      let usuarioEhCoordenador = cargoUsuario.indexOf("coordenador") === 0 || cargoUsuario.indexOf("coordenadora") === 0;
+
+      if (ehDiretor && usuarioEhDiretor) return false;
+      if (ehCoordenador && (usuarioEhDiretor || usuarioEhCoordenador)) return false;
+      return true;
+    });
+  }
+
   function exibirUsuarios(usuarios) {
     let tbody = document.getElementById("tabela-usuarios");
     tbody.innerHTML = "";
 
-    if (usuarios.length === 0) {
+    if (!usuarios || usuarios.length === 0) {
       tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;">Nenhum utilizador encontrado com os filtros selecionados.</td></tr>`;
       return;
     }
@@ -170,27 +212,54 @@
     let cargoLogado = sessionStorage.getItem("CARGO_USUARIO") || "";
     let ehDiretorGeralOuAdmin = cargoLogado === "Diretor Geral" || cargoLogado === "Administrador";
     let ehDiretorFilial = cargoLogado === "Diretor";
-    let temPermissao = ehDiretorGeralOuAdmin || ehDiretorFilial;
+    let ehCoordenador = ehCargoCoordenacao(cargoLogado);
+    let nivelAdministrativo = ehNivelAdministrativo(sessionStorage.getItem("NIVEL_ACESSO"));
 
     for (let i = 0; i < usuarios.length; i++) {
       let usuario = usuarios[i];
+      let podeGerenciarUsuario = nivelAdministrativo && (ehDiretorGeralOuAdmin || ehDiretorFilial || (ehCoordenador && ehCargoProfessor(usuario.cargo)));
 
-      let botoesAcoes = temPermissao ? `
-        <button class="btn-acao editar" title="Editar" onclick="abrirModal(${usuario.id})"><i class="fi fi-rr-edit"></i> Editar</button>
-        <button class="btn-acao excluir" title="Excluir" onclick="excluirUsuario(${usuario.id})"><i class="fi fi-rr-trash"></i> Excluir</button>
-      ` : `<span style="color: #888; font-size: 13px;">Apenas visualização</span>`;
+      let linha = document.createElement("tr");
+      adicionarCelula(linha, valorSeguro(usuario.nome));
+      adicionarCelula(linha, valorSeguro(usuario.email));
+      adicionarCelula(linha, valorSeguro(usuario.cargo, "Professor"));
+      adicionarCelula(linha, valorSeguro(usuario.area_atuacao, "-"));
+      adicionarCelula(linha, valorSeguro(usuario.nome_unidade, "-") + " (" + valorSeguro(usuario.nome_municipio, "-") + ")");
 
-      tbody.innerHTML += `
-        <tr>
-          <td>${usuario.nome}</td>
-          <td>${usuario.email}</td>
-          <td>${usuario.cargo || 'Professor'}</td>
-          <td>${usuario.area_atuacao || '-'}</td>
-          <td>${usuario.nome_unidade || '-'} (${usuario.nome_municipio || '-'})</td>
-          <td>${botoesAcoes}</td>
-        </tr>
-      `;
+      let colunaAcoes = document.createElement("td");
+      if (podeGerenciarUsuario) {
+        let botaoEditar = document.createElement("button");
+        botaoEditar.className = "btn-acao editar";
+        botaoEditar.title = "Editar";
+        botaoEditar.innerHTML = '<i class="fi fi-rr-edit"></i> Editar';
+        botaoEditar.onclick = function () { abrirModal(usuario.id); };
+
+        let botaoExcluir = document.createElement("button");
+        botaoExcluir.className = "btn-acao excluir";
+        botaoExcluir.title = "Excluir";
+        botaoExcluir.innerHTML = '<i class="fi fi-rr-trash"></i> Excluir';
+        botaoExcluir.onclick = function () { excluirUsuario(usuario.id); };
+        colunaAcoes.appendChild(botaoEditar);
+        colunaAcoes.appendChild(botaoExcluir);
+      } else {
+        colunaAcoes.textContent = "Apenas visualização";
+      }
+      linha.appendChild(colunaAcoes);
+      tbody.appendChild(linha);
     }
+  }
+
+  function valorSeguro(valor, padrao = "Dados ausentes") {
+    if (valor === undefined || valor === null) return padrao;
+    let texto = String(valor).trim();
+    if (!texto || texto.toLowerCase() === "undefined" || texto.toLowerCase() === "null") return padrao;
+    return texto;
+  }
+
+  function adicionarCelula(linha, valor) {
+    let celula = document.createElement("td");
+    celula.textContent = valor;
+    linha.appendChild(celula);
   }
 
   function popularSelectFiliaisFiltro() {
@@ -213,14 +282,14 @@
     selectArea.innerHTML = `<option value="">Todas as áreas</option>`;
 
     for (let i = 0; i < usuarios.length; i++) {
-      let cargo = usuarios[i].cargo || 'Professor';
+      let cargo = valorSeguro(usuarios[i].cargo, "Professor");
       let area = usuarios[i].area_atuacao;
 
       if (cargo && !cargosUnicos.includes(cargo)) {
         cargosUnicos.push(cargo);
         selectCargo.innerHTML += `<option value="${cargo}">${cargo}</option>`;
       }
-      if (area && !areasUnicas.includes(area)) {
+      if (area && area !== "undefined" && area !== "null" && !areasUnicas.includes(area)) {
         areasUnicas.push(area);
         selectArea.innerHTML += `<option value="${area}">${area}</option>`;
       }
@@ -234,9 +303,11 @@
     let areaSelecionada = document.getElementById("filtro-area").value;
 
     let usuariosFiltrados = listaUsuariosGlobal.filter(function (usuario) {
-      let nomeMatch = usuario.nome.toLowerCase().includes(textoBusca) || usuario.email.toLowerCase().includes(textoBusca);
+      let nome = valorSeguro(usuario.nome, "").toLowerCase();
+      let email = valorSeguro(usuario.email, "").toLowerCase();
+      let nomeMatch = nome.includes(textoBusca) || email.includes(textoBusca);
       let filialMatch = filialSelecionada === "" || usuario.id_unidade == filialSelecionada;
-      let cargoUser = usuario.cargo || 'Professor';
+      let cargoUser = valorSeguro(usuario.cargo, "Professor");
       let cargoMatch = cargoSelecionado === "" || cargoUser === cargoSelecionado;
       let areaMatch = areaSelecionada === "" || usuario.area_atuacao === areaSelecionada;
 
@@ -260,13 +331,14 @@
     if (!usuario) return;
 
     document.getElementById("edit-id").value = usuario.id;
-    document.getElementById("edit-nome").value = usuario.nome;
-    document.getElementById("edit-email").value = usuario.email;
+    document.getElementById("edit-nome").value = valorSeguro(usuario.nome, "");
+    document.getElementById("edit-email").value = valorSeguro(usuario.email, "");
     document.getElementById("edit-cpf").value = usuario.cpf || "";
-    document.getElementById("edit-area").value = usuario.area_atuacao || "Ciências Exatas";
+    document.getElementById("edit-area").value = valorSeguro(usuario.area_atuacao, "");
     document.getElementById("edit-filial").value = usuario.id_unidade;
 
     let cargoLogado = sessionStorage.getItem("CARGO_USUARIO") || "Diretor";
+    let ehCoordenador = ehCargoCoordenacao(cargoLogado);
     let selectCargo = document.getElementById("edit-cargo");
     selectCargo.innerHTML = "";
 
@@ -278,11 +350,8 @@
         selectCargo.innerHTML = "";
 
         for (var i = 0; i < cargos.length; i++) {
-            selectCargo.innerHTML += `
-                <option value="${cargos[i].nome}">
-                    ${cargos[i].nome}
-                </option>
-            `;
+            if (ehCoordenador && !ehCargoProfessor(cargos[i].nome)) continue;
+            selectCargo.add(new Option(cargos[i].nome, cargos[i].nome));
         }
 
         selectCargo.value = usuario.cargo;
@@ -309,10 +378,24 @@
     let idUnidade = document.getElementById("edit-filial").value;
     let cargoUsuarioLogado = sessionStorage.getItem("CARGO_USUARIO");
 
+    if (!nome.trim() || !email.trim() || !cpf || !cargo || !area.trim() || !idUnidade) {
+      alert("Preencha nome, e-mail, CPF, cargo, área e filial antes de salvar.");
+      return;
+    }
+
     fetch(`/professor/atualizar/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, email, cpf, cargo, area, idUnidade, cargoUsuarioLogado })
+      body: JSON.stringify({
+        nome,
+        email,
+        cpf,
+        cargo,
+        area,
+        idUnidade,
+        cargoUsuarioLogado,
+        nivelAcessoUsuarioLogado: sessionStorage.getItem("NIVEL_ACESSO")
+      })
     })
       .then(res => {
         if (res.ok) {
@@ -328,13 +411,20 @@
 
   function excluirUsuario(id) {
     if (confirm("Tem certeza de que deseja excluir este utilizador?")) {
-      fetch(`/professor/deletar/${id}`, { method: "DELETE" })
+      fetch(`/professor/deletar/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cargoUsuarioLogado: sessionStorage.getItem("CARGO_USUARIO"),
+          nivelAcessoUsuarioLogado: sessionStorage.getItem("NIVEL_ACESSO")
+        })
+      })
         .then(res => {
           if (res.ok) {
             alert("Utilizador excluído com sucesso!");
             atualizarPagina();
           } else {
-            alert("Erro ao excluir o utilizador.");
+            res.text().then(texto => alert(texto || "Erro ao excluir o utilizador."));
           }
         })
         .catch(err => console.error("Erro: ", err));
