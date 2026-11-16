@@ -1,119 +1,299 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Growth Map | Dashboard Professor</title>
+
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/dashboardProfessor.css">
-    <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
+
+    <!-- MENU LATERAL -->
 
     <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
         <i class="fi fi-rr-menu-burger"></i>
     </button>
 
     <div class="sidebar">
+
         <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
+
         <div class="nav-indicador" id="nav-indicador"></div>
 
         <div class="nav-item">
-            <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
+            <a href="./acessoRapido.html">
+                <i class="fi fi-rr-apps"></i>
+            </a>
         </div>
+
         <div class="nav-item">
-            <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
+            <a href="./painelEventos.html">
+                <i class="fi fi-rr-calendar"></i>
+            </a>
         </div>
+
         <div class="nav-item">
-            <a href="./filiais.html"><i class="fi fi-rr-home"></i></a>
+            <a href="./filiais.html">
+                <i class="fi fi-rr-home"></i>
+            </a>
         </div>
+
         <div class="nav-item ativo">
-            <a href="./dashboardDiretorProfessor.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
+            <a href="./dashboardProfessor.html">
+                <i class="fi fi-rr-chart-pie-alt"></i>
+            </a>
         </div>
+
         <div class="nav-item">
-            <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
+            <a href="./usuarios.html">
+                <i class="fi fi-rr-users"></i>
+            </a>
         </div>
+
         <a href="perfilUsuario.html">
             <div class="perfil"></div>
         </a>
-        <div class="sair"><a href="../index.html">Sair</a></div>
+
+        <div class="sair">
+            <a href="../index.html">Sair</a>
+        </div>
+
     </div>
 
-    <main class="main-content" style="margin-left: 90px; padding: 32px; width: calc(100% - 90px);">
+
+    <!-- CONTEÚDO PRINCIPAL -->
+
+    <main class="main-content">
+
+        <!-- CABEÇALHO E FILTROS -->
+
         <header class="dash-header">
+
             <div class="dash-title">
                 <h1>Dashboard Pedagógica</h1>
                 <p>Análise de desempenho regional e competências do ENEM</p>
             </div>
+
             <div class="dash-filters">
+
                 <div class="filter-group">
+
                     <label for="select-estado">Estado (UF)</label>
-                    <select id="select-estado" onchange="atualizarMunicipios()">
+
+                    <select id="select-estado">
                         <option value="SP" selected>São Paulo (SP)</option>
                         <option value="RJ">Rio de Janeiro (RJ)</option>
                         <option value="MG">Minas Gerais (MG)</option>
                         <option value="PR">Paraná (PR)</option>
                     </select>
+
                 </div>
+
                 <div class="filter-group">
+
                     <label for="select-municipio">Município</label>
+
                     <select id="select-municipio"></select>
+
                 </div>
+
+                <div class="filter-group filter-area">
+
+                    <label for="select-area">Área do Conhecimento</label>
+
+                    <select id="select-area">
+                        <option value="matematica">Matemática</option>
+                        <option value="linguagens">Linguagens</option>
+                        <option value="humanas">Ciências Humanas</option>
+                        <option value="natureza">Ciências da Natureza</option>
+                        <option value="redacao">Redação</option>
+                    </select>
+
+                </div>
+
             </div>
+
         </header>
 
+
+        <!-- KPIs -->
+
         <section class="kpi-grid">
+
             <div class="kpi-card">
-                <span class="kpi-title">MÉDIA GERAL DO MUNICÍPIO</span>
-                <span class="kpi-value">515,0 pts</span>
-                <span class="kpi-footer">Média Estadual: 546,8 pts</span>
+
+                <span class="kpi-title">MÉDIA DE DESEMPENHO</span>
+
+                <span class="kpi-value" id="kpi-media">512,0 pts</span>
+
+                <span class="kpi-footer" id="kpi-media-footer">
+                    Média estadual: 554,0 pts
+                </span>
+
             </div>
-            <div class="kpi-card">
-                <span class="kpi-title">MÉDIA DE REDAÇÃO</span>
-                <span class="kpi-value">580,0 pts</span>
-                <span class="kpi-footer">Acima da média das áreas objetivas</span>
-            </div>
+
+
             <div class="kpi-card warning">
-                <span class="kpi-title">ÁREA DE MAIOR ATENÇÃO</span>
-                <span class="kpi-value">Ciências da Natureza</span>
-                <span class="kpi-footer">Média de 480,0 pts na região</span>
+
+                <span class="kpi-title">TAXA DE ABSTENÇÃO</span>
+
+                <span class="kpi-value" id="kpi-abstencao">24,5%</span>
+
+                <span class="kpi-footer" id="kpi-abstencao-footer">
+                    Abstenção do Dia 2 de aplicação
+                </span>
+
             </div>
-            <div class="kpi-card danger">
-                <span class="kpi-title">GARGALO NA REDAÇÃO</span>
-                <span class="kpi-value">Competência 3</span>
-                <span class="kpi-footer">Argumentação (110,0 pts)</span>
+
+
+            <div class="kpi-card">
+
+                <span class="kpi-title" id="titulo-evolucao">
+                    EVOLUÇÃO PLURIANUAL DA MÉDIA GERAL DE MATEMÁTICA
+                </span>
+
+                <span class="kpi-value" id="kpi-evolucao">+4,2%</span>
+
+                <span class="kpi-footer" id="kpi-evolucao-footer">
+                    Comparação entre 2022 e 2024
+                </span>
+
             </div>
+
+
+            <div class="kpi-card" id="card-diferencial">
+
+                <span class="kpi-title">DIFERENCIAL REGIONAL</span>
+
+                <span class="kpi-value" id="kpi-diferencial">-7,6%</span>
+
+                <span class="kpi-footer" id="kpi-diferencial-footer">
+                    Em relação à média estadual
+                </span>
+
+            </div>
+
         </section>
+
+
+        <!-- GRÁFICOS: TODOS NA MESMA LINHA -->
 
         <section class="charts-grid">
-            <div class="chart-card">
+
+
+            <!-- 1. PROGRESSO DO PLANEJAMENTO -->
+
+            <div class="chart-card progress-card">
+
                 <div class="chart-header">
-                    <h3>Desempenho por Área de Conhecimento</h3>
-                    <p>Comparativo entre o município selecionado e a média do estado</p>
+
+                    <h3>Progresso do Planejamento</h3>
+
+                    <p>Eventos cadastrados em relação à meta do período</p>
+
                 </div>
-                <div class="chart-container">
-                    <canvas id="radarChart"></canvas>
+
+                <div class="donut-container">
+
+                    <canvas id="progressChart"></canvas>
+
+                    <div class="donut-center">
+
+                        <span id="progress-percent">40%</span>
+
+                        <small>Concluído</small>
+
+                    </div>
+
                 </div>
+
+                <div class="progress-info">
+
+                    <strong id="progress-absolute">
+                        4 de 10 eventos cadastrados
+                    </strong>
+
+                    <span>Meta de eventos para o período</span>
+
+                </div>
+
             </div>
 
-            <div class="chart-card">
+
+            <!-- 2. COMPETÊNCIAS DA REDAÇÃO -->
+
+            <div class="chart-card diagnostic-card" id="card-diagnostic">
+
                 <div class="chart-header">
-                    <h3>Desempenho por Competência da Redação</h3>
-                    <p>Média de pontuação (0 a 200 pontos por competência)</p>
+
+                    <h3 id="diagnostic-title">
+                        Desempenho por Competência da Redação
+                    </h3>
+
+                    <p id="diagnostic-subtitle">
+                        Pontuação média dos alunos (0 a 200 pontos por competência)
+                    </p>
+
                 </div>
+
                 <div class="chart-container">
-                    <canvas id="barRedacaoChart"></canvas>
+
+                    <canvas id="diagnosticChart"></canvas>
+
                 </div>
+
             </div>
+
+
+            <!-- 3. ESTADO VS MUNICÍPIO -->
+
+            <div class="chart-card historical-card">
+
+                <div class="chart-header">
+
+                    <h3>Desempenho Estado vs. Município</h3>
+
+                    <p id="historical-subtitle">
+                        Evolução da média nos últimos três anos
+                    </p>
+
+                </div>
+
+                <div class="chart-container">
+
+                    <canvas id="historicalChart"></canvas>
+
+                </div>
+
+            </div>
+
         </section>
+
     </main>
 
+
+    <!-- SCRIPTS -->
+
     <script src="../js/menu.js"></script>
+
     <script>
+
+        // ==========================================
+        // 1. MUNICÍPIOS POR ESTADO
+        // ==========================================
+
         const municipiosPorEstado = {
+
             SP: [
                 { value: "mairipora", text: "Mairiporã" },
                 { value: "atibaia", text: "Atibaia" },
@@ -123,101 +303,671 @@
                 { value: "santos", text: "Santos" },
                 { value: "sao-paulo", text: "São Paulo (Capital)" }
             ],
+
             RJ: [
                 { value: "rio-de-janeiro", text: "Rio de Janeiro (Capital)" },
                 { value: "niteroi", text: "Niterói" },
                 { value: "petropolis", text: "Petrópolis" },
                 { value: "duque-de-caxias", text: "Duque de Caxias" }
             ],
+
             MG: [
                 { value: "belo-horizonte", text: "Belo Horizonte (Capital)" },
                 { value: "uberlandia", text: "Uberlândia" },
                 { value: "ouropreto", text: "Ouro Preto" },
                 { value: "juiz-de-fora", text: "Juiz de Fora" }
             ],
+
             PR: [
                 { value: "curitiba", text: "Curitiba (Capital)" },
                 { value: "londrina", text: "Londrina" },
                 { value: "maringa", text: "Maringá" },
                 { value: "foz-do-iguacu", text: "Foz do Iguaçu" }
             ]
+
         };
+
 
         function atualizarMunicipios() {
-            const selectEstado = document.getElementById('select-estado');
-            const selectMunicipio = document.getElementById('select-municipio');
-            const estadoSelecionado = selectEstado.value;
 
-            selectMunicipio.innerHTML = '';
-            const listaMunicipios = municipiosPorEstado[estadoSelecionado] || [];
+            const estado = document.getElementById("select-estado").value;
 
-            listaMunicipios.forEach(mun => {
-                const option = document.createElement('option');
+            const selectMunicipio = document.getElementById("select-municipio");
+
+            selectMunicipio.innerHTML = "";
+
+            const lista = municipiosPorEstado[estado] || [];
+
+            lista.forEach(mun => {
+
+                const option = document.createElement("option");
+
                 option.value = mun.value;
+
                 option.textContent = mun.text;
+
                 selectMunicipio.appendChild(option);
+
             });
+
+            atualizarDashboard();
+
         }
 
-        window.onload = function() {
-            atualizarMunicipios();
+
+        // ==========================================
+        // 2. DADOS ILUSTRATIVOS
+        // ==========================================
+
+        const dadosAreas = {
+
+            matematica: {
+
+                nome: "Matemática",
+
+                media: 512,
+                estadual: 554,
+
+                abstencao: 24.5,
+                dia: 2,
+
+                anos: {
+                    municipio: [490, 502, 512],
+                    estado: [535, 545, 554]
+                }
+
+            },
+
+
+            linguagens: {
+
+                nome: "Linguagens",
+
+                media: 505,
+                estadual: 530,
+
+                abstencao: 18.2,
+                dia: 1,
+
+                anos: {
+                    municipio: [480, 493, 505],
+                    estado: [515, 522, 530]
+                }
+
+            },
+
+
+            humanas: {
+
+                nome: "Ciências Humanas",
+
+                media: 498,
+                estadual: 520,
+
+                abstencao: 18.2,
+                dia: 1,
+
+                anos: {
+                    municipio: [475, 486, 498],
+                    estado: [508, 514, 520]
+                }
+
+            },
+
+
+            natureza: {
+
+                nome: "Ciências da Natureza",
+
+                media: 480,
+                estadual: 510,
+
+                abstencao: 24.5,
+                dia: 2,
+
+                anos: {
+                    municipio: [455, 468, 480],
+                    estado: [490, 500, 510]
+                }
+
+            },
+
+
+            redacao: {
+
+                nome: "Redação",
+
+                media: 580,
+                estadual: 620,
+
+                abstencao: 18.2,
+                dia: 1,
+
+                // Histórico de Linguagens como referência.
+
+                anos: {
+                    municipio: [480, 493, 505],
+                    estado: [515, 522, 530]
+                },
+
+                diagnostico: {
+
+                    labels: [
+                        "Competência 1",
+                        "Competência 2",
+                        "Competência 3",
+                        "Competência 4",
+                        "Competência 5"
+                    ],
+
+                    valores: [145, 120, 110, 130, 135]
+
+                }
+
+            }
+
         };
 
-        const ctxRadar = document.getElementById('radarChart').getContext('2d');
-        new Chart(ctxRadar, {
-            type: 'radar',
+
+        // ==========================================
+        // 3. AJUSTES POR MUNICÍPIO
+        // ==========================================
+
+        const ajustesMunicipais = {
+
+            "mairipora": 0,
+            "atibaia": 8,
+            "guarulhos": -5,
+            "francisco-morato": -12,
+            "campinas": 15,
+            "santos": 10,
+            "sao-paulo": 12,
+
+            "rio-de-janeiro": 5,
+            "niteroi": 14,
+            "petropolis": 8,
+            "duque-de-caxias": -8,
+
+            "belo-horizonte": 10,
+            "uberlandia": 12,
+            "ouropreto": 4,
+            "juiz-de-fora": 7,
+
+            "curitiba": 15,
+            "londrina": 10,
+            "maringa": 13,
+            "foz-do-iguacu": 5
+
+        };
+
+
+        // ==========================================
+        // 4. VARIÁVEIS DOS GRÁFICOS
+        // ==========================================
+
+        let progressChart;
+        let diagnosticChart;
+        let historicalChart;
+
+
+        // ==========================================
+        // 5. GRÁFICO DE PROGRESSO
+        // ==========================================
+
+        const progressCtx = document
+            .getElementById("progressChart")
+            .getContext("2d");
+
+        progressChart = new Chart(progressCtx, {
+
+            type: "doughnut",
+
             data: {
-                labels: ['Matemática', 'Linguagens', 'Humanas', 'Natureza', 'Redação'],
+
+                labels: ["Cadastrados", "Restantes"],
+
                 datasets: [{
-                    label: 'Município Selecionado',
-                    data: [512, 505, 498, 480, 580],
-                    backgroundColor: 'rgba(122, 31, 61, 0.2)',
-                    borderColor: '#7a1f3d',
-                    borderWidth: 2
-                }, {
-                    label: 'Média do Estado',
-                    data: [554, 530, 520, 510, 620],
-                    backgroundColor: 'rgba(31, 31, 122, 0.05)',
-                    borderColor: '#1f1f7a',
-                    borderWidth: 1.5,
-                    borderDash: [4, 4]
+
+                    data: [4, 6],
+
+                    backgroundColor: [
+                        "#7a1f3d",
+                        "#eeeeee"
+                    ],
+
+                    borderWidth: 0,
+
+                    cutout: "78%"
+
                 }]
+
             },
+
             options: {
+
                 responsive: true,
+
                 maintainAspectRatio: false,
-                scales: { r: { suggestedMin: 400, suggestedMax: 700 } }
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    }
+
+                }
+
             }
+
         });
 
-        const ctxBar = document.getElementById('barRedacaoChart').getContext('2d');
-        new Chart(ctxBar, {
-            type: 'bar',
+
+        // ==========================================
+        // 6. GRÁFICO DE COMPETÊNCIAS
+        // ==========================================
+
+        const diagnosticCtx = document
+            .getElementById("diagnosticChart")
+            .getContext("2d");
+
+        diagnosticChart = new Chart(diagnosticCtx, {
+
+            type: "bar",
+
             data: {
-                labels: ['Comp. 1', 'Comp. 2', 'Comp. 3 (Arg.)', 'Comp. 4', 'Comp. 5'],
+
+                labels: [],
+
                 datasets: [{
-                    data: [145, 120, 110, 130, 135],
-                    backgroundColor: [
-                        'rgba(122, 31, 61, 0.7)',
-                        'rgba(122, 31, 61, 0.7)',
-                        'rgba(220, 38, 38, 0.85)',
-                        'rgba(122, 31, 61, 0.7)',
-                        'rgba(122, 31, 61, 0.7)'
-                    ],
-                    borderColor: '#7a1f3d',
-                    borderWidth: 1
+
+                    label: "Pontuação média",
+
+                    data: [],
+
+                    backgroundColor: "#7a1f3d",
+
+                    borderRadius: 6,
+
+                    barThickness: 22
+
                 }]
+
             },
+
             options: {
-                indexAxis: 'y',
+
+                indexAxis: "y",
+
                 responsive: true,
+
                 maintainAspectRatio: false,
-                scales: { x: { max: 200, beginAtZero: true } },
-                plugins: { legend: { display: false } }
+
+                scales: {
+
+                    x: {
+
+                        beginAtZero: true,
+
+                        max: 200,
+
+                        title: {
+                            display: true,
+                            text: "Pontuação"
+                        }
+
+                    },
+
+                    y: {
+
+                        ticks: {
+
+                            font: {
+                                family: "Poppins",
+                                size: 11
+                            }
+
+                        }
+
+                    }
+
+                },
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    }
+
+                }
+
             }
+
         });
+
+
+        // ==========================================
+        // 7. GRÁFICO HISTÓRICO
+        // ==========================================
+
+        const historicalCtx = document
+            .getElementById("historicalChart")
+            .getContext("2d");
+
+        historicalChart = new Chart(historicalCtx, {
+
+            type: "bar",
+
+            data: {
+
+                labels: ["2022", "2023", "2024"],
+
+                datasets: [
+
+                    {
+
+                        label: "Município",
+
+                        data: [],
+
+                        backgroundColor: "#7a1f3d",
+
+                        borderRadius: 5
+
+                    },
+
+                    {
+
+                        label: "Estado",
+
+                        data: [],
+
+                        backgroundColor: "#9e9e9e",
+
+                        borderRadius: 5
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: false,
+
+                        min: 400,
+
+                        max: 700,
+
+                        title: {
+
+                            display: true,
+
+                            text: "Média de desempenho"
+
+                        }
+
+                    }
+
+                },
+
+                plugins: {
+
+                    legend: {
+
+                        position: "bottom",
+
+                        labels: {
+
+                            font: {
+
+                                family: "Poppins",
+
+                                size: 11
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        });
+
+
+        // ==========================================
+        // 8. ATUALIZAÇÃO DOS KPIs
+        // ==========================================
+
+        function atualizarKPIs(area, ajuste) {
+
+            const media = area.media + ajuste;
+
+            const estadual = area.estadual;
+
+
+            // MÉDIA DE DESEMPENHO
+
+            document.getElementById("kpi-media").textContent =
+                media.toFixed(1).replace(".", ",") + " pts";
+
+            document.getElementById("kpi-media-footer").textContent =
+                "Média estadual: " +
+                estadual.toFixed(1).replace(".", ",") + " pts";
+
+
+            // ABSTENÇÃO
+
+            document.getElementById("kpi-abstencao").textContent =
+                area.abstencao.toFixed(1).replace(".", ",") + "%";
+
+            document.getElementById("kpi-abstencao-footer").textContent =
+                area.dia === 1
+                    ? "Abstenção do Dia 1 de aplicação"
+                    : "Abstenção do Dia 2 de aplicação";
+
+
+            // EVOLUÇÃO PLURIANUAL
+
+            const primeiroAno = area.anos.municipio[0];
+
+            const ultimoAno = area.anos.municipio[2];
+
+            const evolucao =
+                ((ultimoAno - primeiroAno) / primeiroAno) * 100;
+
+            const sinalEvolucao = evolucao >= 0 ? "+" : "";
+
+            document.getElementById("titulo-evolucao").textContent =
+                "EVOLUÇÃO PLURIANUAL DA MÉDIA GERAL DE " +
+                area.nome.toUpperCase();
+
+            document.getElementById("kpi-evolucao").textContent =
+                sinalEvolucao +
+                evolucao.toFixed(1).replace(".", ",") + "%";
+
+            document.getElementById("kpi-evolucao-footer").textContent =
+                "Comparação entre 2022 e 2024";
+
+
+            // DIFERENCIAL REGIONAL
+
+            const diferencial =
+                ((media - estadual) / estadual) * 100;
+
+            const sinalDiferencial = diferencial >= 0 ? "+" : "";
+
+            document.getElementById("kpi-diferencial").textContent =
+                sinalDiferencial +
+                diferencial.toFixed(1).replace(".", ",") + "%";
+
+            document.getElementById("kpi-diferencial-footer").textContent =
+                diferencial >= 0
+                    ? "Acima da média estadual"
+                    : "Abaixo da média estadual";
+
+            document.getElementById("card-diferencial").classList.toggle(
+                "danger",
+                diferencial < 0
+            );
+
+        }
+
+
+        // ==========================================
+        // 9. ATUALIZAÇÃO DO GRÁFICO DE REDAÇÃO
+        // ==========================================
+
+        function atualizarDiagnostico(area) {
+
+            const card = document.getElementById("card-diagnostic");
+
+            const titulo = document.getElementById("diagnostic-title");
+
+            const subtitulo = document.getElementById("diagnostic-subtitle");
+
+
+            // ESCONDE NAS OUTRAS MATÉRIAS
+
+            if (area.nome !== "Redação") {
+
+                card.style.display = "none";
+
+                return;
+
+            }
+
+
+            // MOSTRA SOMENTE EM REDAÇÃO
+
+            card.style.display = "flex";
+
+            titulo.textContent =
+                "Desempenho por Competência da Redação";
+
+            subtitulo.textContent =
+                "Pontuação média dos alunos (0 a 200 pontos por competência)";
+
+            diagnosticChart.options.scales.x.max = 200;
+
+            diagnosticChart.data.labels = area.diagnostico.labels;
+
+            diagnosticChart.data.datasets[0].data =
+                area.diagnostico.valores;
+
+            diagnosticChart.data.datasets[0].backgroundColor = [
+                "#7a1f3d",
+                "#7a1f3d",
+                "#dc2626",
+                "#7a1f3d",
+                "#7a1f3d"
+            ];
+
+            diagnosticChart.update();
+
+        }
+
+
+        // ==========================================
+        // 10. ATUALIZAÇÃO DO GRÁFICO HISTÓRICO
+        // ==========================================
+
+        function atualizarHistorico(area, ajuste) {
+
+            const dados = area.anos;
+
+            const municipio = dados.municipio.map(
+                valor => valor + ajuste
+            );
+
+            const estado = dados.estado;
+
+            historicalChart.data.datasets[0].data = municipio;
+
+            historicalChart.data.datasets[1].data = estado;
+
+            historicalChart.update();
+
+
+            const subtitulo = document.getElementById("historical-subtitle");
+
+
+            if (area.nome === "Redação") {
+
+                subtitulo.textContent =
+                    "Referência comparativa: Área de Linguagens (2022–2024)";
+
+            } else {
+
+                subtitulo.textContent =
+                    "Evolução de " + area.nome +
+                    " nos últimos três anos (2022–2024)";
+
+            }
+
+        }
+
+
+        // ==========================================
+        // 11. ATUALIZAÇÃO DA DASHBOARD
+        // ==========================================
+
+        function atualizarDashboard() {
+
+            const areaSelecionada =
+                document.getElementById("select-area").value;
+
+            const municipioSelecionado =
+                document.getElementById("select-municipio").value;
+
+            const area = dadosAreas[areaSelecionada];
+
+            const ajuste =
+                ajustesMunicipais[municipioSelecionado] || 0;
+
+
+            atualizarKPIs(area, ajuste);
+
+            atualizarDiagnostico(area);
+
+            atualizarHistorico(area, ajuste);
+
+        }
+
+        document
+            .getElementById("select-estado")
+            .addEventListener("change", atualizarMunicipios);
+
+        document
+            .getElementById("select-municipio")
+            .addEventListener("change", atualizarDashboard);
+
+        document
+            .getElementById("select-area")
+            .addEventListener("change", atualizarDashboard);
+
+
+
+
+        window.onload = function() {
+
+            atualizarMunicipios();
+
+        };
+
     </script>
 
-    <script src="../js/controleAcesso.js"></script>
 </body>
+
 </html>
