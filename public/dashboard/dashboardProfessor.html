@@ -7,11 +7,13 @@
 
     <title>Growth Map | Dashboard Professor</title>
 
-    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+    <link rel="stylesheet"
+        href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/dashboardProfessor.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -179,21 +181,17 @@
 
                 <span class="kpi-footer" id="kpi-diferencial-footer">
                     Em relação à média estadual
-                </span>
+                </span> 
 
             </div>
 
         </section>
 
-
-        <!-- GRÁFICOS: TODOS NA MESMA LINHA -->
-
+        
         <section class="charts-grid">
 
 
-            <!-- 1. PROGRESSO DO PLANEJAMENTO -->
-
-            <div class="chart-card progress-card">
+                <div class="chart-card progress-card">
 
                 <div class="chart-header">
 
@@ -254,26 +252,17 @@
 
             </div>
 
+            <div class="chart-header">
+                <h3>Desempenho Estado vs. Município</h3>
+                <p id="historical-subtitle">
+                    Evolução da média nos últimos três anos
+                </p>
+            </div>
+            <div class="chart-container">
 
-            <!-- 3. ESTADO VS MUNICÍPIO -->
+                <canvas id="historicalChart"></canvas>
 
-            <div class="chart-card historical-card">
-
-                <div class="chart-header">
-
-                    <h3>Desempenho Estado vs. Município</h3>
-
-                    <p id="historical-subtitle">
-                        Evolução da média nos últimos três anos
-                    </p>
-
-                </div>
-
-                <div class="chart-container">
-
-                    <canvas id="historicalChart"></canvas>
-
-                </div>
+            </div>
 
             </div>
 
@@ -288,9 +277,7 @@
 
     <script>
 
-        // ==========================================
-        // 1. MUNICÍPIOS POR ESTADO
-        // ==========================================
+
 
         const municipiosPorEstado = {
 
@@ -354,10 +341,6 @@
 
         }
 
-
-        // ==========================================
-        // 2. DADOS ILUSTRATIVOS
-        // ==========================================
 
         const dadosAreas = {
 
@@ -443,8 +426,6 @@
                 abstencao: 18.2,
                 dia: 1,
 
-                // Histórico de Linguagens como referência.
-
                 anos: {
                     municipio: [480, 493, 505],
                     estado: [515, 522, 530]
@@ -468,10 +449,6 @@
 
         };
 
-
-        // ==========================================
-        // 3. AJUSTES POR MUNICÍPIO
-        // ==========================================
 
         const ajustesMunicipais = {
 
@@ -501,157 +478,12 @@
         };
 
 
-        // ==========================================
-        // 4. VARIÁVEIS DOS GRÁFICOS
-        // ==========================================
-
-        let progressChart;
-        let diagnosticChart;
         let historicalChart;
 
 
-        // ==========================================
-        // 5. GRÁFICO DE PROGRESSO
-        // ==========================================
-
-        const progressCtx = document
-            .getElementById("progressChart")
-            .getContext("2d");
-
-        progressChart = new Chart(progressCtx, {
-
-            type: "doughnut",
-
-            data: {
-
-                labels: ["Cadastrados", "Restantes"],
-
-                datasets: [{
-
-                    data: [4, 6],
-
-                    backgroundColor: [
-                        "#7a1f3d",
-                        "#eeeeee"
-                    ],
-
-                    borderWidth: 0,
-
-                    cutout: "78%"
-
-                }]
-
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                plugins: {
-
-                    legend: {
-                        display: false
-                    }
-
-                }
-
-            }
-
-        });
-
-
-        // ==========================================
-        // 6. GRÁFICO DE COMPETÊNCIAS
-        // ==========================================
-
-        const diagnosticCtx = document
-            .getElementById("diagnosticChart")
-            .getContext("2d");
-
-        diagnosticChart = new Chart(diagnosticCtx, {
-
-            type: "bar",
-
-            data: {
-
-                labels: [],
-
-                datasets: [{
-
-                    label: "Pontuação média",
-
-                    data: [],
-
-                    backgroundColor: "#7a1f3d",
-
-                    borderRadius: 6,
-
-                    barThickness: 22
-
-                }]
-
-            },
-
-            options: {
-
-                indexAxis: "y",
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                scales: {
-
-                    x: {
-
-                        beginAtZero: true,
-
-                        max: 200,
-
-                        title: {
-                            display: true,
-                            text: "Pontuação"
-                        }
-
-                    },
-
-                    y: {
-
-                        ticks: {
-
-                            font: {
-                                family: "Poppins",
-                                size: 11
-                            }
-
-                        }
-
-                    }
-
-                },
-
-                plugins: {
-
-                    legend: {
-                        display: false
-                    }
-
-                }
-
-            }
-
-        });
-
-
-        // ==========================================
-        // 7. GRÁFICO HISTÓRICO
-        // ==========================================
-
         const historicalCtx = document
             .getElementById("historicalChart")
-            .getContext("2d");
+            .getContext("2d"); // obtém o contexto de renderização 2d do elemento canvas no DOM
 
         historicalChart = new Chart(historicalCtx, {
 
@@ -746,142 +578,27 @@
         });
 
 
-        // ==========================================
-        // 8. ATUALIZAÇÃO DOS KPIs
-        // ==========================================
+        function atualizarKPI(media, estadual) {
 
-        function atualizarKPIs(area, ajuste) {
+            const diferencial = ((media - estadual) / estadual) * 100; // calculamos a variação percentual exata entre a média ajustada do município e a referência do estado
 
-            const media = area.media + ajuste;
-
-            const estadual = area.estadual;
-
-
-            // MÉDIA DE DESEMPENHO
-
-            document.getElementById("kpi-media").textContent =
-                media.toFixed(1).replace(".", ",") + " pts";
-
-            document.getElementById("kpi-media-footer").textContent =
-                "Média estadual: " +
-                estadual.toFixed(1).replace(".", ",") + " pts";
-
-
-            // ABSTENÇÃO
-
-            document.getElementById("kpi-abstencao").textContent =
-                area.abstencao.toFixed(1).replace(".", ",") + "%";
-
-            document.getElementById("kpi-abstencao-footer").textContent =
-                area.dia === 1
-                    ? "Abstenção do Dia 1 de aplicação"
-                    : "Abstenção do Dia 2 de aplicação";
-
-
-            // EVOLUÇÃO PLURIANUAL
-
-            const primeiroAno = area.anos.municipio[0];
-
-            const ultimoAno = area.anos.municipio[2];
-
-            const evolucao =
-                ((ultimoAno - primeiroAno) / primeiroAno) * 100;
-
-            const sinalEvolucao = evolucao >= 0 ? "+" : "";
-
-            document.getElementById("titulo-evolucao").textContent =
-                "EVOLUÇÃO PLURIANUAL DA MÉDIA GERAL DE " +
-                area.nome.toUpperCase();
-
-            document.getElementById("kpi-evolucao").textContent =
-                sinalEvolucao +
-                evolucao.toFixed(1).replace(".", ",") + "%";
-
-            document.getElementById("kpi-evolucao-footer").textContent =
-                "Comparação entre 2022 e 2024";
-
-
-            // DIFERENCIAL REGIONAL
-
-            const diferencial =
-                ((media - estadual) / estadual) * 100;
-
-            const sinalDiferencial = diferencial >= 0 ? "+" : "";
+            const sinalDiferencial = diferencial >= 0 ? "+" : ""; // definimos operador positivo ou mantemos o negativo nativo do cálculo para exibição amigável
 
             document.getElementById("kpi-diferencial").textContent =
                 sinalDiferencial +
-                diferencial.toFixed(1).replace(".", ",") + "%";
+                diferencial.toFixed(1).replace(".", ",") + "%"; // injetamos o valor formatado com uma casa decimal e vírgula padrão pt-br no span do kpi
 
             document.getElementById("kpi-diferencial-footer").textContent =
                 diferencial >= 0
                     ? "Acima da média estadual"
-                    : "Abaixo da média estadual";
+                    : "Abaixo da média estadual"; // alternamos o texto explicativo do rodapé dependendo da performance regional
 
             document.getElementById("card-diferencial").classList.toggle(
                 "danger",
                 diferencial < 0
-            );
+            ); // aplicamos ou removemos dinamicamente a classe visual de alerta de perigo (vermelho) se o diferencial for negativo
 
-        }
-
-
-        // ==========================================
-        // 9. ATUALIZAÇÃO DO GRÁFICO DE REDAÇÃO
-        // ==========================================
-
-        function atualizarDiagnostico(area) {
-
-            const card = document.getElementById("card-diagnostic");
-
-            const titulo = document.getElementById("diagnostic-title");
-
-            const subtitulo = document.getElementById("diagnostic-subtitle");
-
-
-            // ESCONDE NAS OUTRAS MATÉRIAS
-
-            if (area.nome !== "Redação") {
-
-                card.style.display = "none";
-
-                return;
-
-            }
-
-
-            // MOSTRA SOMENTE EM REDAÇÃO
-
-            card.style.display = "flex";
-
-            titulo.textContent =
-                "Desempenho por Competência da Redação";
-
-            subtitulo.textContent =
-                "Pontuação média dos alunos (0 a 200 pontos por competência)";
-
-            diagnosticChart.options.scales.x.max = 200;
-
-            diagnosticChart.data.labels = area.diagnostico.labels;
-
-            diagnosticChart.data.datasets[0].data =
-                area.diagnostico.valores;
-
-            diagnosticChart.data.datasets[0].backgroundColor = [
-                "#7a1f3d",
-                "#7a1f3d",
-                "#dc2626",
-                "#7a1f3d",
-                "#7a1f3d"
-            ];
-
-            diagnosticChart.update();
-
-        }
-
-
-        // ==========================================
-        // 10. ATUALIZAÇÃO DO GRÁFICO HISTÓRICO
-        // ==========================================
+        } // fim da função de cálculo e renderização do kpi avançado de diferencial regional
 
         function atualizarHistorico(area, ajuste) {
 
@@ -889,19 +606,18 @@
 
             const municipio = dados.municipio.map(
                 valor => valor + ajuste
-            );
+            ); // usamos .map() para percorrer o array histórico de anos e somar o offset do município selecionado em cada ponto temporal
 
             const estado = dados.estado;
 
-            historicalChart.data.datasets[0].data = municipio;
+            historicalChart.data.datasets[0].data = municipio; // atualizamos os dados do primeiro dataset do gráfico com a série temporal recalculada do município
 
-            historicalChart.data.datasets[1].data = estado;
+            historicalChart.data.datasets[1].data = estado; // atribuímos diretamente a série temporal estática da média estadual ao segundo dataset
 
-            historicalChart.update();
+            historicalChart.update(); // despachamos o método update() do chart.js para redesenhar a interface visual do gráfico de forma fluida
 
 
             const subtitulo = document.getElementById("historical-subtitle");
-
 
             if (area.nome === "Redação") {
 
@@ -912,21 +628,18 @@
 
                 subtitulo.textContent =
                     "Evolução de " + area.nome +
-                    " nos últimos três anos (2022–2024)";
+                    " nos últimos três anos (2022–2024)"; // atualizamos dinamicamente o subtítulo descritivo do card de acordo com a matéria ativa
 
             }
 
-        }
+        } // fim da função responsável por processar os arrays plurianuais e atualizar o gráfico funcional
 
 
-        // ==========================================
-        // 11. ATUALIZAÇÃO DA DASHBOARD
-        // ==========================================
 
         function atualizarDashboard() {
 
             const areaSelecionada =
-                document.getElementById("select-area").value;
+                document.getElementById("select-area").value; // resgata o objeto da área de conhecimento ativa com base no select da tela
 
             const municipioSelecionado =
                 document.getElementById("select-municipio").value;
@@ -934,40 +647,37 @@
             const area = dadosAreas[areaSelecionada];
 
             const ajuste =
-                ajustesMunicipais[municipioSelecionado] || 0;
+                ajustesMunicipais[municipioSelecionado] || 0; // busca o valor de ajuste numérico correspondente ao município ou assume zero por segurança
 
+            const mediaFinal = area.media + ajuste; // calcula a média final ponderada somando a base da matéria com o fator geográfico municipal
 
-            atualizarKPIs(area, ajuste);
+            atualizarKPI(mediaFinal, area.estadual); // executa a função complexa do KPI repassando os parâmetros calculados
 
-            atualizarDiagnostico(area);
+            atualizarHistorico(area, ajuste); // executa a função complexa do gráfico repassando os dados estruturados e o ajuste
 
-            atualizarHistorico(area, ajuste);
+        } // função agregadora central que sincroniza todas as atualizações cruzadas dos elementos visuais
 
-        }
 
         document
             .getElementById("select-estado")
-            .addEventListener("change", atualizarMunicipios);
+            .addEventListener("change", atualizarMunicipios); // escuta alteração no seletor de estado para atualizar a lista de cidades filhas
 
         document
             .getElementById("select-municipio")
-            .addEventListener("change", atualizarDashboard);
+            .addEventListener("change", atualizarDashboard); // escuta alteração no seletor de município para recalcular os dados exibidos
 
         document
             .getElementById("select-area")
-            .addEventListener("change", atualizarDashboard);
+            .addEventListener("change", atualizarDashboard); // escuta alteração na disciplina para reprocessar KPIs e gráficos simultaneamente
 
 
-
-
-        window.onload = function() {
+        window.onload = function () {
 
             atualizarMunicipios();
 
-        };
+        }; // inicializa o fluxo completo populando os estados e renderizando os componentes ao carregar a página
 
     </script>
-
 </body>
 
 </html>
