@@ -240,6 +240,36 @@ body {
    background-color: green;
 }
 
+.campo-senha {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.campo-senha .input {
+  width: 100%;
+  padding-right: 40px; /* evita que o texto da senha fique embaixo do ícone */
+}
+
+.btn-ver-senha {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.icone-olho {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
 
 /* Responsividade */
 
