@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growth Map | Dashboard Coordenador</title>
-    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/dashboardCoordenador.css">
-    <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="styles.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growth Map | Dashboard Coordenador</title>
+  <link rel="stylesheet"
+    href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/dashboardCoordenador.css">
+  <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
+
 <body>
-    <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
-  <i class="fi fi-rr-menu-burger"></i>
-</button>
+  <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
+    <i class="fi fi-rr-menu-burger"></i>
+  </button>
 
   <div class="sidebar">
     <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
@@ -42,348 +45,340 @@
     <div class="sair"><a href="../index.html">Sair</a></div>
   </div>
 
-  
-<div class="conteudo">
-  <div class="upper">
-    <div class="text_upper">
-      <div style="color: #7a1f3d; font-size: 30px;" class="teste">Olá coordenador!</div>
-      <div style="color: grey; font-size: 15px;" class="teste">Acompanhe a evolução do ENEM no município da sua unidade.</div>
-    </div>
 
-    <div style="color: white; font-size: 15px;" class="card_upper">Unidade: Brás</div>
-  </div>
+  <div class="conteudo">
 
-  
-
-  <div class="kpis">
-    <div class="conteudo_kpis">
-      <span style="color: grey; font-size: 13px;">Área mais fraca — foco das aulas:</span>
-      <span style="color: #7a1f3d; font-size: 13px;">Biológicas</span>
-    </div>
-
-    <div class="conteudo_kpis">
-      <span style="color: grey; font-size: 13px;">Evolução vs. ano anterior:</span>
-      <span style="color: #7a1f3d; font-size: 13px;"> 739 | 707 </span>
-    </div>
-
-    <div class="conteudo_kpis">
-      <span style="color: grey; font-size: 13px;">Registros no painel:</span>
-      <span style="color: #7a1f3d; font-size: 13px;">12</span>
-    </div>
-
-    <div class="conteudo_kpis">
-      <span style="color: grey; font-size: 13px;">Usuários na unidade:</span>
-      <span style="color: #7a1f3d; font-size: 13px;">67</span>
-    </div>
-  </div>
-
-  <div class="evolucao_medias">
-  <div class="evolucao_medias_text">
-    <div class="text_pai" style="display: flex; align-items: center; gap: 8px;">
-      <i class="fi fi-rr-chart-line-up" style="color: #7a1f3d; font-size: 20px;"></i>
-      <h3 style="color: #7a1f3d; font-size: 16px; font-weight: 600;">Evolução das Médias do ENEM — Município da Unidade</h3>
-    </div>
-    <p style="color: #666; font-size: 13px;">
-      Médias anuais do ENEM no município da unidade por área de conhecimento. As linhas verticais indicam anos em que o coordenador registrou um acompanhamento no painel — permitindo avaliar se as ações do cursinho impactaram a área mais fraca.
-    </p>
-  </div>
-
-  <div class="button_pai" style="display: flex; gap: 10px; flex-wrap: wrap;">
-  <button class="evolucao_medias_button ativo">C.Natureza</button>
-  <button class="evolucao_medias_button">C.Humanas</button>
-  <button class="evolucao_medias_button">Linguagens</button>
-  <button class="evolucao_medias_button">Matemática</button>
-  <button class="evolucao_medias_button">Redação</button>
-</div>
-    <div id="chart"></div>
-  </div>
-
-
- <div class="dashboard-1">
-  <div class="dashboard-1_pai">
-
-    <div class="acompanhamento">
-      <div class="card-header">
-        <h3>Painel de Acompanhamento</h3>
+    <div class="upper">
+      <div class="text_upper">
+        <div style="color:#7a1f3d;font-size:30px;" class="teste">Olá, coordenador!</div>
+        <div style="color:grey;font-size:15px;" class="teste">Acompanhe a evolução do ENEM no município da sua unidade.
+        </div>
       </div>
-      <p class="card-descricao">Acompanhe o registro das atividades e o progresso da unidade.</p>
-       <div id="chartA"></div>
+      <div class="card_upper">Unidade: Brás</div>
     </div>
-    
-    <div class="equipe">
-      <div class="card-header">
-        <h3>Equipe da Unidade</h3>
+
+    <!-- KPIs -->
+    <div class="kpis">
+
+      <div class="conteudo_kpis">
+        <span class="kpi-label">Área mais fraca — foco das aulas</span>
+        <span class="kpi-destaque">C. Natureza</span>
+        <div class="kpi-comparativo">
+          <span class="kpi-comp-item">
+            <span class="kpi-comp-label">Município</span>
+            <span class="kpi-comp-valor kpi-negativo">484 pts</span>
+          </span>
+          <span class="kpi-comp-sep">vs</span>
+          <span class="kpi-comp-item">
+            <span class="kpi-comp-label">Estado</span>
+            <span class="kpi-comp-valor">506 pts</span>
+          </span>
+        </div>
+        <span class="kpi-diff kpi-negativo">−22 pts abaixo do estado</span>
       </div>
-      <p class="card-descricao">Membros e coordenadores responsáveis.</p>
-      <div class="lista-equipe">
-  <div class="membro">
-    <div class="avatar">MS</div>
-    <div class="membro-info">
-      <span class="membro-nome">Maria Souza</span>
-      <span class="membro-cargo">Coordenadora</span>
-    </div>
-    <span class="tag tag-coord">Coordenação</span>
-  </div>
 
-  <div class="membro">
-    <div class="avatar">JL</div>
-    <div class="membro-info">
-      <span class="membro-nome">João Lima</span>
-      <span class="membro-cargo">Professor de Matemática</span>
-    </div>
-    <span class="tag">Professor</span>
-  </div>
-
-  <div class="membro">
-    <div class="avatar">AC</div>
-    <div class="membro-info">
-      <span class="membro-nome">Ana Costa</span>
-      <span class="membro-cargo">Professora de Biologia</span>
-    </div>
-    <span class="tag">Professor</span>
-  </div>
-
-  <div class="membro">
-    <div class="avatar">AC</div>
-    <div class="membro-info">
-      <span class="membro-nome">Rafael Pereira</span>
-      <span class="membro-cargo">Professor de Química</span>
-    </div>
-    <span class="tag">Professor</span>
-  </div>
-
-</div>
-    </div>
-
-  </div>
-
-
-
-
-
-
-  <div class="dashboard-2">
-  <div class="dashboard-2_pai">
-    
-   
-    <div class="card-alerta">
-      <div class="card-header">
-        <h3>Alertas Configurados</h3>
+      <div class="conteudo_kpis">
+        <span class="kpi-label">Média geral ENEM — município</span>
+        <div class="kpi-comparativo">
+          <span class="kpi-comp-item">
+            <span class="kpi-comp-label">2024</span>
+            <span class="kpi-comp-valor">548 pts</span>
+          </span>
+          <span class="kpi-comp-sep">→</span>
+          <span class="kpi-comp-item">
+            <span class="kpi-comp-label">2025</span>
+            <span class="kpi-comp-valor kpi-positivo">557 pts</span>
+          </span>
+        </div>
+        <span class="kpi-diff kpi-positivo">+9 pts em relação ao ano anterior</span>
       </div>
-      <div id="chartE"></div>
-    </div>
 
-    
-    <div class="card-atividade">
-      <div class="card-header">
-        <h3>Atividade Recente</h3>
+      <div class="conteudo_kpis">
+        <span class="kpi-label">Registros no painel</span>
+        <span class="kpi-destaque">12 <span style="font-size:13px;color:#555;font-weight:600;">/ meta <span
+              id="meta-valor">20</span></span></span>
+        <div class="kpi-progress-wrap">
+          <div class="kpi-progress-bar">
+            <div class="kpi-progress-fill" id="meta-barra" style="width:60%"></div>
+          </div>
+          <span class="kpi-progress-pct" id="meta-pct">60% da meta</span>
+        </div>
+        <span class="kpi-diff" id="meta-faltam">Faltam 8 registros para a meta mensal</span>
+        <button class="kpi-meta-btn" onclick="abrirMeta()">✏️ Definir meta</button>
       </div>
-      <div class="lista-atividade">
-  <div class="atividade-item">
-    <div class="atividade-icone"><i class="fi fi-rr-chart-line-up"></i></div>
-    <div class="atividade-texto">
-      <span class="atividade-titulo">Novo acompanhamento registrado</span>
-      <span class="atividade-sub">Maria Souza · Biológicas</span>
-    </div>
-    <span class="atividade-tempo">há 2h</span>
-  </div>
 
-  <div class="atividade-item">
-    <div class="atividade-icone"><i class="fi fi-rr-bell"></i></div>
-    <div class="atividade-texto">
-      <span class="atividade-titulo">Alerta gerado</span>
-      <span class="atividade-sub">Queda na média de C.Natureza</span>
-    </div>
-    <span class="atividade-tempo">há 5h</span>
-  </div>
+      <!-- Modal de definir meta -->
+      <div id="meta-overlay"
+        style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;align-items:center;justify-content:center;">
+        <div
+          style="background:white;border-radius:16px;padding:32px;width:300px;box-shadow:0 8px 32px rgba(0,0,0,.18);display:flex;flex-direction:column;gap:16px;">
+          <h3 style="color:#7a1f3d;font-size:16px;font-weight:600;margin:0;">Definir meta de registros</h3>
+          <p style="color:#888;font-size:13px;margin:0;">Quantos registros são a meta mensal?</p>
+          <input id="meta-input" type="number" min="1" max="999"
+            style="border:1px solid #d9b8c2;border-radius:8px;padding:10px 14px;font-size:16px;font-family:'Poppins',sans-serif;color:#333;outline:none;width:100%;box-sizing:border-box;">
+          <div style="display:flex;gap:10px;">
+            <button onclick="fecharMeta()"
+              style="flex:1;padding:10px;border:1px solid #d9b8c2;border-radius:8px;background:white;color:#7a1f3d;font-family:'Poppins',sans-serif;font-size:13px;cursor:pointer;">Cancelar</button>
+            <button onclick="salvarMeta()"
+              style="flex:1;padding:10px;border:none;border-radius:8px;background:#7a1f3d;color:white;font-family:'Poppins',sans-serif;font-size:13px;cursor:pointer;">Salvar</button>
+          </div>
+        </div>
+      </div>
 
-
-  <div class="atividade-item">
-    <div class="atividade-icone"><i class="fi fi-rr-edit"></i></div>
-    <div class="atividade-texto">
-      <span class="atividade-titulo">Registro atualizado</span>
-      <span class="atividade-sub">João Lima · Matemática</span>
-    </div>
-    <span class="atividade-tempo">3 dias</span>
-  </div>
-</div>
-     
     </div>
 
+
+    <div class="graficos-row">
+
+      <div class="evolucao_medias">
+        <div class="evolucao_medias_text">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <i class="fi fi-rr-chart-line-up" style="color:#7a1f3d;font-size:20px;"></i>
+            <h3 style="color:#7a1f3d;font-size:16px;font-weight:600;">Evolução das Médias do ENEM — Município da Unidade
+            </h3>
+          </div>
+          <p style="color:#666;font-size:13px;">
+            Médias anuais do ENEM no município da unidade por área de conhecimento.
+          </p>
+        </div>
+        <div class="button_pai">
+          <button class="evolucao_medias_button ativo">C.Natureza</button>
+          <button class="evolucao_medias_button">C.Humanas</button>
+          <button class="evolucao_medias_button">Linguagens</button>
+          <button class="evolucao_medias_button">Matemática</button>
+          <button class="evolucao_medias_button">Redação</button>
+        </div>
+        <div id="chart"></div>
+      </div>
+
+      <div class="acompanhamento">
+        <div class="card-header">
+          <h3>Painel de Acompanhamento de Registro de Eventos</h3>
+        </div>
+        <p class="card-descricao">Acompanhe o registro das atividades e o progresso da unidade.</p>
+        <div id="chartA"></div>
+      </div>
+
+    </div>
+
+    <!-- Registros por Professor + Atividade Recente lado a lado -->
+    <div class="dashboard-2_pai">
+
+      <div class="equipe">
+        <div class="card-header">
+          <h3>Registros por Professor</h3>
+        </div>
+        <p class="card-descricao">Quantidade de registros no painel por professor da unidade.</p>
+        <div id="chartProfessores" style="flex:1;min-height:0;width:100%;"></div>
+      </div>
+
+      <div class="card-atividade">
+        <div class="card-header">
+          <h3>Atividade Recente</h3>
+        </div>
+        <div class="lista-atividade">
+
+          <div class="atividade-item">
+            <div class="atividade-icone"><i class="fi fi-rr-chart-line-up"></i></div>
+            <div class="atividade-texto">
+              <span class="atividade-titulo">Novo acompanhamento registrado</span>
+              <span class="atividade-sub">Maria Souza · Biológicas</span>
+            </div>
+            <span class="atividade-tempo">há 2h</span>
+          </div>
+
+          <div class="atividade-item">
+            <div class="atividade-icone"><i class="fi fi-rr-bell"></i></div>
+            <div class="atividade-texto">
+              <span class="atividade-titulo">Alerta gerado</span>
+              <span class="atividade-sub">Queda na média de C.Natureza</span>
+            </div>
+            <span class="atividade-tempo">há 5h</span>
+          </div>
+
+          <div class="atividade-item">
+            <div class="atividade-icone"><i class="fi fi-rr-edit"></i></div>
+            <div class="atividade-texto">
+              <span class="atividade-titulo">Registro atualizado</span>
+              <span class="atividade-sub">João Lima · Matemática</span>
+            </div>
+            <span class="atividade-tempo">3 dias</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
   </div>
-</div>
+  <script src="../js/menu.js"></script>
+  <script>
+    const REGISTROS = 12;
+    let metaAtual = 20;
 
-</div>
+    function atualizarKpiMeta() {
+      const pct = Math.min(Math.round((REGISTROS / metaAtual) * 100), 100);
+      const faltam = Math.max(metaAtual - REGISTROS, 0);
+      document.getElementById('meta-valor').textContent = metaAtual;
+      document.getElementById('meta-barra').style.width = pct + '%';
+      document.getElementById('meta-pct').textContent = pct + '% da meta';
+      document.getElementById('meta-faltam').textContent =
+        faltam > 0 ? `Faltam ${faltam} registros para a meta mensal` : 'Meta atingida! 🎉';
+    }
 
+    function abrirMeta() {
+      document.getElementById('meta-input').value = metaAtual;
+      const overlay = document.getElementById('meta-overlay');
+      overlay.style.display = 'flex';
+      document.getElementById('meta-input').focus();
+    }
 
+    function fecharMeta() {
+      document.getElementById('meta-overlay').style.display = 'none';
+    }
 
+    function salvarMeta() {
+      const val = parseInt(document.getElementById('meta-input').value);
+      if (!val || val < 1) return;
+      metaAtual = val;
+      atualizarKpiMeta();
+      fecharMeta();
+    }
 
-</div>
-<script src="../js/menu.js"></script>
-<script>
-  const VINHO = '#7a1f3d';
-
-  /* Configurações comuns a todos os gráficos */
-  const base = {
-    chart: {
-      type: 'line',
-      zoom: { enabled: false },
-      toolbar: { show: false },
-      fontFamily: 'Poppins, sans-serif',
-    },
-    dataLabels: { enabled: false },
-    stroke: { curve: 'smooth', width: 3 },
-    markers: { size: 4 },
-    grid: { borderColor: '#f1f1f1' },
-    legend: { position: 'top', horizontalAlign: 'right' },
-  };
-
-  const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-
-
-  /* Dashboard da evolução das médias do enem */
-const anos = ['2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'];
-
-const notas = {
-  'C.Natureza': [450, 495, 500, 490, 510, 530, 565, 605],
-  'C.Humanas':  [510, 530, 530, 525, 560, 570, 560, 590],
-  'Linguagens': [540, 555, 560, 570, 575, 605, 610, 595],
-  'Matemática': [580, 585, 600, 580, 595, 610, 605, 620],
-  'Redação':    [560, 575, 590, 570, 600, 620, 640, 660],
-};
-
-const metas = {
-  'C.Natureza': 520,
-  'C.Humanas':  550,
-  'Linguagens': 580,
-  'Matemática': 610,
-  'Redação':    620,
-};
-
-function linhaMeta(area) {
-  return [{
-    y: metas[area],
-    borderColor: '#2ba84a',
-    strokeDashArray: 6,
-    label: {
-      text: 'Meta: ' + metas[area],
-      position: 'left',
-      textAnchor: 'start',
-      style: { color: '#fff', background: '#2ba84a', fontSize: '11px' },
-    },
-  }];
-}
-
-const chart = new ApexCharts(document.querySelector('#chart'), {
-  series: [{ name: 'C.Natureza', data: notas['C.Natureza'] }],
-  chart: { height: 320, type: 'line', zoom: { enabled: false }, toolbar: { show: false }, fontFamily: 'Poppins, sans-serif' },
-  colors: ['#7a1f3d'],
-  stroke: { curve: 'smooth', width: 3 },
-  markers: { size: 4 },
-  dataLabels: { enabled: false },
-  grid: { borderColor: '#f1f1f1' },
-  xaxis: { categories: anos },
-  yaxis: { min: 400, max: 700 },
-  annotations: { yaxis: linhaMeta('C.Natureza') },
-  legend: { show: false },
-
-   responsive: [{
-    breakpoint: 600,
-    options: {
-      chart: { height: 240 },
-      markers: { size: 3 },
-    },
-  }],
-});
-chart.render();
-
-/* Filtros por área */
-const botoes = document.querySelectorAll('.evolucao_medias_button');
-
-botoes.forEach(botao => {
-  botao.addEventListener('click', () => {
-    botoes.forEach(b => b.classList.remove('ativo'));
-    botao.classList.add('ativo');
-
-    const area = botao.textContent.trim();
-    chart.updateOptions({
-      series: [{ name: area, data: notas[area] }],
-      annotations: { yaxis: linhaMeta(area) },
+    // Fecha ao clicar fora
+    document.getElementById('meta-overlay').addEventListener('click', function (e) {
+      if (e.target === this) fecharMeta();
     });
-  });
-});
 
+    /* ── Gráficos ApexCharts ── */
+    const VINHO = '#7a1f3d';
 
- 
+    const anos = ['2023', '2024', '2025', '2026'];
+    const notas = {
+      'C.Natureza': [565, 580, 605, 620],
+      'C.Humanas': [560, 575, 590, 600],
+      'Linguagens': [610, 600, 595, 610],
+      'Matemática': [605, 610, 620, 630],
+      'Redação': [640, 650, 660, 670],
+    };
+    const metas = { 'C.Natureza': 520, 'C.Humanas': 550, 'Linguagens': 580, 'Matemática': 610, 'Redação': 620 };
 
+    function linhaMeta(area) {
+      return [{
+        y: metas[area], borderColor: '#2ba84a', strokeDashArray: 6,
+        label: {
+          text: 'Meta: ' + metas[area], position: 'left', textAnchor: 'start',
+          style: { color: '#fff', background: '#2ba84a', fontSize: '11px' }
+        }
+      }];
+    }
 
+    const chart = new ApexCharts(document.querySelector('#chart'), {
+      series: [{ name: 'C.Natureza', data: notas['C.Natureza'] }],
+      chart: { height: 260, type: 'line', zoom: { enabled: false }, toolbar: { show: false }, fontFamily: 'Poppins, sans-serif' },
+      colors: [VINHO],
+      stroke: { curve: 'smooth', width: 3 },
+      markers: { size: 4, strokeWidth: 0 },
+      dataLabels: { enabled: false },
+      grid: { borderColor: '#f1f1f1' },
+      xaxis: { categories: anos },
+      yaxis: { min: 400, max: 700 },
+      annotations: { yaxis: linhaMeta('C.Natureza') },
+      legend: { show: false },
+      responsive: [{ breakpoint: 600, options: { chart: { height: 240 }, markers: { size: 3 } } }],
+    });
+    chart.render();
 
- new ApexCharts(document.querySelector('#chartA'), {
-  ...base,
-  chart: { ...base.chart, height: 350 },
-  series: [{ name: 'Registros', data: [4, 5, 8, 9, 5, 6, 4, 9, 7, 6, 8, 9] }],
-  colors: [VINHO],
-  xaxis: { categories: meses },
-  yaxis: { title: { text: 'Registros por mês' }, min: 0, max: 12, tickAmount: 6 },
-  annotations: {
-    yaxis: [{
-      y: 7,
-      borderColor: '#2ba84a',
-      strokeDashArray: 6,
-      label: {
-        text: 'Meta: 7',
-        position: 'left',
-        textAnchor: 'start',
-        style: { color: '#fff', background: '#2ba84a', fontSize: '11px' },
+    document.querySelectorAll('.evolucao_medias_button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.evolucao_medias_button').forEach(b => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+        const area = btn.textContent.trim();
+        chart.updateOptions({
+          series: [{ name: area, data: notas[area] }],
+          annotations: { yaxis: linhaMeta(area) },
+        });
+      });
+    });
+
+    const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+    new ApexCharts(document.querySelector('#chartA'), {
+      chart: { type: 'line', height: 300, zoom: { enabled: false }, toolbar: { show: false }, fontFamily: 'Poppins, sans-serif' },
+      series: [{ name: 'Registros', data: [4, 5, 8, 9, 5, 6, 4, 9, 7, 6, 8, 9] }],
+      colors: [VINHO],
+      stroke: { curve: 'smooth', width: 3 },
+      markers: { size: 4 },
+      dataLabels: { enabled: false },
+      grid: { borderColor: '#f1f1f1' },
+      xaxis: { categories: meses },
+      yaxis: { title: { text: 'Registros por mês' }, min: 0, max: 12, tickAmount: 6 },
+      annotations: {
+        yaxis: [{
+          y: 7, borderColor: '#2ba84a', strokeDashArray: 6,
+          label: {
+            text: 'Meta: 7', position: 'left', textAnchor: 'start',
+            style: { color: '#fff', background: '#2ba84a', fontSize: '11px' }
+          }
+        }]
       },
-    }],
-  },
-  legend: { show: false },
+      legend: { show: false },
+      responsive: [{
+        breakpoint: 600, options: {
+          chart: { height: 240 },
+          yaxis: { title: { text: undefined }, min: 0, max: 12, tickAmount: 6 }
+        }
+      }],
+    }).render();
 
-   responsive: [{
-    breakpoint: 600,
-    options: {
-      chart: { height: 240 },
-      yaxis: { title: { text: undefined }, min: 0, max: 12, tickAmount: 6 },
-    },
-  }],
-}).render();
+    const registrosPorProfessor = {
+      'João Lima': ['Simulado Mat. Jan', 'Lista de exercícios', 'Revisão de álgebra', 'Prova diagnóstica', 'Simulado Mat. Fev', 'Correção coletiva', 'Exercícios ENEM', 'Revisão final', 'Prova bimestral'],
+      'Ana Costa': ['Aula de genética', 'Revisão de biologia', 'Simulado CN', 'Lista de ecologia', 'Prova diagnóstica', 'Exercícios ENEM'],
+      'Rafael Pereira': ['Revisão de química', 'Simulado CN', 'Lista de reações', 'Prova bimestral', 'Exercícios ENEM'],
+      'Carla Mendes': ['Revisão de física', 'Simulado CN', 'Lista de mecânica'],
+    };
 
-  
+    new ApexCharts(document.querySelector('#chartProfessores'), {
+      chart: { type: 'bar', height: 300, toolbar: { show: false }, fontFamily: 'Poppins, sans-serif' },
+      plotOptions: { bar: { horizontal: false, columnWidth: '55%', borderRadius: 6, distributed: true } },
+      colors: ['#7a1f3d', '#a84060', '#c86882', '#d9a0b0'],
+      dataLabels: { enabled: true, style: { fontSize: '12px', colors: ['#333'] }, offsetY: -6 },
+      series: [{ name: 'Registros', data: [9, 6, 5, 3] }],
+      xaxis: {
+        categories: ['João Lima', 'Ana Costa', 'Rafael Pereira', 'Carla Mendes'],
+        labels: { style: { fontSize: '12px', fontFamily: 'Poppins, sans-serif' } }
+      },
+      yaxis: { title: { text: 'Nº de registros' }, min: 0, max: 12, tickAmount: 4 },
+      annotations: {
+        yaxis: [{
+          y: 10, borderColor: '#2b9348', strokeDashArray: 6,
+          label: {
+            text: 'Meta: 10', position: 'left', textAnchor: 'start',
+            style: { color: '#fff', background: '#2b9348', fontSize: '11px', fontFamily: 'Poppins, sans-serif' }
+          }
+        }]
+      },
+      grid: { borderColor: '#f1f1f1' },
+      legend: { show: false },
+      tooltip: {
+        custom: function ({ dataPointIndex, w }) {
+          const nome = w.globals.labels[dataPointIndex];
+          const total = w.globals.series[0][dataPointIndex];
+          const lista = registrosPorProfessor[nome] || [];
+          const itens = lista.map(r => `<li style="padding:2px 0;border-bottom:1px solid #f1f1f1;">${r}</li>`).join('');
+          return `
+            <div style="padding:12px 14px;font-family:Poppins,sans-serif;min-width:200px;max-width:260px;">
+              <div style="font-weight:600;color:#7a1f3d;font-size:13px;margin-bottom:6px;">${nome}</div>
+              <div style="font-size:11px;color:#555;margin-bottom:8px;">${total} registro(s)</div>
+              <ul style="list-style:none;padding:0;margin:0;font-size:11px;color:#333;">${itens}</ul>
+            </div>`;
+        }
+      },
+      responsive: [{ breakpoint: 600, options: { chart: { height: 220 } } }],
+    }).render();
+  </script>
 
-
-
-
-
-
-
-
-
-
-
-
-  /* ===== 3. Alertas configurados ===== */
-  new ApexCharts(document.querySelector('#chartE'), {
-    ...base,
-    chart: { ...base.chart, height: 230 },
-    series: [{ name: 'Alertas', data: [1, 2, 3, 2, 3, 1, 5, 6, 2, 3, 3, 3] }],
-    colors: ['#7a1f3d'],
-    xaxis: { categories: meses },
-    yaxis: { title: { text: 'Alertas' }, min: 0, tickAmount: 4 },
-    legend: { show: false },
-
-     responsive: [{
-    breakpoint: 600,
-    options: {
-      chart: { height: 220 },
-      yaxis: { title: { text: undefined }, min: 0, tickAmount: 4 },
-    },
-  }],
-  }).render();
-
-  
-</script>
 
   <script src="../js/controleAcesso.js"></script>
 </body>
+
 </html>
