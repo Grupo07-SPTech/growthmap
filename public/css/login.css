@@ -229,6 +229,47 @@ body {
    cursor: pointer;
 }
 
+.campo-senha {
+         position: relative;
+         display: flex;
+         align-items: center;
+         width: 100%;
+      }
+
+      .campo-senha .input {
+         width: 100%;
+         box-sizing: border-box;
+         padding-right: 44px;
+      }
+
+      .btn-ver-senha,
+      .btn-ver-senha:hover,
+      .btn-ver-senha:focus,
+      .btn-ver-senha:active {
+         position: absolute;
+         right: 14px;
+         top: 50%;
+         transform: translateY(-50%);
+         background: none !important;
+         background-color: transparent !important;
+         border: none !important;
+         outline: none !important;
+         box-shadow: none !important;
+         padding: 0 !important;
+         margin: 0 !important;
+         cursor: pointer;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+      }
+
+      .icone-olho {
+         width: 22px;
+         height: 22px;
+         object-fit: contain;
+         display: block;
+      }
+
 /* Responsividade */
 
 @media (max-width: 650px) {
