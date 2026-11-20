@@ -30,12 +30,17 @@
 
             <div id="caixaEmail" class="caixa">
                <p class="tituloInp">Email:</p>
-               <input id="inpEmail" class="input" type="text">
+               <input id="inpEmail" class="input" type="text" placeholder="seuemail@email.com">
             </div>
 
             <div id="caixaSenha" class="caixa">
                <p class=" tituloInp">Senha:</p>
-               <input id="inpSenha" class="input" type="password">
+               <div class="campo-senha">
+                  <input id="inpSenha" class="input" type="password" placeholder="*****">
+                  <button type="button" class="btn-ver-senha" onclick="alternarVisibilidadeSenha('inpSenha', this)">
+                     <img src="./assets/imgs/olhos-fechados.png" alt="Ocultar senha" class="icone-olho">
+                  </button>
+               </div>
             </div>
 
          </div>
@@ -48,6 +53,20 @@
       </div>
    </div>
    <script>
+      const CAMINHO_OLHO_ABERTO = "./assets/imgs/olho.png";
+      const CAMINHO_OLHO_FECHADO = "./assets/imgs/olhos-fechados.png";
+
+      function alternarVisibilidadeSenha(idInput, botao) {
+         const input = document.getElementById(idInput);
+         const img = botao.querySelector("img");
+
+         const estaOculta = input.type === "password";
+         input.type = estaOculta ? "text" : "password";
+
+         if (img) {
+            img.src = estaOculta ? CAMINHO_OLHO_ABERTO : CAMINHO_OLHO_FECHADO;
+         }
+      }
 
       function entrar() {
          var emailVar = inpEmail.value;
