@@ -1,4 +1,5 @@
 var professorModel = require("../models/professorModel");
+var notificacaoService = require("../services/notificacaoService");
 
 function cadastrar(req, res) {
     var nome = req.body.nome;
@@ -14,7 +15,10 @@ function cadastrar(req, res) {
     }
 
     professorModel.cadastrar(nome, email, senha, cargo, area, idUnidade, cpf)
-        .then(resultado => res.json(resultado))
+        .then(resultado => {
+             res.json(resultado);
+             notificacaoService.avisarCadastro(nome, email);
+            })
         .catch(erro => {
             console.log(erro);
             res.status(500).json(erro.sqlMessage);

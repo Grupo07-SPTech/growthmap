@@ -1,4 +1,6 @@
 var eventoModel = require("../models/eventoModel");
+var usuarioModel = require("../models/usuarioModel");
+var notificacaoService = require("../services/notificacaoService");
 
 function listar(req, res) {
     var idUsuario = req.params.idUsuario;
@@ -27,6 +29,7 @@ function cadastrar(req, res) {
         eventoModel.cadastrar(tipo || 'tarefa', nome, area || 'Geral', data, rotulo || 'Tarefa', fkUsuario)
             .then(function (resultado) {
                 res.status(201).json(resultado);
+                 avisarEventoPorEmail(fkUsuario, nome, area || 'Geral', data);
             })
             .catch(function (erro) {
                 console.log(erro);
@@ -59,6 +62,24 @@ function deletar(req, res) {
     eventoModel.deletar(idEvento)
         .then(resultado => res.status(200).json(resultado))
         .catch(erro => res.status(500).json(erro.sqlMessage));
+}
+
+function avisarEventoPorEmail(idUsuario, nomeEvento, area, data) {
+    usuarioModel.buscarPorId(idUsuario)
+        .then(function (usuarios) {
+            if (usuarios.length > 0) {
+                notificacaoService.avisarEvento(
+                    usuarios[0].nome,
+                    usuarios[0].email,
+                    nomeEvento,
+                    area,
+                    data
+                );
+            }
+        })
+        .catch(function (erro) {
+            console.log("Não foi possível buscar o e-mail do usuário:", erro.sqlMessage || erro);
+        });
 }
 
 module.exports = {
