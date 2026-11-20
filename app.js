@@ -24,6 +24,8 @@ var filialRouter = require("./src/routes/filial");
 var professorRouter = require("./src/routes/professor");
 var eventosRouter = require("./src/routes/eventos");
 var permissoesRouter = require("./src/routes/permissoes");
+var dashboardProfessorRouter = require("./src/routes/dashboardProfessor");
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -40,6 +42,8 @@ app.use("/filial", filialRouter);
 app.use("/professor", professorRouter);
 app.use("/eventos", eventosRouter);
 app.use("/permissoes", permissoesRouter);
+app.use("/dashboardProfessor", dashboardProfessorRouter);
+
 
 app.listen(PORTA_APP, function () {
   console.log(`

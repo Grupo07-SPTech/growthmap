@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Growth Map | Dashboard Professor</title>
-    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+
+    <link rel="stylesheet"
+        href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/dashboardProfessor.css">
-    <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
 
     <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
@@ -18,206 +25,696 @@
     </button>
 
     <div class="sidebar">
+
         <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo">
+
         <div class="nav-indicador" id="nav-indicador"></div>
 
         <div class="nav-item">
-            <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
+            <a href="./acessoRapido.html">
+                <i class="fi fi-rr-apps"></i>
+            </a>
         </div>
+
         <div class="nav-item">
-            <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
+            <a href="./painelEventos.html">
+                <i class="fi fi-rr-calendar"></i>
+            </a>
         </div>
+
         <div class="nav-item">
-            <a href="./filiais.html"><i class="fi fi-rr-home"></i></a>
+            <a href="./filiais.html">
+                <i class="fi fi-rr-home"></i>
+            </a>
         </div>
+
         <div class="nav-item ativo">
-            <a href="./dashboardDiretorProfessor.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
+            <a href="./dashboardProfessor.html">
+                <i class="fi fi-rr-chart-pie-alt"></i>
+            </a>
         </div>
+
         <div class="nav-item">
-            <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
+            <a href="./usuarios.html">
+                <i class="fi fi-rr-users"></i>
+            </a>
         </div>
+
         <a href="perfilUsuario.html">
             <div class="perfil"></div>
         </a>
-        <div class="sair"><a href="../index.html">Sair</a></div>
+
+        <div class="sair">
+            <a href="../index.html">Sair</a>
+        </div>
+
     </div>
 
-    <main class="main-content" style="margin-left: 90px; padding: 32px; width: calc(100% - 90px);">
+
+    <main class="main-content">
+
         <header class="dash-header">
+
             <div class="dash-title">
                 <h1>Dashboard Pedagógica</h1>
                 <p>Análise de desempenho regional e competências do ENEM</p>
             </div>
+
             <div class="dash-filters">
+
                 <div class="filter-group">
+
                     <label for="select-estado">Estado (UF)</label>
-                    <select id="select-estado" onchange="atualizarMunicipios()">
+
+                    <select id="select-estado">
                         <option value="SP" selected>São Paulo (SP)</option>
                         <option value="RJ">Rio de Janeiro (RJ)</option>
                         <option value="MG">Minas Gerais (MG)</option>
                         <option value="PR">Paraná (PR)</option>
                     </select>
+
                 </div>
+
                 <div class="filter-group">
+
                     <label for="select-municipio">Município</label>
+
                     <select id="select-municipio"></select>
+
                 </div>
+
+                <div class="filter-group filter-area">
+
+                    <label for="select-area">Área do Conhecimento</label>
+
+                    <select id="select-area">
+                        <option value="matematica">Matemática</option>
+                        <option value="linguagens">Linguagens</option>
+                        <option value="humanas">Ciências Humanas</option>
+                        <option value="natureza">Ciências da Natureza</option>
+                        <option value="redacao">Redação</option>
+                    </select>
+
+                </div>
+
             </div>
+
         </header>
 
+
         <section class="kpi-grid">
+
             <div class="kpi-card">
-                <span class="kpi-title">MÉDIA GERAL DO MUNICÍPIO</span>
-                <span class="kpi-value">515,0 pts</span>
-                <span class="kpi-footer">Média Estadual: 546,8 pts</span>
+
+                <span class="kpi-title">MÉDIA DE DESEMPENHO</span>
+
+                <span class="kpi-value" id="kpi-media">512,0 pts</span>
+
+                <span class="kpi-footer" id="kpi-media-footer">
+                    Média estadual: 554,0 pts
+                </span>
+
             </div>
-            <div class="kpi-card">
-                <span class="kpi-title">MÉDIA DE REDAÇÃO</span>
-                <span class="kpi-value">580,0 pts</span>
-                <span class="kpi-footer">Acima da média das áreas objetivas</span>
-            </div>
+
+
             <div class="kpi-card warning">
-                <span class="kpi-title">ÁREA DE MAIOR ATENÇÃO</span>
-                <span class="kpi-value">Ciências da Natureza</span>
-                <span class="kpi-footer">Média de 480,0 pts na região</span>
+
+                <span class="kpi-title">TAXA DE ABSTENÇÃO</span>
+
+                <span class="kpi-value" id="kpi-abstencao">24,5%</span>
+
+                <span class="kpi-footer" id="kpi-abstencao-footer">
+                    Abstenção do Dia 2 de aplicação
+                </span>
+
             </div>
-            <div class="kpi-card danger">
+
+
+            <div class="kpi-card">
+
+                <span class="kpi-title" id="titulo-evolucao">
+                    EVOLUÇÃO PLURIANUAL DA MÉDIA GERAL DE MATEMÁTICA
+                </span>
+
+                <span class="kpi-value" id="kpi-evolucao">+4,2%</span>
+
+                <span class="kpi-footer" id="kpi-evolucao-footer">
+                    Comparação entre 2022 e 2024
+                </span>
+
+            </div>
+
+
+            <div class="kpi-card" id="card-diferencial">
+
+                <span class="kpi-title">DIFERENCIAL REGIONAL</span>
+
+                <span class="kpi-value" id="kpi-diferencial">-7,6%</span>
+
+                <span class="kpi-footer" id="kpi-diferencial-footer">
+                    Em relação à média estadual
+                </span>
+
+            </div>
+
+
+            <div class="kpi-card danger" id="card-gargalo-redacao" style="display: none;">
+
                 <span class="kpi-title">GARGALO NA REDAÇÃO</span>
-                <span class="kpi-value">Competência 3</span>
-                <span class="kpi-footer">Argumentação (110,0 pts)</span>
+
+                <span class="kpi-value" id="kpi-gargalo-valor">Competência 3</span>
+
+                <span class="kpi-footer" id="kpi-gargalo-footer">Argumentação (110,0 pts)</span>
+
             </div>
+
         </section>
+
 
         <section class="charts-grid">
-            <div class="chart-card">
+
+            <div class="chart-card progress-card">
+
                 <div class="chart-header">
-                    <h3>Desempenho por Área de Conhecimento</h3>
-                    <p>Comparativo entre o município selecionado e a média do estado</p>
+
+                    <h3>Progresso do Planejamento</h3>
+
+                    <p>Eventos cadastrados em relação à meta do período</p>
+
                 </div>
-                <div class="chart-container">
-                    <canvas id="radarChart"></canvas>
+
+                <div class="donut-container">
+
+                    <canvas id="progressChart"></canvas>
+
+                    <div class="donut-center">
+
+                        <span id="progress-percent">40%</span>
+
+                        <small>Concluído</small>
+
+                    </div>
+
                 </div>
+
+                <div class="progress-info">
+
+                    <strong id="progress-absolute">
+                        4 de 10 eventos cadastrados
+                    </strong>
+
+                    <span>Meta de eventos para o período</span>
+
+                </div>
+
             </div>
 
-            <div class="chart-card">
+
+            <div class="chart-card diagnostic-card" id="card-diagnostic">
+
                 <div class="chart-header">
-                    <h3>Desempenho por Competência da Redação</h3>
-                    <p>Média de pontuação (0 a 200 pontos por competência)</p>
+
+                    <h3 id="diagnostic-title">
+                        Desempenho por Competência da Redação
+                    </h3>
+
+                    <p id="diagnostic-subtitle">
+                        Pontuação média dos alunos (0 a 200 pontos por competência)
+                    </p>
+
                 </div>
+
                 <div class="chart-container">
-                    <canvas id="barRedacaoChart"></canvas>
+
+                    <canvas id="diagnosticChart"></canvas>
+
                 </div>
+
             </div>
+
+
+            <div class="chart-card historical-card">
+
+                <div class="chart-header">
+
+                    <h3>Desempenho Estado vs. Município</h3>
+
+                    <p id="historical-subtitle">
+                        Evolução da média nos últimos três anos
+                    </p>
+
+                </div>
+
+                <div class="chart-container">
+
+                    <canvas id="historicalChart"></canvas>
+
+                </div>
+
+            </div>
+
         </section>
+
     </main>
 
+
     <script src="../js/menu.js"></script>
+
     <script>
+
         const municipiosPorEstado = {
             SP: [
-                { value: "mairipora", text: "Mairiporã" },
-                { value: "atibaia", text: "Atibaia" },
-                { value: "guarulhos", text: "Guarulhos" },
-                { value: "francisco-morato", text: "Francisco Morato" },
-                { value: "campinas", text: "Campinas" },
-                { value: "santos", text: "Santos" },
-                { value: "sao-paulo", text: "São Paulo (Capital)" }
+                { value: "3528502", text: "Mairiporã" },
+                { value: "3504107", text: "Atibaia" },
+                { value: "3518800", text: "Guarulhos" },
+                { value: "3516309", text: "Francisco Morato" },
+                { value: "3509502", text: "Campinas" },
+                { value: "3548500", text: "Santos" },
+                { value: "3550308", text: "São Paulo (Capital)" }
             ],
             RJ: [
-                { value: "rio-de-janeiro", text: "Rio de Janeiro (Capital)" },
-                { value: "niteroi", text: "Niterói" },
-                { value: "petropolis", text: "Petrópolis" },
-                { value: "duque-de-caxias", text: "Duque de Caxias" }
+                { value: "3304557", text: "Rio de Janeiro (Capital)" },
+                { value: "3303302", text: "Niterói" },
+                { value: "3303906", text: "Petrópolis" },
+                { value: "3301702", text: "Duque de Caxias" }
             ],
             MG: [
-                { value: "belo-horizonte", text: "Belo Horizonte (Capital)" },
-                { value: "uberlandia", text: "Uberlândia" },
-                { value: "ouropreto", text: "Ouro Preto" },
-                { value: "juiz-de-fora", text: "Juiz de Fora" }
+                { value: "3106200", text: "Belo Horizonte (Capital)" },
+                { value: "3170206", text: "Uberlândia" },
+                { value: "3146107", text: "Ouro Preto" },
+                { value: "3136702", text: "Juiz de Fora" }
             ],
             PR: [
-                { value: "curitiba", text: "Curitiba (Capital)" },
-                { value: "londrina", text: "Londrina" },
-                { value: "maringa", text: "Maringá" },
-                { value: "foz-do-iguacu", text: "Foz do Iguaçu" }
+                { value: "4106902", text: "Curitiba (Capital)" },
+                { value: "4113700", text: "Londrina" },
+                { value: "4115200", text: "Maringá" },
+                { value: "4108304", text: "Foz do Iguaçu" }
             ]
         };
 
-        function atualizarMunicipios() {
-            const selectEstado = document.getElementById('select-estado');
-            const selectMunicipio = document.getElementById('select-municipio');
-            const estadoSelecionado = selectEstado.value;
+        const dadosAreasFallback = {
+            matematica: {
+                nome: "Matemática",
+                dia: 2,
+                abstencao: 24.5,
+                anos: { labels: ["2022", "2023", "2024"], municipio: [490, 502, 512], estado: [535, 545, 554] }
+            },
+            linguagens: {
+                nome: "Linguagens",
+                dia: 1,
+                abstencao: 18.2,
+                anos: { labels: ["2022", "2023", "2024"], municipio: [480, 493, 505], estado: [515, 522, 530] }
+            },
+            humanas: {
+                nome: "Ciências Humanas",
+                dia: 1,
+                abstencao: 18.2,
+                anos: { labels: ["2022", "2023", "2024"], municipio: [475, 486, 498], estado: [508, 514, 520] }
+            },
+            natureza: {
+                nome: "Ciências da Natureza",
+                dia: 2,
+                abstencao: 24.5,
+                anos: { labels: ["2022", "2023", "2024"], municipio: [455, 468, 480], estado: [490, 500, 510] }
+            },
+            redacao: {
+                nome: "Redação",
+                dia: 1,
+                abstencao: 18.2,
+                anos: { labels: ["2022", "2023", "2024"], municipio: [550, 565, 580], estado: [595, 608, 620] },
+                competencias: [145, 120, 110, 130, 135]
+            }
+        };
 
-            selectMunicipio.innerHTML = '';
-            const listaMunicipios = municipiosPorEstado[estadoSelecionado] || [];
+        const nomesCompetenciasRedacao = [
+            { titulo: "Competência 1", descricao: "Norma culta da língua escrita" },
+            { titulo: "Competência 2", descricao: "Compreensão do tema e repertório" },
+            { titulo: "Competência 3", descricao: "Argumentação" },
+            { titulo: "Competência 4", descricao: "Coesão textual" },
+            { titulo: "Competência 5", descricao: "Proposta de intervenção" }
+        ];
+
+
+        const progressChart = new Chart(
+            document.getElementById("progressChart").getContext("2d"),
+            {
+                type: "doughnut",
+                data: {
+                    labels: ["Cadastrados", "Restantes"],
+                    datasets: [{
+                        data: [4, 6],
+                        backgroundColor: ["#7a1f3d", "#eeeeee"],
+                        borderWidth: 0,
+                        cutout: "78%"
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            }
+        );
+
+        const diagnosticChart = new Chart(
+            document.getElementById("diagnosticChart").getContext("2d"),
+            {
+                type: "bar",
+                data: {
+                    labels: ["Competência 1", "Competência 2", "Competência 3", "Competência 4", "Competência 5"],
+                    datasets: [{
+                        label: "Pontuação média",
+                        data: [0, 0, 0, 0, 0],
+                        backgroundColor: "#7a1f3d",
+                        borderRadius: 6,
+                        barThickness: 22
+                    }]
+                },
+                options: {
+                    indexAxis: "y",
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 200,
+                            title: { display: true, text: "Pontuação" }
+                        },
+                        y: {
+                            ticks: { font: { family: "Poppins", size: 11 } }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            }
+        );
+
+        const historicalChart = new Chart(
+            document.getElementById("historicalChart").getContext("2d"),
+            {
+                type: "bar",
+                data: {
+                    labels: ["2022", "2023", "2024"],
+                    datasets: [
+                        {
+                            label: "Município",
+                            data: [],
+                            backgroundColor: "#7a1f3d",
+                            borderRadius: 5
+                        },
+                        {
+                            label: "Estado",
+                            data: [],
+                            backgroundColor: "#9e9e9e",
+                            borderRadius: 5
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 400,
+                            max: 700,
+                            title: { display: true, text: "Média de desempenho" }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: { font: { family: "Poppins", size: 11 } }
+                        }
+                    }
+                }
+            }
+        );
+
+
+        function formatarPtBr(valor, casas = 1) {
+            return Number(valor).toFixed(casas).replace(".", ",");
+        }
+
+        function atualizarProgressoPlanejamento(cadastrados, meta) {
+            const totalCadastrados = Math.max(0, Number(cadastrados) || 0);
+            const totalMeta = Math.max(1, Number(meta) || 10);
+            const restantes = Math.max(0, totalMeta - totalCadastrados);
+            const percentual = Math.min(100, Math.round((totalCadastrados / totalMeta) * 100));
+
+            document.getElementById("progress-percent").textContent = percentual + "%";
+            document.getElementById("progress-absolute").textContent =
+                `${totalCadastrados} de ${totalMeta} eventos cadastrados`;
+
+            progressChart.data.datasets[0].data = [totalCadastrados, restantes];
+            progressChart.update();
+        }
+
+        function atualizarKPIs(nomeArea, diaAplicacao, taxaAbstencao, labelsAnos, serieMunicipio, serieEstado) {
+            const ultimoIdx = serieMunicipio.length - 1;
+            const mediaAtual = ultimoIdx >= 0 ? serieMunicipio[ultimoIdx] : 0;
+            const estadualAtual = ultimoIdx >= 0 ? serieEstado[ultimoIdx] : 0;
+
+            document.getElementById("kpi-media").textContent =
+                formatarPtBr(mediaAtual, 1) + " pts";
+            document.getElementById("kpi-media-footer").textContent =
+                "Média estadual: " + formatarPtBr(estadualAtual, 1) + " pts";
+
+            document.getElementById("kpi-abstencao").textContent =
+                formatarPtBr(taxaAbstencao, 1) + "%";
+            document.getElementById("kpi-abstencao-footer").textContent =
+                diaAplicacao === 1
+                    ? "Abstenção do Dia 1 de aplicação"
+                    : "Abstenção do Dia 2 de aplicação";
+
+            const primeiroAno = serieMunicipio[0] || mediaAtual;
+            const evolucao = primeiroAno !== 0
+                ? ((mediaAtual - primeiroAno) / primeiroAno) * 100
+                : 0;
+            const sinalEvolucao = evolucao >= 0 ? "+" : "";
+
+            document.getElementById("titulo-evolucao").textContent =
+                "EVOLUÇÃO PLURIANUAL DA MÉDIA GERAL DE " + nomeArea.toUpperCase();
+            document.getElementById("kpi-evolucao").textContent =
+                sinalEvolucao + formatarPtBr(evolucao, 1) + "%";
+            document.getElementById("kpi-evolucao-footer").textContent =
+                labelsAnos.length > 1
+                    ? `Comparação entre ${labelsAnos[0]} e ${labelsAnos[labelsAnos.length - 1]}`
+                    : `Ano de referência: ${labelsAnos[0] || "2024"}`;
+
+            const diferencial = estadualAtual !== 0
+                ? ((mediaAtual - estadualAtual) / estadualAtual) * 100
+                : 0;
+            const sinalDiferencial = diferencial >= 0 ? "+" : "";
+
+            document.getElementById("kpi-diferencial").textContent =
+                sinalDiferencial + formatarPtBr(diferencial, 1) + "%";
+            document.getElementById("kpi-diferencial-footer").textContent =
+                diferencial >= 0
+                    ? "Acima da média estadual"
+                    : "Abaixo da média estadual";
+
+            document.getElementById("card-diferencial").classList.toggle(
+                "danger",
+                diferencial < 0
+            );
+        }
+
+        function atualizarKpiGargalo(areaKey, valoresCompetencias) {
+            const cardGargalo = document.getElementById("card-gargalo-redacao");
+
+            if (areaKey !== "redacao") {
+                cardGargalo.style.display = "none";
+                return;
+            }
+
+            cardGargalo.style.display = "flex";
+
+            const comps = Array.isArray(valoresCompetencias) && valoresCompetencias.length === 5
+                ? valoresCompetencias.map(v => Number(v) || 0)
+                : dadosAreasFallback.redacao.competencias;
+
+            let menorIdx = 0;
+            for (let i = 1; i < comps.length; i++) {
+                if (comps[i] < comps[menorIdx]) {
+                    menorIdx = i;
+                }
+            }
+
+            const infoComp = nomesCompetenciasRedacao[menorIdx] || {
+                titulo: `Competência ${menorIdx + 1}`,
+                descricao: "Menor pontuação média"
+            };
+
+            document.getElementById("kpi-gargalo-valor").textContent = infoComp.titulo;
+            document.getElementById("kpi-gargalo-footer").textContent =
+                `${infoComp.descricao} (${formatarPtBr(comps[menorIdx], 1)} pts)`;
+        }
+
+        function atualizarDiagnostico(areaKey, valoresCompetencias) {
+            const card = document.getElementById("card-diagnostic");
+
+            if (areaKey !== "redacao") {
+                card.style.display = "none";
+                return;
+            }
+
+            card.style.display = "flex";
+            document.getElementById("diagnostic-title").textContent =
+                "Desempenho por Competência da Redação";
+            document.getElementById("diagnostic-subtitle").textContent =
+                "Pontuação média dos alunos (0 a 200 pontos por competência)";
+
+            const menorNota = Math.min(...valoresCompetencias);
+            const coresBarras = valoresCompetencias.map(nota =>
+                nota === menorNota ? "#dc2626" : "#7a1f3d"
+            );
+
+            diagnosticChart.data.datasets[0].data = valoresCompetencias;
+            diagnosticChart.data.datasets[0].backgroundColor = coresBarras;
+            diagnosticChart.update();
+        }
+
+        function atualizarHistorico(nomeArea, labelsAnos, serieMunicipio, serieEstado) {
+            historicalChart.data.labels = labelsAnos;
+            historicalChart.data.datasets[0].data = serieMunicipio;
+            historicalChart.data.datasets[1].data = serieEstado;
+            historicalChart.update();
+
+            const subtitulo = document.getElementById("historical-subtitle");
+            const intervalo = labelsAnos.length > 1
+                ? `(${labelsAnos[0]}–${labelsAnos[labelsAnos.length - 1]})`
+                : `(${labelsAnos[0] || "2024"})`;
+
+            subtitulo.textContent = `Evolução de ${nomeArea} nos últimos anos ${intervalo}`;
+        }
+
+
+        async function carregarMunicipios() {
+            const uf = document.getElementById("select-estado").value;
+            const selectMunicipio = document.getElementById("select-municipio");
+            selectMunicipio.innerHTML = "";
+
+            let listaMunicipios = [];
+
+            try {
+                const resposta = await fetch(`/dashboardProfessor/municipios/${encodeURIComponent(uf)}`);
+                if (resposta.ok) {
+                    const dados = await resposta.json();
+                    if (Array.isArray(dados) && dados.length > 0) {
+                        listaMunicipios = dados.map(m => ({
+                            value: String(m.co_municipio),
+                            text: m.nome_municipio
+                        }));
+                    }
+                }
+            } catch (erro) {
+                console.warn("Usando lista local de municípios (API indisponível):", erro);
+            }
+
+            if (listaMunicipios.length === 0) {
+                listaMunicipios = municipiosPorEstado[uf] || [];
+            }
 
             listaMunicipios.forEach(mun => {
-                const option = document.createElement('option');
+                const option = document.createElement("option");
                 option.value = mun.value;
                 option.textContent = mun.text;
                 selectMunicipio.appendChild(option);
             });
+
+            await atualizarDashboard();
         }
 
-        window.onload = function() {
-            atualizarMunicipios();
+        async function atualizarDashboard() {
+            const coMunicipio = document.getElementById("select-municipio").value;
+            const areaKey = document.getElementById("select-area").value;
+            const fallback = dadosAreasFallback[areaKey] || dadosAreasFallback.matematica;
+
+            const idUnidade = sessionStorage.getItem("ID_UNIDADE") || "";
+            const idUsuario = sessionStorage.getItem("ID_USUARIO") || "";
+
+            const mapaColunas = {
+                matematica: { nome: "Matemática", mun: "municipio_mt", est: "estado_mt", dia: 2 },
+                linguagens: { nome: "Linguagens", mun: "municipio_lc", est: "estado_lc", dia: 1 },
+                humanas: { nome: "Ciências Humanas", mun: "municipio_ch", est: "estado_ch", dia: 1 },
+                natureza: { nome: "Ciências da Natureza", mun: "municipio_cn", est: "estado_cn", dia: 2 },
+                redacao: { nome: "Redação", mun: "municipio_redacao", est: "estado_redacao", dia: 1 }
+            };
+
+            const configArea = mapaColunas[areaKey] || mapaColunas.matematica;
+
+            let labelsAnos = [...fallback.anos.labels];
+            let serieMunicipio = [...fallback.anos.municipio];
+            let serieEstado = [...fallback.anos.estado];
+            let taxaAbstencao = fallback.abstencao;
+            let competenciasRedacao = dadosAreasFallback.redacao.competencias;
+            let cadastrados = 4;
+            let meta = 10;
+
+            try {
+                const queryParams = new URLSearchParams();
+                if (idUnidade) queryParams.append("idUnidade", idUnidade);
+                if (idUsuario) queryParams.append("idUsuario", idUsuario);
+
+                const url = `/dashboardProfessor/dados/${encodeURIComponent(coMunicipio)}?${queryParams.toString()}`;
+                const resposta = await fetch(url);
+
+                if (resposta.ok) {
+                    const payload = await resposta.json();
+
+                    if (Array.isArray(payload.historico) && payload.historico.length > 0) {
+                        labelsAnos = payload.historico.map(r => String(r.ano));
+                        serieMunicipio = payload.historico.map(r => Number(r[configArea.mun]) || 0);
+                        serieEstado = payload.historico.map(r => Number(r[configArea.est]) || 0);
+
+                        const ultimoRegistro = payload.historico[payload.historico.length - 1];
+
+                        const abstencaoCol = configArea.dia === 1
+                            ? ultimoRegistro.taxa_abstencao_dia1
+                            : ultimoRegistro.taxa_abstencao_dia2;
+
+                        if (abstencaoCol !== null && abstencaoCol !== undefined) {
+                            taxaAbstencao = Number(abstencaoCol);
+                        }
+
+                        if (ultimoRegistro.media_comp1 !== null && ultimoRegistro.media_comp1 !== undefined) {
+                            competenciasRedacao = [
+                                Number(ultimoRegistro.media_comp1) || 0,
+                                Number(ultimoRegistro.media_comp2) || 0,
+                                Number(ultimoRegistro.media_comp3) || 0,
+                                Number(ultimoRegistro.media_comp4) || 0,
+                                Number(ultimoRegistro.media_comp5) || 0
+                            ];
+                        }
+                    }
+
+                    if (payload.planejamento) {
+                        cadastrados = payload.planejamento.cadastrados;
+                        meta = payload.planejamento.meta;
+                    }
+                }
+            } catch (erro) {
+                console.warn("Usando dados ilustrativos (API indisponível):", erro);
+            }
+
+            atualizarProgressoPlanejamento(cadastrados, meta);
+            atualizarKPIs(configArea.nome, configArea.dia, taxaAbstencao, labelsAnos, serieMunicipio, serieEstado);
+            atualizarKpiGargalo(areaKey, competenciasRedacao);
+            atualizarDiagnostico(areaKey, competenciasRedacao);
+            atualizarHistorico(configArea.nome, labelsAnos, serieMunicipio, serieEstado);
+        }
+
+
+        document.getElementById("select-estado").addEventListener("change", carregarMunicipios);
+        document.getElementById("select-municipio").addEventListener("change", atualizarDashboard);
+        document.getElementById("select-area").addEventListener("change", atualizarDashboard);
+
+        window.onload = function () {
+            carregarMunicipios();
         };
 
-        const ctxRadar = document.getElementById('radarChart').getContext('2d');
-        new Chart(ctxRadar, {
-            type: 'radar',
-            data: {
-                labels: ['Matemática', 'Linguagens', 'Humanas', 'Natureza', 'Redação'],
-                datasets: [{
-                    label: 'Município Selecionado',
-                    data: [512, 505, 498, 480, 580],
-                    backgroundColor: 'rgba(122, 31, 61, 0.2)',
-                    borderColor: '#7a1f3d',
-                    borderWidth: 2
-                }, {
-                    label: 'Média do Estado',
-                    data: [554, 530, 520, 510, 620],
-                    backgroundColor: 'rgba(31, 31, 122, 0.05)',
-                    borderColor: '#1f1f7a',
-                    borderWidth: 1.5,
-                    borderDash: [4, 4]
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { r: { suggestedMin: 400, suggestedMax: 700 } }
-            }
-        });
-
-        const ctxBar = document.getElementById('barRedacaoChart').getContext('2d');
-        new Chart(ctxBar, {
-            type: 'bar',
-            data: {
-                labels: ['Comp. 1', 'Comp. 2', 'Comp. 3 (Arg.)', 'Comp. 4', 'Comp. 5'],
-                datasets: [{
-                    data: [145, 120, 110, 130, 135],
-                    backgroundColor: [
-                        'rgba(122, 31, 61, 0.7)',
-                        'rgba(122, 31, 61, 0.7)',
-                        'rgba(220, 38, 38, 0.85)',
-                        'rgba(122, 31, 61, 0.7)',
-                        'rgba(122, 31, 61, 0.7)'
-                    ],
-                    borderColor: '#7a1f3d',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { x: { max: 200, beginAtZero: true } },
-                plugins: { legend: { display: false } }
-            }
-        });
     </script>
-
-    <script src="../js/controleAcesso.js"></script>
 </body>
+
 </html>

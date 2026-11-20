@@ -66,6 +66,16 @@ CREATE TABLE desempenho_regional (
     media_lc DECIMAL(6,2),
     media_mt DECIMAL(6,2),
     media_redacao DECIMAL(6,2),
+/* para o grafico de media das competencias da regiao*/
+    media_comp1 DECIMAL(5,2),
+    media_comp2 DECIMAL(5,2),
+    media_comp3 DECIMAL(5,2),
+    media_comp4 DECIMAL(5,2),
+    media_comp5 DECIMAL(5,2),
+/*para o grafico de donut de taxa de abstencao*/
+    taxa_abstencao_dia1 DECIMAL(5,2),
+    taxa_abstencao_dia2 DECIMAL(5,2),
+    qtd_inscritos INT,
     qtd_participantes INT,
 
     CONSTRAINT fk_desempenho_municipio
@@ -76,14 +86,31 @@ CREATE TABLE desempenho_regional (
 CREATE TABLE desempenho_estadual (
     id INT AUTO_INCREMENT PRIMARY KEY,
     uf CHAR(2) NOT NULL,
-    ano SMALLINT NOT NULL,
+    ano INT NOT NULL,
+
     media_cn DECIMAL(6,2),
     media_ch DECIMAL(6,2),
     media_lc DECIMAL(6,2),
     media_mt DECIMAL(6,2),
     media_redacao DECIMAL(6,2),
-    qtd_participantes INT NOT NULL,
-    UNIQUE (uf, ano)
+
+    taxa_abstencao_dia1 DECIMAL(5,2),
+    taxa_abstencao_dia2 DECIMAL(5,2),
+
+    qtd_inscritos INT,
+    qtd_participantes INT NOT NULL
+);
+
+CREATE TABLE meta_planejamento (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_unidade INT NOT NULL,
+    ano INT NOT NULL,
+    semestre INT NOT NULL,
+    meta_eventos INT NOT NULL DEFAULT 10,
+
+    CONSTRAINT fk_meta_unidade
+        FOREIGN KEY (id_unidade)
+        REFERENCES unidade(id)
 );
 
 CREATE TABLE config_notificacao (
@@ -155,3 +182,6 @@ INSERT INTO modulo (nome) VALUES
 ('Filiais'),
 ('Gráficos / Dashboard'),
 ('Gerenciamento de Usuários');
+
+INSERT INTO cargo_modulo (fk_cargo, fk_modulo) VALUES
+(1, 1);

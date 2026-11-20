@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growth Map | Dashboard Coordenador — Preview</title>
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <style>
+    /* ── Reset & base ── */
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:"Poppins","Segoe UI",Arial,sans-serif;
+      color:#1a1a1a;
+      min-height:100vh;
+      background-color:#ebebeb;
+      background-image:
+        radial-gradient(circle at 8% 0%,rgba(122,31,61,.18) 0,transparent 38%),
+        radial-gradient(circle at 100% 100%,rgba(31,31,122,.14) 0,transparent 42%),
+        radial-gradient(circle at 85% 15%,rgba(122,31,61,.08) 0,transparent 30%),
+        radial-gradient(circle at 40% 70%,rgba(31,31,122,.05) 0,transparent 35%),
+        radial-gradient(rgba(122,31,61,.14) 1.2px,transparent 1.4px);
+      background-size:auto,auto,auto,auto,26px 26px;
+      background-attachment:fixed;
+    }
+    a{color:inherit;text-decoration:none}
+    .fi{display:inline-flex;line-height:1}
+
+    /* ── Sidebar ── */
+    .sidebar{
+      position:fixed;top:0;left:0;bottom:0;width:100px;z-index:10;
+      display:flex;flex-direction:column;align-items:center;
+      padding:16px 0;gap:34px;
+      background:#ebebeb;
+      border-right:1px solid #b5b5b5;
+      border-radius:0 36px 36px 0;
+      box-shadow:8px 0 24px rgba(122,31,61,.14),2px 0 6px rgba(0,0,0,.10),inset -3px 0 8px rgba(255,255,255,.7);
+      transition:transform .3s ease;
+    }
+    .logo{display:block;width:76px;height:auto;max-height:80px;object-fit:contain}
+    .nav-item{width:100%;height:60px;color:#7a1f3d;opacity:.35;cursor:pointer;position:relative;transition:opacity .3s ease}
+    .nav-item:hover{opacity:.7}
+    .nav-item.ativo{opacity:1}
+    .nav-item a{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:inherit}
+    .nav-item i{font-size:30px}
+    .nav-indicador{
+      position:absolute;top:0;right:0;width:4px;height:60px;
+      background:#7a1f3d;border-radius:4px 0 0 4px;opacity:0;
+      transition:transform .4s cubic-bezier(.4,0,.2,1);
+    }
+    .perfil{
+      margin-top:auto;width:54px;height:54px;border-radius:50%;
+      background:#7a1f3d;
+      box-shadow:0 4px 10px rgba(122,31,61,.35),inset 0 2px 3px rgba(255,255,255,.3);
+    }
+    .sair{color:#b5b5b5;cursor:pointer;font-size:18px}
+    .sair:hover{color:#7a1f3d}
+    .btn-menu{
+      position:fixed;top:16px;left:82px;z-index:20;
+      width:36px;height:36px;border:none;border-radius:50%;
+      background:#7a1f3d;color:#fff;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;font-size:16px;
+      box-shadow:0 4px 10px rgba(122,31,61,.35);transition:left .3s ease,background .2s;
+    }
+    .btn-menu:hover{background:#4d1226}
+    body.menu-fechado .sidebar{transform:translateX(-110%)}
+    body.menu-fechado .conteudo{margin-left:0}
+    body.menu-fechado .btn-menu{left:14px}
+
+    /* ── Conteúdo ── */
+    .conteudo{margin-left:100px;min-width:0;padding:64px 60px 40px 40px;transition:margin-left .3s ease}
+
+    /* ── Upper ── */
+    .upper{align-items:center;display:flex;justify-content:space-between;justify-items:center}
+    .teste{color:white;border-radius:10px;font-size:16px;display:flex;align-items:center;justify-content:left}
+    .card_upper{width:150px;height:35px;border-radius:10px;background-color:#7a1f3d;display:flex;justify-content:center;align-items:center;color:white;font-size:15px}
+
+    /* ── KPIs ── */
+    .kpis{display:flex;justify-content:space-around;align-items:stretch;margin-top:30px;gap:16px}
+    .conteudo_kpis{
+      flex:1;min-width:0;max-width:340px;height:160px;border-radius:10px;background-color:white;
+      display:flex;align-items:flex-start;justify-content:space-between;flex-direction:column;
+      padding:18px 20px;box-shadow:0 4px 12px rgba(0,0,0,.05);
+    }
+    .kpi-label{color:#444;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+    .kpi-destaque{color:#7a1f3d;font-size:20px;font-weight:700}
+    .kpi-comparativo{display:flex;align-items:center;gap:10px;width:100%}
+    .kpi-comp-item{display:flex;flex-direction:column;gap:2px}
+    .kpi-comp-label{color:#555;font-size:10px;font-weight:600}
+    .kpi-comp-valor{color:#111;font-size:17px;font-weight:700}
+    .kpi-comp-sep{color:#777;font-size:14px;align-self:flex-end;padding-bottom:2px}
+    .kpi-negativo{color:#e6a700;font-weight:700}
+    .kpi-positivo{color:#2b9348;font-weight:700}
+    .kpi-diff{font-size:11px;color:#555;font-weight:500}
+    .kpi-diff.kpi-negativo{color:#e6a700;font-weight:600}
+    .kpi-diff.kpi-positivo{color:#2b9348;font-weight:600}
+    .kpi-progress-wrap{display:flex;align-items:center;gap:8px;width:100%}
+    .kpi-progress-bar{flex:1;height:8px;background-color:#f3e4e9;border-radius:4px;overflow:hidden}
+    .kpi-progress-fill{height:100%;background-color:#7a1f3d;border-radius:4px;transition:width .4s ease}
+    .kpi-progress-pct{font-size:11px;color:#7a1f3d;font-weight:600;white-space:nowrap}
+    .kpi-meta-btn{
+      margin-top:2px;padding:5px 12px;border:1px solid #d9b8c2;border-radius:20px;
+      background:white;color:#7a1f3d;font-family:"Poppins",sans-serif;
+      font-size:11px;font-weight:500;cursor:pointer;align-self:flex-start;
+      transition:background .2s,color .2s;
+    }
+    .kpi-meta-btn:hover{background:#7a1f3d;color:white;border-color:#7a1f3d}
+
+    /* ── Card genérico ── */
+    .card-header{display:flex;align-items:center;gap:10px}
+    .card-header h3{color:#7a1f3d;font-size:16px;font-weight:600}
+    .card-descricao{color:#666;font-size:13px}
+
+    /* ── Linha dos dois gráficos lado a lado ── */
+    .graficos-row{
+      display:flex;gap:20px;align-items:stretch;
+      margin-top:30px;margin-left:10px;
+    }
+    .evolucao_medias{
+      flex:1;min-width:0;background-color:white;display:flex;flex-direction:column;
+      border-radius:16px;padding:24px;gap:16px;height:460px;
+      box-shadow:0 4px 12px rgba(0,0,0,.05);box-sizing:border-box;
+    }
+    .evolucao_medias_text{display:flex;flex-direction:column;gap:6px;width:100%}
+    .button_pai{display:flex;flex-direction:row;gap:8px;flex-wrap:wrap}
+    .evolucao_medias_button{
+      height:32px;padding:0 14px;background-color:white;border:1px solid #d9b8c2;
+      color:#7a1f3d;border-radius:20px;font-family:"Poppins",sans-serif;
+      font-size:12px;font-weight:500;cursor:pointer;
+    }
+    .evolucao_medias_button:hover,.evolucao_medias_button.ativo{background-color:#7a1f3d;color:white;border-color:#7a1f3d}
+    #chart{width:100%;flex:1;min-height:0}
+
+    /* ── Dashboard 1: Acompanhamento ── */
+    .acompanhamento{
+      flex:1;min-width:0;border-radius:16px;background-color:white;
+      display:flex;flex-direction:column;padding:24px;gap:12px;height:460px;
+      box-shadow:0 4px 12px rgba(0,0,0,.05);box-sizing:border-box;
+    }
+    #chartA{width:100%;flex:1;min-height:0}
+
+    /* ── Dashboard 2: professores + atividade lado a lado ── */
+    .dashboard-2_pai{
+      margin-top:20px;margin-left:10px;
+      display:flex;gap:20px;align-items:stretch;
+    }
+    .equipe{
+      flex:1;min-width:0;border-radius:16px;background-color:white;
+      display:flex;flex-direction:column;padding:24px;gap:12px;height:460px;
+      box-shadow:0 4px 12px rgba(0,0,0,.05);box-sizing:border-box;
+    }
+    .card-atividade{
+      flex:1;min-width:0;border-radius:16px;background-color:white;
+      display:flex;flex-direction:column;padding:24px;height:460px;
+      box-shadow:0 4px 12px rgba(0,0,0,.05);box-sizing:border-box;
+    }
+
+    /* ── Lista atividade ── */
+    .lista-atividade{display:flex;flex-direction:column;gap:4px;margin-top:12px;overflow-y:auto}
+    .atividade-item{
+      display:flex;align-items:center;gap:12px;padding:8px 4px;
+      border-bottom:1px solid #f1f1f1;font-family:"Poppins",sans-serif;
+    }
+    .atividade-item:last-child{border-bottom:none}
+    .atividade-icone{
+      width:32px;height:32px;border-radius:8px;background-color:#f3e4e9;
+      color:#7a1f3d;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .atividade-texto{display:flex;flex-direction:column;flex:1}
+    .atividade-titulo{color:#333;font-size:13px;font-weight:500}
+    .atividade-sub{color:#888;font-size:11px}
+    .atividade-tempo{color:#aaa;font-size:11px;white-space:nowrap}
+
+    /* ── Responsivo ── */
+    @media(max-width:1024px){
+      .kpis{flex-wrap:wrap;gap:16px;justify-content:center}
+      .conteudo_kpis{width:calc(50% - 16px);min-width:200px;max-width:100%}
+      .graficos-row,.dashboard-2_pai{flex-direction:column;margin-left:0}
+      .evolucao_medias,.acompanhamento,.equipe,.card-atividade{width:100%;height:auto}
+    }
+    @media(max-width:600px){
+      .upper{flex-direction:column;align-items:flex-start;gap:12px}
+      .kpis{gap:12px}
+      .conteudo_kpis{width:100%;height:auto;padding:20px 12px;gap:10px}
+      .evolucao_medias,.acompanhamento,.equipe,.card-atividade{padding:16px}
+      .graficos-row,.dashboard-2_pai{padding:0;margin-top:20px}
+      .button_pai{flex-wrap:nowrap!important;overflow-x:auto;width:100%;padding-bottom:6px}
+      .evolucao_medias_button{flex-shrink:0}
+    }
+  </style>
+</head>
+<body>
+
+  <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
+    <i class="fi fi-rr-menu-burger"></i>
+  </button>
+
+  <div class="sidebar">
+    <!-- Logo em texto como fallback (sem depender de arquivo local) -->
+    <div style="color:#7a1f3d;font-weight:700;font-size:13px;text-align:center;line-height:1.2;padding:0 8px">Growth<br>Map</div>
+    <div class="nav-indicador" id="nav-indicador"></div>
+
+    <div class="nav-item"><a href="#"><i class="fi fi-rr-apps"></i></a></div>
+    <div class="nav-item"><a href="#"><i class="fi fi-rr-calendar"></i></a></div>
+    <div class="nav-item"><a href="#"><i class="fi fi-rr-home"></i></a></div>
+    <div class="nav-item ativo"><a href="#"><i class="fi fi-rr-chart-pie-alt"></i></a></div>
+    <div class="nav-item"><a href="#"><i class="fi fi-rr-users"></i></a></div>
+    <a href="#"><div class="perfil"></div></a>
+    <div class="sair"><a href="#">Sair</a></div>
+  </div>
+
+  <div class="conteudo">
+
+    <div class="upper">
+      <div class="text_upper">
+        <div style="color:#7a1f3d;font-size:30px;" class="teste">Olá, coordenador!</div>
+        <div style="color:grey;font-size:15px;" class="teste">Acompanhe a evolução do ENEM no município da sua unidade.</div>
+      </div>
+      <div class="card_upper">Unidade: Brás</div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpis">
+
+      <div class="conteudo_kpis">
+        <span class="kpi-label">Área mais fraca — foco das aulas</span>
+        <span class="kpi-destaque">C. Natureza</span>
+        <div class="kpi-comparativo">
+          <span class="kpi-comp-item">
+            <span class="kpi-comp-label">Município</span>
+            <span class="kpi-comp-valor kpi-negativo">484 pts</span>
+          </span>
+          <span class="kpi-comp-sep">vs</span>
+          <span class="kpi-comp-item">
+            <span class="kpi-comp-label">Estado</span>
+            <span class="kpi-comp-valor">506 pts</span>
+          </span>
+        </div>
+        <span class="kpi-diff kpi-negativo">−22 pts abaixo do estado</span>
+      </div>
+
+      <div class="conteudo_kpis">
+        <span class="kpi-label">Média geral ENEM — município</span>
+        <div class="kpi-comparativo">
+          <span class="kpi-comp-item">
+            <span class="kpi-comp-label">2024</span>
+            <span class="kpi-comp-valor">548 pts</span>
+          </span>
+          <span class="kpi-comp-sep">→</span>
+          <span class="kpi-comp-item">
+            <span class="kpi-comp-label">2025</span>
+            <span class="kpi-comp-valor kpi-positivo">557 pts</span>
+          </span>
+        </div>
+        <span class="kpi-diff kpi-positivo">+9 pts em relação ao ano anterior</span>
+      </div>
+
+      <div class="conteudo_kpis">
+        <span class="kpi-label">Registros no painel</span>
+        <span class="kpi-destaque">12 <span style="font-size:13px;color:#555;font-weight:600;">/ meta <span id="meta-valor">20</span></span></span>
+        <div class="kpi-progress-wrap">
+          <div class="kpi-progress-bar">
+            <div class="kpi-progress-fill" id="meta-barra" style="width:60%"></div>
+          </div>
+          <span class="kpi-progress-pct" id="meta-pct">60% da meta</span>
+        </div>
+        <span class="kpi-diff" id="meta-faltam">Faltam 8 registros para a meta mensal</span>
+        <button class="kpi-meta-btn" onclick="abrirMeta()">✏️ Definir meta</button>
+      </div>
+
+      <!-- Modal de definir meta -->
+      <div id="meta-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;align-items:center;justify-content:center;">
+        <div style="background:white;border-radius:16px;padding:32px;width:300px;box-shadow:0 8px 32px rgba(0,0,0,.18);display:flex;flex-direction:column;gap:16px;">
+          <h3 style="color:#7a1f3d;font-size:16px;font-weight:600;margin:0;">Definir meta de registros</h3>
+          <p style="color:#888;font-size:13px;margin:0;">Quantos registros são a meta mensal?</p>
+          <input id="meta-input" type="number" min="1" max="999"
+            style="border:1px solid #d9b8c2;border-radius:8px;padding:10px 14px;font-size:16px;font-family:'Poppins',sans-serif;color:#333;outline:none;width:100%;box-sizing:border-box;">
+          <div style="display:flex;gap:10px;">
+            <button onclick="fecharMeta()" style="flex:1;padding:10px;border:1px solid #d9b8c2;border-radius:8px;background:white;color:#7a1f3d;font-family:'Poppins',sans-serif;font-size:13px;cursor:pointer;">Cancelar</button>
+            <button onclick="salvarMeta()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#7a1f3d;color:white;font-family:'Poppins',sans-serif;font-size:13px;cursor:pointer;">Salvar</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Gráficos lado a lado: Evolução das médias + Painel de Acompanhamento -->
+    <div class="graficos-row">
+
+      <div class="evolucao_medias">
+        <div class="evolucao_medias_text">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <i class="fi fi-rr-chart-line-up" style="color:#7a1f3d;font-size:20px;"></i>
+            <h3 style="color:#7a1f3d;font-size:16px;font-weight:600;">Evolução das Médias do ENEM — Município da Unidade</h3>
+          </div>
+          <p style="color:#666;font-size:13px;">
+            Médias anuais do ENEM no município da unidade por área de conhecimento.
+          </p>
+        </div>
+        <div class="button_pai">
+          <button class="evolucao_medias_button ativo">C.Natureza</button>
+          <button class="evolucao_medias_button">C.Humanas</button>
+          <button class="evolucao_medias_button">Linguagens</button>
+          <button class="evolucao_medias_button">Matemática</button>
+          <button class="evolucao_medias_button">Redação</button>
+        </div>
+        <div id="chart"></div>
+      </div>
+
+      <div class="acompanhamento">
+        <div class="card-header"><h3>Painel de Acompanhamento de Registro de Eventos</h3></div>
+        <p class="card-descricao">Acompanhe o registro das atividades e o progresso da unidade.</p>
+        <div id="chartA"></div>
+      </div>
+
+    </div>
+
+    <!-- Registros por Professor + Atividade Recente lado a lado -->
+    <div class="dashboard-2_pai">
+
+      <div class="equipe">
+        <div class="card-header"><h3>Registros por Professor</h3></div>
+        <p class="card-descricao">Quantidade de registros no painel por professor da unidade.</p>
+        <div id="chartProfessores" style="flex:1;min-height:0;width:100%;"></div>
+      </div>
+
+      <div class="card-atividade">
+        <div class="card-header"><h3>Atividade Recente</h3></div>
+        <div class="lista-atividade">
+
+          <div class="atividade-item">
+            <div class="atividade-icone"><i class="fi fi-rr-chart-line-up"></i></div>
+            <div class="atividade-texto">
+              <span class="atividade-titulo">Novo acompanhamento registrado</span>
+              <span class="atividade-sub">Maria Souza · Biológicas</span>
+            </div>
+            <span class="atividade-tempo">há 2h</span>
+          </div>
+
+          <div class="atividade-item">
+            <div class="atividade-icone"><i class="fi fi-rr-bell"></i></div>
+            <div class="atividade-texto">
+              <span class="atividade-titulo">Alerta gerado</span>
+              <span class="atividade-sub">Queda na média de C.Natureza</span>
+            </div>
+            <span class="atividade-tempo">há 5h</span>
+          </div>
+
+          <div class="atividade-item">
+            <div class="atividade-icone"><i class="fi fi-rr-edit"></i></div>
+            <div class="atividade-texto">
+              <span class="atividade-titulo">Registro atualizado</span>
+              <span class="atividade-sub">João Lima · Matemática</span>
+            </div>
+            <span class="atividade-tempo">3 dias</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /conteudo -->
+
+  <script>
+    /* ── Meta de registros ── */
+    const REGISTROS = 12;
+    let metaAtual = 20;
+
+    function atualizarKpiMeta() {
+      const pct = Math.min(Math.round((REGISTROS / metaAtual) * 100), 100);
+      const faltam = Math.max(metaAtual - REGISTROS, 0);
+      document.getElementById('meta-valor').textContent = metaAtual;
+      document.getElementById('meta-barra').style.width = pct + '%';
+      document.getElementById('meta-pct').textContent = pct + '% da meta';
+      document.getElementById('meta-faltam').textContent =
+        faltam > 0 ? `Faltam ${faltam} registros para a meta mensal` : 'Meta atingida! 🎉';
+    }
+
+    function abrirMeta() {
+      document.getElementById('meta-input').value = metaAtual;
+      const overlay = document.getElementById('meta-overlay');
+      overlay.style.display = 'flex';
+      document.getElementById('meta-input').focus();
+    }
+
+    function fecharMeta() {
+      document.getElementById('meta-overlay').style.display = 'none';
+    }
+
+    function salvarMeta() {
+      const val = parseInt(document.getElementById('meta-input').value);
+      if (!val || val < 1) return;
+      metaAtual = val;
+      atualizarKpiMeta();
+      fecharMeta();
+    }
+
+    // Fecha ao clicar fora
+    document.getElementById('meta-overlay').addEventListener('click', function(e) {
+      if (e.target === this) fecharMeta();
+    });
+
+    /* ── Menu toggle ── */
+    const btnMenu = document.getElementById('btn-menu');
+    if (window.innerWidth <= 900) document.body.classList.add('menu-fechado');
+    btnMenu.addEventListener('click', () => document.body.classList.toggle('menu-fechado'));
+
+    const itensNav = [...document.querySelectorAll('.sidebar .nav-item')];
+    const indicador = document.getElementById('nav-indicador');
+    const indiceAtivo = () => itensNav.findIndex(i => i.classList.contains('ativo'));
+    const topoDe = i => `translateY(${itensNav[i].offsetTop}px)`;
+
+    function posicionarIndicador() {
+      const atual = indiceAtivo();
+      if (atual < 0) return;
+      indicador.style.transition = 'none';
+      indicador.style.transform = topoDe(atual);
+      indicador.style.opacity = 1;
+      indicador.offsetHeight;
+      indicador.style.transition = '';
+      indicador.style.transform = topoDe(atual);
+    }
+    window.addEventListener('load', posicionarIndicador);
+    window.addEventListener('resize', () => {
+      indicador.style.transition = 'none';
+      indicador.style.transform = topoDe(indiceAtivo());
+    });
+
+    /* ── Gráficos ApexCharts ── */
+    const VINHO = '#7a1f3d';
+
+    const anos = ['2023','2024','2025','2026'];
+    const notas = {
+      'C.Natureza': [565,580,605,620],
+      'C.Humanas':  [560,575,590,600],
+      'Linguagens': [610,600,595,610],
+      'Matemática': [605,610,620,630],
+      'Redação':    [640,650,660,670],
+    };
+    const metas = { 'C.Natureza':520,'C.Humanas':550,'Linguagens':580,'Matemática':610,'Redação':620 };
+
+    function linhaMeta(area) {
+      return [{ y: metas[area], borderColor:'#2ba84a', strokeDashArray:6,
+        label:{ text:'Meta: '+metas[area], position:'left', textAnchor:'start',
+          style:{ color:'#fff', background:'#2ba84a', fontSize:'11px' } } }];
+    }
+
+    const chart = new ApexCharts(document.querySelector('#chart'), {
+      series: [{ name:'C.Natureza', data: notas['C.Natureza'] }],
+      chart: { height:260, type:'line', zoom:{enabled:false}, toolbar:{show:false}, fontFamily:'Poppins, sans-serif' },
+      colors: [VINHO],
+      stroke: { curve:'smooth', width:3 },
+      markers: { size:4, strokeWidth:0 },
+      dataLabels: { enabled:false },
+      grid: { borderColor:'#f1f1f1' },
+      xaxis: { categories: anos },
+      yaxis: { min:400, max:700 },
+      annotations: { yaxis: linhaMeta('C.Natureza') },
+      legend: { show:false },
+      responsive: [{ breakpoint:600, options:{ chart:{ height:240 }, markers:{ size:3 } } }],
+    });
+    chart.render();
+
+    document.querySelectorAll('.evolucao_medias_button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.evolucao_medias_button').forEach(b => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+        const area = btn.textContent.trim();
+        chart.updateOptions({
+          series: [{ name: area, data: notas[area] }],
+          annotations: { yaxis: linhaMeta(area) },
+        });
+      });
+    });
+
+    const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+    new ApexCharts(document.querySelector('#chartA'), {
+      chart: { type:'line', height:300, zoom:{enabled:false}, toolbar:{show:false}, fontFamily:'Poppins, sans-serif' },
+      series: [{ name:'Registros', data:[4,5,8,9,5,6,4,9,7,6,8,9] }],
+      colors: [VINHO],
+      stroke: { curve:'smooth', width:3 },
+      markers: { size:4 },
+      dataLabels: { enabled:false },
+      grid: { borderColor:'#f1f1f1' },
+      xaxis: { categories: meses },
+      yaxis: { title:{ text:'Registros por mês' }, min:0, max:12, tickAmount:6 },
+      annotations: { yaxis:[{ y:7, borderColor:'#2ba84a', strokeDashArray:6,
+        label:{ text:'Meta: 7', position:'left', textAnchor:'start',
+          style:{ color:'#fff', background:'#2ba84a', fontSize:'11px' } } }] },
+      legend: { show:false },
+      responsive: [{ breakpoint:600, options:{ chart:{ height:240 },
+        yaxis:{ title:{ text:undefined }, min:0, max:12, tickAmount:6 } } }],
+    }).render();
+
+    const registrosPorProfessor = {
+      'João Lima':      ['Simulado Mat. Jan', 'Lista de exercícios', 'Revisão de álgebra', 'Prova diagnóstica', 'Simulado Mat. Fev', 'Correção coletiva', 'Exercícios ENEM', 'Revisão final', 'Prova bimestral'],
+      'Ana Costa':      ['Aula de genética', 'Revisão de biologia', 'Simulado CN', 'Lista de ecologia', 'Prova diagnóstica', 'Exercícios ENEM'],
+      'Rafael Pereira': ['Revisão de química', 'Simulado CN', 'Lista de reações', 'Prova bimestral', 'Exercícios ENEM'],
+      'Carla Mendes':   ['Revisão de física', 'Simulado CN', 'Lista de mecânica'],
+    };
+
+    new ApexCharts(document.querySelector('#chartProfessores'), {
+      chart: { type:'bar', height:300, toolbar:{show:false}, fontFamily:'Poppins, sans-serif' },
+      plotOptions: { bar:{ horizontal:false, columnWidth:'55%', borderRadius:6, distributed:true } },
+      colors: ['#7a1f3d','#a84060','#c86882','#d9a0b0'],
+      dataLabels: { enabled:true, style:{ fontSize:'12px', colors:['#333'] }, offsetY:-6 },
+      series: [{ name:'Registros', data:[9,6,5,3] }],
+      xaxis: { categories:['João Lima','Ana Costa','Rafael Pereira','Carla Mendes'],
+        labels:{ style:{ fontSize:'12px', fontFamily:'Poppins, sans-serif' } } },
+      yaxis: { title:{ text:'Nº de registros' }, min:0, max:12, tickAmount:4 },
+      annotations: { yaxis:[{ y:10, borderColor:'#2b9348', strokeDashArray:6,
+        label:{ text:'Meta: 10', position:'left', textAnchor:'start',
+          style:{ color:'#fff', background:'#2b9348', fontSize:'11px', fontFamily:'Poppins, sans-serif' } } }] },
+      grid: { borderColor:'#f1f1f1' },
+      legend: { show:false },
+      tooltip: {
+        custom: function({ dataPointIndex, w }) {
+          const nome = w.globals.labels[dataPointIndex];
+          const total = w.globals.series[0][dataPointIndex];
+          const lista = registrosPorProfessor[nome] || [];
+          const itens = lista.map(r => `<li style="padding:2px 0;border-bottom:1px solid #f1f1f1;">${r}</li>`).join('');
+          return `
+            <div style="padding:12px 14px;font-family:Poppins,sans-serif;min-width:200px;max-width:260px;">
+              <div style="font-weight:600;color:#7a1f3d;font-size:13px;margin-bottom:6px;">${nome}</div>
+              <div style="font-size:11px;color:#555;margin-bottom:8px;">${total} registro(s)</div>
+              <ul style="list-style:none;padding:0;margin:0;font-size:11px;color:#333;">${itens}</ul>
+            </div>`;
+        }
+      },
+      responsive: [{ breakpoint:600, options:{ chart:{ height:220 } } }],
+    }).render();
+  </script>
+</body>
+</html>
