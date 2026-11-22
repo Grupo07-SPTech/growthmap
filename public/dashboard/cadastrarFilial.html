@@ -303,7 +303,7 @@
       function validarNumero(f_num, id) {
         f_num = f_num.trim();
 
-        if (f_num.length == 0) {
+        if (f_num.length == 0 || f_num.toUpperCase() === "S/N") {
           limparErroCampo(id);
           return true;
         }
@@ -323,7 +323,7 @@
         }
 
         if (!numeroValido) {
-          mostrarErroCampo(id, "Confira o número do endereço. Use números e, se necessário, uma letra no final.");
+          mostrarErroCampo(id, "Use S/N ou informe o número, com uma letra no final se necessário.");
           return false;
         }
 

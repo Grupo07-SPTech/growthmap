@@ -170,19 +170,23 @@
         let filial = filiais[i];
         let cnpjFormatado = filial.cnpj ? filial.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5") : "";
 
-        tbody.innerHTML += `
+        tbody.insertAdjacentHTML("beforeend", `
           <tr>
             <td>${filial.nome}</td>
             <td>${cnpjFormatado}</td>
             <td>${filial.nome_municipio}</td>
             <td>${filial.uf}</td>
-            <td>${filial.endereco}</td>
+            <td class="endereco-filial"></td>
             <td>
               <button class="btn-acao" title="Editar" onclick="abrirModal(${filial.id})"><i class="fi fi-rr-edit"></i> Editar</button>
               <button class="btn-acao excluir" title="Excluir" onclick="excluirFilial(${filial.id})"><i class="fi fi-rr-trash"></i> Excluir</button>
             </td>
           </tr>
-        `;
+        `);
+        let logradouro = [filial.logradouro, filial.numero].filter(Boolean).join(", ");
+        let cep = filial.cep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
+        tbody.lastElementChild.querySelector(".endereco-filial").textContent =
+          `${logradouro} - ${filial.bairro}, CEP: ${cep}`;
       }
     }
 
@@ -243,7 +247,10 @@
       ibgeEdicaoAtual = filial.co_municipio;
       document.getElementById("edit-cidade").value = filial.nome_municipio;
       document.getElementById("edit-estado").value = filial.uf;
-      document.getElementById("edit-rua").value = filial.endereco.split(",")[0] || "";
+      document.getElementById("edit-rua").value = filial.logradouro;
+      document.getElementById("edit-num").value = filial.numero ?? "";
+      document.getElementById("edit-bairro").value = filial.bairro;
+      document.getElementById("edit-cep").value = filial.cep;
 
       document.getElementById("modal-editar").style.display = "flex";
     }
