@@ -14,12 +14,12 @@ function autenticar(email, senha) {
         FROM usuario u
         JOIN unidade un ON u.id_unidade = un.id
         JOIN cargo c ON u.fk_cargo = c.id_cargo
-        WHERE u.email = '${email}'
-        AND u.senha = '${senha}';
+        WHERE u.email = ?
+        AND u.senha = ?;
     `;
 
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [email, senha]);
 }
 
 function cadastrar(nome, email, senha, fkEmpresa) {
