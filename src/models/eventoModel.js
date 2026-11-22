@@ -1,50 +1,44 @@
-var database = require("../database/config");
+﻿var database = require("../database/config");
+
+function buscarAcesso(idUsuario) {
+    return database.executar(
+        `SELECT c.nivel_acesso
+         FROM usuario u
+         JOIN cargo c ON c.id_cargo = u.fk_cargo
+         JOIN cargo_modulo cm ON cm.fk_cargo = c.id_cargo
+         JOIN modulo m ON m.id_modulo = cm.fk_modulo
+         WHERE u.id = ? AND m.nome = 'Painel de Eventos';`,
+        [idUsuario]
+    );
+}
 
 function listar(idUsuario) {
-    var instrucaoSql = `
-        SELECT id, tipo, nome, area, data, rotulo, feita FROM evento WHERE fk_usuario = ${idUsuario} ORDER BY data ASC;
-    `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
+    return database.executar(
+        `SELECT id, tipo, nome, area, DATE_FORMAT(data, '%Y-%m-%d') AS data, rotulo, feita
+         FROM evento WHERE fk_usuario = ? ORDER BY data ASC;`,
+        [idUsuario]
+    );
 }
 
-function cadastrar(tipo, nome, area, data, rotulo, fkUsuario) {
-    var instrucaoSql = `
-        INSERT INTO evento (tipo, nome, area, data, rotulo, feita, fk_usuario) 
-        VALUES ('${tipo}', '${nome}', '${area}', '${data}', '${rotulo}', 0, ${fkUsuario});
-    `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
+function cadastrar(tipo, nome, area, data, rotulo, idUsuario) {
+    return database.executar(
+        `INSERT INTO evento (tipo, nome, area, data, rotulo, feita, fk_usuario)
+         VALUES (?, ?, ?, ?, ?, 0, ?);`,
+        [tipo, nome, area, data, rotulo, idUsuario]
+    );
 }
 
-function atualizarStatus(idEvento, feita) {
-    var instrucaoSql = `
-        UPDATE evento SET feita = ${feita ? 1 : 0} WHERE id = ${idEvento};
-    `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
+function atualizar(idEvento, idUsuario, nome, area, feita) {
+    return database.executar(
+        `UPDATE evento
+         SET nome = COALESCE(?, nome), area = COALESCE(?, area), feita = COALESCE(?, feita)
+         WHERE id = ? AND fk_usuario = ?;`,
+        [nome, area, feita, idEvento, idUsuario]
+    );
 }
 
-function atualizarNome(idEvento, nome) {
-    var instrucaoSql = `
-        UPDATE evento SET nome = '${nome}' WHERE id = ${idEvento};
-    `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
+function deletar(idEvento, idUsuario) {
+    return database.executar("DELETE FROM evento WHERE id = ? AND fk_usuario = ?;", [idEvento, idUsuario]);
 }
 
-function deletar(idEvento) {
-    var instrucaoSql = `
-        DELETE FROM evento WHERE id = ${idEvento};
-    `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql);
-}
-
-module.exports = {
-    listar,
-    cadastrar,
-    atualizarStatus,
-    atualizarNome,
-    deletar
-};
+module.exports = { buscarAcesso, listar, cadastrar, atualizar, deletar };

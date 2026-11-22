@@ -1,4 +1,5 @@
 var usuarioModel = require("../models/usuarioModel");
+var sessaoEventos = require("../sessaoEventos");
 
 function autenticar(req, res) {
     var email = req.body.emailServer;
@@ -23,7 +24,8 @@ function autenticar(req, res) {
                         cargoId: resultadoAutenticar[0].cargoId,
                         cargo: resultadoAutenticar[0].cargo,
                         nivelAcesso: resultadoAutenticar[0].nivelAcesso,
-                        unidadeId: resultadoAutenticar[0].unidadeId
+                        unidadeId: resultadoAutenticar[0].unidadeId,
+                        tokenEventos: sessaoEventos.criar(resultadoAutenticar[0].id)
                     });
                 } else if (resultadoAutenticar.length == 0) {
                     res.status(403).send("Email e/ou senha inválido(s)");

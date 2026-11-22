@@ -80,12 +80,12 @@
             <div class="painel-rotulo">Eventos do dia</div>
             <div class="painel-data" id="painel-data"></div>
           </div>
-          <button class="btn-editar" id="btn-editar">Editar</button>
+          <button class="btn-editar" id="btn-editar" style="display: none">Editar</button>
         </div>
 
         <div class="lista-tarefas" id="lista-tarefas"></div>
 
-        <button class="btn-add" id="btn-add">+ Adicionar evento</button>
+        <button class="btn-add" id="btn-add" style="display: none">+ Adicionar evento</button>
 
         <form class="form-tarefa" id="form-tarefa">
           <div class="form-data">Cadastrar em: <strong id="form-data-label"></strong></div>
@@ -110,7 +110,8 @@
   </div>
 
   <script>
-    const idUsuario = sessionStorage.ID_USUARIO || 1;
+    const idUsuario = sessionStorage.ID_USUARIO;
+    const tokenEventos = sessionStorage.TOKEN_EVENTOS;
     const chave = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     const daChave = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
     const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
@@ -124,6 +125,7 @@
     let mesVisivel = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
     let diaSelecionado = chaveHoje;
     let modoEdicao = false;
+    let podeAlterar = false;
 
     function obterIcone(tipo) {
       if (tipo === 'prova') return '<i class="fi fi-rr-edit"></i>';
@@ -131,19 +133,37 @@
       return '<i class="fi fi-rr-book-alt"></i>';
     }
 
+    async function requisitarEventos(url, metodo = 'GET', dados) {
+      const resposta = await fetch(url, {
+        method: metodo,
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tokenEventos },
+        body: dados === undefined ? undefined : JSON.stringify(dados)
+      });
+      if (!resposta.ok) {
+        throw new Error(await resposta.text());
+      }
+      return resposta;
+    }
+
     async function carregarEventos() {
+      const lista = document.getElementById('lista-tarefas');
+      if (!idUsuario || !tokenEventos) {
+        lista.textContent = 'Entre novamente com uma conta de colaborador para acessar a agenda.';
+        return;
+      }
+
       try {
-        const resposta = await fetch(`/eventos/listar/${idUsuario}`);
-        if (resposta.ok) {
-          const dadosBrutos = await resposta.json();
-          itens = dadosBrutos.map(i => ({
-            ...i,
-            data: i.data ? i.data.substring(0, 10) : i.data
-          }));
-          renderTudo();
-        }
+        const resposta = await requisitarEventos(`/eventos/listar/${idUsuario}`);
+        itens = await resposta.json();
+        podeAlterar = resposta.headers.get('X-Eventos-Pode-Alterar') === 'true';
+        if (!podeAlterar) modoEdicao = false;
+        renderTudo();
       } catch (erro) {
-        console.error("Erro ao buscar eventos:", erro);
+        itens = [];
+        podeAlterar = false;
+        modoEdicao = false;
+        renderTudo();
+        lista.textContent = erro.message;
       }
     }
 
@@ -199,8 +219,9 @@
         (diaSelecionado === chaveHoje ? 'Hoje · ' : '') + rotuloDia(dataSel);
       document.getElementById('form-data-label').textContent = rotuloDia(dataSel);
 
-      btnAdd.style.display = passado ? 'none' : '';
-      if (passado) form.classList.remove('aberto');
+      btnEditar.style.display = podeAlterar ? '' : 'none';
+      btnAdd.style.display = podeAlterar && !passado ? '' : 'none';
+      if (passado || !podeAlterar) form.classList.remove('aberto');
 
       const doDia = itens.filter(i => i.data === diaSelecionado);
       if (!doDia.length) {
@@ -226,7 +247,7 @@
           </div>`;
         }
 
-        return `<div class="tarefa ${estaFeita ? 'feita' : ''}" data-id="${i.id}">
+        return `<div class="tarefa ${estaFeita ? 'feita' : ''} ${podeAlterar ? '' : 'fixa'}" data-id="${i.id}">
           <span class="check">${estaFeita ? '<i class="fi fi-rr-cross-small"></i>' : ''}</span>
           <span class="txt">${i.nome}<small>${i.area || ''}</small></span>
         </div>`;
@@ -236,13 +257,18 @@
     const listaEl = document.getElementById('lista-tarefas');
 
     listaEl.addEventListener('click', async e => {
+      if (!podeAlterar) return;
       const linha = e.target.closest('.tarefa[data-id]');
       if (!linha) return;
       const id = Number(linha.dataset.id);
 
       if (e.target.closest('.btn-excluir')) {
-        await fetch(`/eventos/deletar/${id}`, { method: 'DELETE' });
-        await carregarEventos();
+        try {
+          await requisitarEventos(`/eventos/deletar/${id}`, 'DELETE');
+          await carregarEventos();
+        } catch (erro) {
+          alert(erro.message);
+        }
         return;
       }
       if (modoEdicao) return;
@@ -253,66 +279,47 @@
       const novoStatus = Number(t.feita) === 1 ? 0 : 1;
 
       try {
-        const resposta = await fetch(`/eventos/atualizar/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ feitaServer: novoStatus })
-        });
-
-        if (resposta.ok) {
-          t.feita = novoStatus;
-          renderEventos();
-          renderCalendario();
-          renderPainel();
-        }
+        await requisitarEventos(`/eventos/atualizar/${id}`, 'PUT', { feitaServer: novoStatus });
+        t.feita = novoStatus;
+        renderTudo();
       } catch (erro) {
-        console.error("Erro ao atualizar status da tarefa:", erro);
-      }
-    });
-
-    listaEl.addEventListener('input', async e => {
-      if (!e.target.classList.contains('edit-nome')) return;
-      const linha = e.target.closest('.tarefa');
-      const id = Number(linha.dataset.id);
-      const novoNome = e.target.value.trim();
-      const novaArea = linha.querySelector('.edit-area').value;
-
-      if (novoNome) {
-        const t = itens.find(i => i.id === id);
-        if (t) { t.nome = novoNome; t.area = novaArea; }
-
-        await fetch(`/eventos/atualizar/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nomeServer: novoNome, areaServer: novaArea })
-        });
+        alert(erro.message);
       }
     });
 
     listaEl.addEventListener('change', async e => {
-      if (!e.target.classList.contains('edit-area')) return;
+      if (!podeAlterar) return;
+      const alteraNome = e.target.classList.contains('edit-nome');
+      if (!alteraNome && !e.target.classList.contains('edit-area')) return;
       const linha = e.target.closest('.tarefa');
       const id = Number(linha.dataset.id);
-      const novaArea = e.target.value;
-      const novoNome = linha.querySelector('.edit-nome').value.trim();
-
       const t = itens.find(i => i.id === id);
-      if (t) { t.nome = novoNome; t.area = novaArea; }
+      if (!t) return;
+      const valor = e.target.value.trim();
+      const campo = alteraNome ? 'nome' : 'area';
+      const dados = alteraNome ? { nomeServer: valor } : { areaServer: valor };
 
-      await fetch(`/eventos/atualizar/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nomeServer: novoNome, areaServer: novaArea })
-      });
+      try {
+        await requisitarEventos(`/eventos/atualizar/${id}`, 'PUT', dados);
+        t[campo] = valor;
+        renderEventos();
+        renderCalendario();
+        if (!modoEdicao) renderPainel();
+      } catch (erro) {
+        e.target.value = t[campo];
+        alert(erro.message);
+      }
     });
 
     btnEditar.addEventListener('click', () => {
+      if (!podeAlterar) return;
       modoEdicao = !modoEdicao;
       btnEditar.textContent = modoEdicao ? 'Concluir' : 'Editar';
       renderTudo();
     });
 
     btnAdd.addEventListener('click', () => {
+      if (!podeAlterar) return;
       form.classList.toggle('aberto');
       document.getElementById('f-nome').focus();
     });
@@ -324,20 +331,21 @@
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
+      if (!podeAlterar) return;
       const novoEvento = {
         tipoServer: 'tarefa',
         nomeServer: document.getElementById('f-nome').value.trim(),
         areaServer: document.getElementById('f-area').value,
         dataServer: diaSelecionado,
-        rotuloServer: 'Tarefa',
-        idUsuarioServer: idUsuario
+        rotuloServer: 'Tarefa'
       };
 
-      await fetch('/eventos/cadastrar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(novoEvento)
-      });
+      try {
+        await requisitarEventos('/eventos/cadastrar', 'POST', novoEvento);
+      } catch (erro) {
+        alert(erro.message);
+        return;
+      }
 
       form.reset(); 
       form.classList.remove('aberto');
@@ -418,6 +426,7 @@
       renderPainel();
     }
 
+    renderTudo();
     carregarEventos();
   </script>
 
