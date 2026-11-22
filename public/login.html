@@ -90,6 +90,7 @@
             .then(function (resposta) {
                if (resposta.ok) {
                   resposta.json().then(function (empresa) {
+                     sessionStorage.clear();
                      sessionStorage.ID_EMPRESA = empresa.id;
                      sessionStorage.NOME_EMPRESA = empresa.nome;
                      sessionStorage.EMAIL_EMPRESA = empresa.email;
@@ -126,6 +127,7 @@
                               sessionStorage.ID_CARGO = usuario.cargoId;
                               sessionStorage.CARGO_USUARIO = usuario.cargo;
                               sessionStorage.NIVEL_ACESSO = usuario.nivelAcesso;
+                              sessionStorage.TOKEN_EVENTOS = usuario.tokenEventos;
                               sessionStorage.TIPO_CONTA = "usuario";
 
                               window.location = "./dashboard/acessoRapido.html";
