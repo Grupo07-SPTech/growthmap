@@ -19,7 +19,10 @@ CREATE TABLE municipio (
 CREATE TABLE unidade (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
-    endereco VARCHAR(200),
+    logradouro VARCHAR(150) NOT NULL,
+    numero VARCHAR(20),
+    bairro VARCHAR(100) NOT NULL,
+    cep CHAR(8) NOT NULL,
     co_municipio INT NOT NULL,
     id_empresa INT NOT NULL,
     cnpj CHAR(14),
@@ -115,7 +118,6 @@ CREATE TABLE meta_planejamento (
 
 CREATE TABLE config_notificacao (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    canal VARCHAR(20) NOT NULL,
     destinatario VARCHAR(150) NOT NULL,
     limiar_media DECIMAL(6,2),
     id_unidade INT NOT NULL,
