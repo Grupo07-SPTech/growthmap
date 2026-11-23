@@ -405,221 +405,58 @@
     border-radius: 999px;
 }
 
-.opportunity-layout {
-    display: grid;
-    grid-template-columns: 1.25fr .85fr;
-    gap: 28px;
-    align-items: stretch;
+.opportunity-map-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 38px;
+    color: #555;
+    font-size: 11px;
+}
+
+.map-back-button {
+    padding: 7px 10px;
+    border: 1px solid #e3d1d8;
+    border-radius: 8px;
+    background: #f8f2f4;
+    color: #7a1f3d;
+    font: 600 10px "Poppins", sans-serif;
+    cursor: pointer;
+}
+
+.map-back-button:hover {
+    background: #f0e2e7;
+}
+
+.opportunity-map-wrap {
+    position: relative;
 }
 
 .opportunity-map {
-    min-height: 320px;
-    position: relative;
-    overflow: hidden;
-    border-radius: 14px;
+    height: min(58vh, 560px);
+    min-height: 340px;
     border: 1px solid #e0e6eb;
+    border-radius: 14px;
     background: #eef4f8;
+    z-index: 0;
 }
 
-.map-grid-line {
+.opportunity-map-status {
     position: absolute;
-    background: rgba(89, 116, 136, .10);
-}
-
-.map-grid-line.vertical {
-    top: 0;
-    bottom: 0;
-    width: 1px;
-}
-
-.map-grid-line.horizontal {
-    left: 0;
-    right: 0;
-    height: 1px;
-}
-
-.v1 {
-    left: 25%
-}
-
-.v2 {
-    left: 50%
-}
-
-.v3 {
-    left: 75%
-}
-
-.h1 {
-    top: 25%
-}
-
-.h2 {
-    top: 50%
-}
-
-.h3 {
-    top: 75%
-}
-
-.hotspot {
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    filter: blur(10px);
-    background: radial-gradient(circle, rgba(201, 82, 23, .55) 0, rgba(220, 134, 82, .28) 38%, rgba(255, 255, 255, 0) 70%);
-}
-
-.hs1 {
-    left: 3%;
-    top: 22%
-}
-
-.hs2 {
-    left: 26%;
-    top: 50%
-}
-
-.hs3 {
-    right: 4%;
-    top: 16%;
-    width: 190px;
-    height: 190px
-}
-
-.hs4 {
-    right: 27%;
-    bottom: 2%;
-    width: 110px;
-    height: 110px
-}
-
-.map-point {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    z-index: 2;
-    font-size: 9px;
-}
-
-.map-point i {
-    width: 12px;
-    height: 12px;
-    border: 2px solid #fff;
-    border-radius: 50%;
-    background: #8d2146;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .24);
-}
-
-.map-point b {
-    background: rgba(255, 255, 255, .92);
-    padding: 3px 5px;
-    border-radius: 4px;
-    font-weight: 500;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
-}
-
-.map-point.itu {
-    left: 15%;
-    top: 47%
-}
-
-.map-point.sorocaba {
-    left: 29%;
-    top: 61%
-}
-
-.map-point.jundiai {
-    left: 51%;
-    top: 22%
-}
-
-.map-point.campinas {
-    left: 66%;
-    top: 35%
-}
-
-.map-point.piracicaba {
-    left: 60%;
-    top: 70%
-}
-
-.opportunity-map small {
-    position: absolute;
-    left: 10px;
-    bottom: 8px;
-    padding: 4px 6px;
-    border-radius: 5px;
-    background: rgba(255, 255, 255, .88);
-    color: #666;
-    font-size: 8px;
-    z-index: 2;
-}
-
-.opportunity-list h3 {
-    font-size: 12px;
-    margin-bottom: 4px;
-}
-
-.opp-row {
-    display: grid;
-    grid-template-columns: 20px minmax(100px, 1fr) minmax(80px, 1fr) 24px;
-    gap: 8px;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.rank {
-    color: #888;
+    top: 12px;
+    left: 50%;
+    z-index: 500;
+    transform: translateX(-50%);
+    padding: 7px 11px;
+    border-radius: 7px;
+    background: rgba(255, 255, 255, .95);
+    color: #555;
     font-size: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
 }
 
-.opp-name {
-    display: flex;
-    flex-direction: column;
-}
-
-.opp-name strong {
-    font-size: 10px;
-}
-
-.opp-name small {
-    width: max-content;
-    margin-top: 2px;
-    padding: 1px 5px;
-    border-radius: 999px;
-    color: #9b4d1f;
-    background: #fff2e8;
-    font-size: 7.5px;
-}
-
-.opp-name small.served {
-    color: #315b79;
-    background: #e8f1f7;
-}
-
-.opp-bar {
-    height: 7px;
-    border-radius: 999px;
-    background: #eee;
-    overflow: hidden;
-}
-
-.opp-bar i {
-    display: block;
-    width: var(--score);
-    height: 100%;
-    border-radius: inherit;
-    background: #bd4a08;
-}
-
-.opp-row>strong {
-    color: #333;
-    font-size: 10px;
-    text-align: right;
+.opportunity-map-status:empty {
+    display: none;
 }
 
 .map-legend {
@@ -628,30 +465,20 @@
     gap: 7px;
     margin-top: 12px;
     color: #666;
-    font-size: 8.5px;
+    font-size: 9px;
 }
 
-.gradient-scale {
-    width: 110px;
-    height: 7px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, #fbe7da, #bd4a08);
-}
-
-.existing-unit {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-left: 12px;
-}
-
-.existing-unit i {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #8d2146;
+.map-legend-swatch {
+    width: 12px;
+    height: 12px;
     border: 1px solid #fff;
-    outline: 1px solid #8d2146;
+    border-radius: 3px;
+    background: #d8e1e8;
+    box-shadow: 0 0 0 1px #aebbc5;
+}
+
+.opportunity-map .leaflet-interactive:focus {
+    outline: none;
 }
 
 @media (max-width:1150px) {
@@ -659,8 +486,7 @@
         grid-template-columns: repeat(2, 1fr)
     }
 
-    .network-grid,
-    .opportunity-layout {
+    .network-grid {
         grid-template-columns: 1fr
     }
 }
@@ -700,7 +526,8 @@
     }
 
     .opportunity-map {
-        min-height: 270px
+        height: 55vh;
+        min-height: 300px
     }
 
     .director-chart-container {

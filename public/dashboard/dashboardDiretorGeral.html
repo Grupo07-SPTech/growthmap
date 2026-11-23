@@ -9,6 +9,7 @@
     href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/dashboardDiretorGeral.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -156,66 +157,30 @@
       <div class="chart-header opportunity-header">
         <div>
           <h2>Mapa de oportunidade de expansão</h2>
-          <p>Índice de 0 a 100 por município: participantes x déficit vs. estado, normalizado. Mede necessidade
-            pedagógica e volume, não poder de compra.</p>
+          <p>Selecione um estado para visualizar seus municípios. Os municípios aparecem sem classificação por índice.</p>
         </div>
-        <span class="score-pill">Índice 0-100</span>
+        <span class="score-pill">Mapa geográfico</span>
       </div>
 
-      <div class="opportunity-layout">
-        <div class="opportunity-map" role="img" aria-label="Mapa esquemático de oportunidade de expansão">
-          <span class="map-grid-line vertical v1"></span><span class="map-grid-line vertical v2"></span><span
-            class="map-grid-line vertical v3"></span>
-          <span class="map-grid-line horizontal h1"></span><span class="map-grid-line horizontal h2"></span><span
-            class="map-grid-line horizontal h3"></span>
-          <span class="hotspot hs1"></span><span class="hotspot hs2"></span><span class="hotspot hs3"></span><span
-            class="hotspot hs4"></span>
-          <span class="map-point itu"><i></i><b>Itu</b></span>
-          <span class="map-point sorocaba"><i></i><b>Sorocaba</b></span>
-          <span class="map-point jundiai"><i></i><b>Jundiaí</b></span>
-          <span class="map-point campinas"><i></i><b>Campinas</b></span>
-          <span class="map-point piracicaba"><i></i><b>Piracicaba</b></span>
-          <small>Esquema ilustrativo. O mapa real usa a malha municipal do IBGE.</small>
-        </div>
-
-        <div class="opportunity-list">
-          <h3>Maiores oportunidades</h3>
-          <div class="opp-row"><span class="rank">1</span>
-            <div class="opp-name"><strong>Hortolândia</strong><small>sem unidade</small></div>
-            <div class="opp-bar"><i style="--score:91%"></i></div><strong>91</strong>
-          </div>
-          <div class="opp-row"><span class="rank">2</span>
-            <div class="opp-name"><strong>Sorocaba</strong><small class="served">atendido</small></div>
-            <div class="opp-bar"><i style="--score:84%"></i></div><strong>84</strong>
-          </div>
-          <div class="opp-row"><span class="rank">3</span>
-            <div class="opp-name"><strong>Sumaré</strong><small>sem unidade</small></div>
-            <div class="opp-bar"><i style="--score:80%"></i></div><strong>80</strong>
-          </div>
-          <div class="opp-row"><span class="rank">4</span>
-            <div class="opp-name"><strong>Votorantim</strong><small>sem unidade</small></div>
-            <div class="opp-bar"><i style="--score:73%"></i></div><strong>73</strong>
-          </div>
-          <div class="opp-row"><span class="rank">5</span>
-            <div class="opp-name"><strong>Itu</strong><small class="served">atendido</small></div>
-            <div class="opp-bar"><i style="--score:69%"></i></div><strong>69</strong>
-          </div>
-          <div class="opp-row"><span class="rank">6</span>
-            <div class="opp-name"><strong>Salto</strong><small>sem unidade</small></div>
-            <div class="opp-bar"><i style="--score:61%"></i></div><strong>61</strong>
-          </div>
-        </div>
+      <div class="opportunity-map-toolbar">
+        <button id="map-back-to-brazil" class="map-back-button" type="button" hidden>← Voltar ao Brasil</button>
+        <span id="map-current-view">Brasil</span>
       </div>
-
+      <div class="opportunity-map-wrap">
+        <div id="opportunity-map" class="opportunity-map" role="application" aria-label="Mapa interativo do Brasil"></div>
+        <p id="opportunity-map-status" class="opportunity-map-status" role="status">Carregando estados brasileiros...</p>
+      </div>
       <div class="map-legend">
-        <span>Baixa</span><i class="gradient-scale"></i><span>Alta oportunidade</span><span
-          class="existing-unit"><i></i>Unidade existente</span>
+        <span class="map-legend-swatch"></span>
+        <span>Municípios sem classificação por índice</span>
       </div>
     </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
   <script src="../js/dashboardDiretorCharts.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../js/dashboardDiretorMapa.js"></script>
   <script src="../js/menu.js"></script>
   <script src="../js/controleAcesso.js"></script>
 </body>
