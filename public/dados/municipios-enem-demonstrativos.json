@@ -1,0 +1,148 @@
+{
+  "descricao": "Dados totalmente fictícios para demonstrar médias municipais do ENEM. Não representam resultados oficiais.",
+  "unidade": "pontos",
+  "escala": {
+    "minimo": 0,
+    "maximo": 1000
+  },
+  "municipios": [
+    {
+      "codigoIbge": "3550308",
+      "municipio": "São Paulo",
+      "uf": "SP",
+      "mediaEnem": 612.4
+    },
+    {
+      "codigoIbge": "3547809",
+      "municipio": "Santo André",
+      "uf": "SP",
+      "mediaEnem": 598.7
+    },
+    {
+      "codigoIbge": "3548807",
+      "municipio": "São Caetano do Sul",
+      "uf": "SP",
+      "mediaEnem": 635.2
+    },
+    {
+      "codigoIbge": "3548500",
+      "municipio": "Santos",
+      "uf": "SP",
+      "mediaEnem": 621.8
+    },
+    {
+      "codigoIbge": "3509502",
+      "municipio": "Campinas",
+      "uf": "SP",
+      "mediaEnem": 628.3
+    },
+    {
+      "codigoIbge": "3304557",
+      "municipio": "Rio de Janeiro",
+      "uf": "RJ",
+      "mediaEnem": 605.6
+    },
+    {
+      "codigoIbge": "3301702",
+      "municipio": "Duque de Caxias",
+      "uf": "RJ",
+      "mediaEnem": 572.1
+    },
+    {
+      "codigoIbge": "3303302",
+      "municipio": "Niterói",
+      "uf": "RJ",
+      "mediaEnem": 642.5
+    },
+    {
+      "codigoIbge": "3106200",
+      "municipio": "Belo Horizonte",
+      "uf": "MG",
+      "mediaEnem": 619.3
+    },
+    {
+      "codigoIbge": "3170206",
+      "municipio": "Uberlândia",
+      "uf": "MG",
+      "mediaEnem": 606.8
+    },
+    {
+      "codigoIbge": "3106705",
+      "municipio": "Betim",
+      "uf": "MG",
+      "mediaEnem": 584.2
+    },
+    {
+      "codigoIbge": "4106902",
+      "municipio": "Curitiba",
+      "uf": "PR",
+      "mediaEnem": 631.7
+    },
+    {
+      "codigoIbge": "4113700",
+      "municipio": "Londrina",
+      "uf": "PR",
+      "mediaEnem": 599.4
+    },
+    {
+      "codigoIbge": "4314902",
+      "municipio": "Porto Alegre",
+      "uf": "RS",
+      "mediaEnem": 614.9
+    },
+    {
+      "codigoIbge": "4305108",
+      "municipio": "Caxias do Sul",
+      "uf": "RS",
+      "mediaEnem": 603.5
+    },
+    {
+      "codigoIbge": "2927408",
+      "municipio": "Salvador",
+      "uf": "BA",
+      "mediaEnem": 578.6
+    },
+    {
+      "codigoIbge": "2910800",
+      "municipio": "Feira de Santana",
+      "uf": "BA",
+      "mediaEnem": 561.2
+    },
+    {
+      "codigoIbge": "2304400",
+      "municipio": "Fortaleza",
+      "uf": "CE",
+      "mediaEnem": 590.8
+    },
+    {
+      "codigoIbge": "2312908",
+      "municipio": "Sobral",
+      "uf": "CE",
+      "mediaEnem": 615.1
+    },
+    {
+      "codigoIbge": "5300108",
+      "municipio": "Brasília",
+      "uf": "DF",
+      "mediaEnem": 638.9
+    },
+    {
+      "codigoIbge": "5208707",
+      "municipio": "Goiânia",
+      "uf": "GO",
+      "mediaEnem": 601.6
+    },
+    {
+      "codigoIbge": "1501402",
+      "municipio": "Belém",
+      "uf": "PA",
+      "mediaEnem": 566.4
+    },
+    {
+      "codigoIbge": "1302603",
+      "municipio": "Manaus",
+      "uf": "AM",
+      "mediaEnem": 559.7
+    }
+  ]
+}

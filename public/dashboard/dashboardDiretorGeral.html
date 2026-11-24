@@ -172,9 +172,18 @@
             <div id="opportunity-map" class="opportunity-map" role="application" aria-label="Mapa interativo do Brasil"></div>
             <p id="opportunity-map-status" class="opportunity-map-status" role="status">Carregando estados brasileiros...</p>
           </div>
-          <div class="map-legend">
-            <span class="map-legend-swatch"></span>
-            <span>Municípios sem classificação por índice</span>
+          <div id="legend-estados" class="map-legend" aria-label="Legenda de municípios abaixo da meta de média ENEM">
+            <strong>Municípios abaixo da meta (600)</strong>
+            <span><i class="map-legend-swatch map-count-zero"></i>0</span>
+            <span><i class="map-legend-swatch map-count-one"></i>1</span>
+            <span><i class="map-legend-swatch map-count-two"></i>2</span>
+            <span><i class="map-legend-swatch map-count-many"></i>3 ou mais</span>
+            <span><i class="map-legend-swatch map-count-empty"></i>Sem dados</span>
+          </div>
+          <div id="legend-municipios" class="map-legend map-legend-notas" aria-label="Legenda de médias ENEM por município" hidden>
+            <strong>Média ENEM</strong>
+            <span>Menor</span><i class="map-nota-gradient"></i><span>Maior</span>
+            <span><i class="map-legend-swatch map-count-empty"></i>Sem dados</span>
           </div>
         </div>
 

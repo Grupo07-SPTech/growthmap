@@ -1,6 +1,21 @@
 (function () {
     const URL_ESTADOS = "https://cdn.jsdelivr.net/gh/henriquemalvar/br-geojson@main/dist/estados.geojson";
     const URL_MUNICIPIOS = "https://cdn.jsdelivr.net/gh/henriquemalvar/br-geojson@main/dist/municipios/";
+    const META_MEDIA_ENEM = 600;
+    const CORES_CONTAGEM = {
+        semDados: "#e5e7eb",
+        zero: "#d8e9df",
+        um: "#f5d775",
+        dois: "#ee9a57",
+        tresOuMais: "#c85858"
+    };
+    const ESCALA_NOTAS = [
+        { nota: 500, cor: "#7f1d1d" },
+        { nota: 560, cor: "#c2413b" },
+        { nota: 600, cor: "#fca5a5" },
+        { nota: 650, cor: "#f4e6a1" },
+        { nota: 700, cor: "#d8e9df" }
+    ];
 
     const elementoMapa = document.getElementById("opportunity-map");
     if (!elementoMapa) return;
@@ -26,28 +41,115 @@
     let nomeEstadoSelecionado = "";
     let estadoEmDestaque = null;
     let municipioEmDestaque = null;
+    let notasPorCodigo = new Map();
+    let notasPorNome = new Map();
     const tooltipMapa = L.tooltip({ sticky: true, direction: "top", opacity: 0.95 });
 
     const botaoVoltar = document.getElementById("map-back-to-brazil");
     const visualizacaoAtual = document.getElementById("map-current-view");
     const listaAtencao = document.getElementById("attention-ranking");
     const escopoAtencao = document.getElementById("attention-scope");
+    const legendaEstados = document.getElementById("legend-estados");
+    const legendaMunicipios = document.getElementById("legend-municipios");
 
-    const estiloEstado = {
-        color: "#ffffff",
-        weight: 1.8,
-        lineCap: "round",
-        lineJoin: "round",
-        fillColor: "#d8e1e8",
-        fillOpacity: 0.9
-    };
+    function reconstruirIndiceNotas() {
+        notasPorCodigo = new Map();
+        notasPorNome = new Map();
 
-    const estiloMunicipio = {
-        color: "#ffffff",
-        weight: 0.45,
-        fillColor: "#d8e1e8",
-        fillOpacity: 0.9
-    };
+        municipiosDemonstrativos.forEach(function (municipio) {
+            const nota = Number(municipio.mediaEnem);
+            if (!Number.isFinite(nota)) return;
+            if (municipio.codigoIbge) notasPorCodigo.set(String(municipio.codigoIbge), nota);
+            notasPorNome.set(municipio.uf + "|" + normalizarNome(municipio.municipio), nota);
+        });
+    }
+
+    function obterNotaMunicipio(feature) {
+        const propriedades = feature.properties || {};
+        const codigo = String(propriedades.cd_geocmu || propriedades.codigo_ibge || "");
+        if (codigo && notasPorCodigo.has(codigo)) return notasPorCodigo.get(codigo);
+
+        const nome = propriedades.nome || propriedades.name || "";
+        return notasPorNome.get(ufSelecionada + "|" + normalizarNome(nome));
+    }
+
+    function interpolarCorNota(nota) {
+        const valor = Math.max(ESCALA_NOTAS[0].nota, Math.min(ESCALA_NOTAS[ESCALA_NOTAS.length - 1].nota, nota));
+        let inferior = ESCALA_NOTAS[0];
+        let superior = ESCALA_NOTAS[ESCALA_NOTAS.length - 1];
+
+        for (let indice = 1; indice < ESCALA_NOTAS.length; indice++) {
+            if (valor <= ESCALA_NOTAS[indice].nota) {
+                inferior = ESCALA_NOTAS[indice - 1];
+                superior = ESCALA_NOTAS[indice];
+                break;
+            }
+        }
+
+        const proporcao = (valor - inferior.nota) / (superior.nota - inferior.nota);
+        const canal = function (cor, posicao) {
+            return parseInt(cor.slice(posicao, posicao + 2), 16);
+        };
+        const rgb = [1, 3, 5].map(function (posicao) {
+            const inicio = canal(inferior.cor, posicao);
+            const fim = canal(superior.cor, posicao);
+            return Math.round(inicio + (fim - inicio) * proporcao);
+        });
+
+        return "#" + rgb.map(function (valorCanal) {
+            return valorCanal.toString(16).padStart(2, "0");
+        }).join("");
+    }
+
+    function estiloMunicipio(feature) {
+        const nota = obterNotaMunicipio(feature);
+        return {
+            color: "#ffffff",
+            weight: 0.45,
+            fillColor: nota === undefined ? CORES_CONTAGEM.semDados : interpolarCorNota(nota),
+            fillOpacity: 0.9
+        };
+    }
+
+    function resumoEstado(uf) {
+        const municipiosComNota = municipiosDemonstrativos.filter(function (municipio) {
+            return municipio.uf === uf && Number.isFinite(Number(municipio.mediaEnem));
+        });
+
+        return {
+            total: municipiosComNota.length,
+            abaixoDaMeta: municipiosComNota.filter(function (municipio) {
+                return Number(municipio.mediaEnem) < META_MEDIA_ENEM;
+            }).length
+        };
+    }
+
+    function estiloEstado(feature) {
+        const resumo = resumoEstado(siglaEstado(feature));
+        let fillColor = CORES_CONTAGEM.semDados;
+
+        if (resumo.total > 0) {
+            if (resumo.abaixoDaMeta === 0) fillColor = CORES_CONTAGEM.zero;
+            else if (resumo.abaixoDaMeta === 1) fillColor = CORES_CONTAGEM.um;
+            else if (resumo.abaixoDaMeta === 2) fillColor = CORES_CONTAGEM.dois;
+            else fillColor = CORES_CONTAGEM.tresOuMais;
+        }
+
+        return {
+            color: "#ffffff",
+            weight: 1.8,
+            lineCap: "round",
+            lineJoin: "round",
+            fillColor: fillColor,
+            fillOpacity: 0.9
+        };
+    }
+
+    function descricaoEstado(uf) {
+        const resumo = resumoEstado(uf);
+        if (resumo.total === 0) return "Sem médias demonstrativas disponíveis";
+        return resumo.abaixoDaMeta + " de " + resumo.total + " municípios com nota abaixo da meta de " + META_MEDIA_ENEM;
+    }
 
     function atualizarRankingAtencao() {
         const municipios = municipiosDemonstrativos
@@ -157,7 +259,10 @@
             if (!resposta.ok) throw new Error("Falha ao carregar médias demonstrativas.");
             const dados = await resposta.json();
             municipiosDemonstrativos = Array.isArray(dados.municipios) ? dados.municipios : [];
+            reconstruirIndiceNotas();
             atualizarRankingAtencao();
+            if (camadaEstados) camadaEstados.setStyle(estiloEstado);
+            if (camadaMunicipios) camadaMunicipios.setStyle(estiloMunicipio);
         } catch (erro) {
             console.error("Não foi possível carregar as médias demonstrativas:", erro);
             listaAtencao.replaceChildren();
@@ -184,13 +289,13 @@
 
         camada.on("mouseover", function (evento) {
             if (estadoEmDestaque && estadoEmDestaque !== camada) {
-                estadoEmDestaque.setStyle(estiloEstado);
+                estadoEmDestaque.setStyle(estiloEstado(estadoEmDestaque.feature));
             }
             estadoEmDestaque = camada;
             camada.bringToFront();
-            camada.setStyle({ fillColor: "#b9c9d5", weight: 2.5, color: "#7a1f3d" });
+            camada.setStyle(Object.assign({}, estiloEstado(camada.feature), { weight: 2.5, color: "#7a1f3d" }));
             tooltipMapa
-                .setContent(sigla ? nome + " (" + sigla + ")" : nome)
+                .setContent((sigla ? nome + " (" + sigla + ")" : nome) + " · " + descricaoEstado(sigla))
                 .setLatLng(evento.latlng);
             mapa.openTooltip(tooltipMapa);
         });
@@ -199,7 +304,7 @@
         });
         camada.on("mouseout", function () {
             if (estadoEmDestaque !== camada) return;
-            camada.setStyle(estiloEstado);
+            camada.setStyle(estiloEstado(camada.feature));
             estadoEmDestaque = null;
             mapa.closeTooltip(tooltipMapa);
         });
@@ -232,22 +337,28 @@
             estadoEmDestaque = null;
             mapa.closeTooltip(tooltipMapa);
             mapa.removeLayer(camadaEstados);
+            ufSelecionada = uf;
+            nomeEstadoSelecionado = nome;
 
             camadaMunicipios = L.geoJSON(dados, {
                 style: estiloMunicipio,
                 onEachFeature: function (feature, camada) {
                     const propriedades = feature.properties || {};
                     const nomeMunicipio = propriedades.nome || propriedades.name || "Município";
-                    camada.bindPopup(nomeMunicipio);
+                    const nota = obterNotaMunicipio(feature);
+                    const textoPopup = nota === undefined
+                        ? nomeMunicipio + "<br>Sem média demonstrativa"
+                        : nomeMunicipio + "<br>Média ENEM: " + nota.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " pontos";
+                    camada.bindPopup(textoPopup);
                     camada.on("mouseover", function (evento) {
                         if (municipioEmDestaque && municipioEmDestaque !== camada) {
-                            municipioEmDestaque.setStyle(estiloMunicipio);
+                            municipioEmDestaque.setStyle(estiloMunicipio(municipioEmDestaque.feature));
                         }
                         municipioEmDestaque = camada;
                         camada.bringToFront();
-                        camada.setStyle({ fillColor: "#b9c9d5", weight: 2, color: "#7a1f3d" });
+                        camada.setStyle(Object.assign({}, estiloMunicipio(camada.feature), { weight: 2, color: "#7a1f3d" }));
                         tooltipMapa
-                            .setContent(nomeMunicipio)
+                            .setContent(textoPopup)
                             .setLatLng(evento.latlng);
                         mapa.openTooltip(tooltipMapa);
                     });
@@ -256,7 +367,7 @@
                     });
                     camada.on("mouseout", function () {
                         if (municipioEmDestaque !== camada) return;
-                        camada.setStyle(estiloMunicipio);
+                        camada.setStyle(estiloMunicipio(camada.feature));
                         municipioEmDestaque = null;
                         mapa.closeTooltip(tooltipMapa);
                     });
@@ -264,10 +375,10 @@
             }).addTo(mapa);
 
             mapa.fitBounds(camadaMunicipios.getBounds(), { padding: [12, 12] });
-            ufSelecionada = uf;
-            nomeEstadoSelecionado = nome;
             visualizacaoAtual.textContent = nome + (uf ? " (" + uf + ")" : "");
             botaoVoltar.hidden = false;
+            legendaEstados.hidden = true;
+            legendaMunicipios.hidden = false;
             status.textContent = "Municípios de " + nome + ". Passe o cursor ou selecione uma área para ver o nome.";
             atualizarRankingAtencao();
             return true;
@@ -288,6 +399,8 @@
         mapa.fitBounds(camadaEstados.getBounds(), { padding: [12, 12] });
         ufSelecionada = "";
         nomeEstadoSelecionado = "";
+        legendaEstados.hidden = false;
+        legendaMunicipios.hidden = true;
         visualizacaoAtual.textContent = "Brasil";
         botaoVoltar.hidden = true;
         status.textContent = "Selecione um estado para visualizar seus municípios.";
