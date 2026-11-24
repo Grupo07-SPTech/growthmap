@@ -71,6 +71,9 @@ function plotarGraficoAreas() {
 }
 
 if (typeof Chart !== 'undefined') {
+    Chart.defaults.font.size = 14;
+    Chart.defaults.font.family = "Poppins, sans-serif";
+
     if (document.getElementById('graficoMunicipios')) {
         plotarGraficoMunicipios();
     }
