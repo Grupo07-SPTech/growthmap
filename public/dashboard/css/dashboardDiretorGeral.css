@@ -405,6 +405,17 @@
     border-radius: 999px;
 }
 
+.opportunity-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(250px, .75fr);
+    gap: 22px;
+    align-items: start;
+}
+
+.opportunity-map-column {
+    min-width: 0;
+}
+
 .opportunity-map-toolbar {
     display: flex;
     align-items: center;
@@ -477,6 +488,110 @@
     box-shadow: 0 0 0 1px #aebbc5;
 }
 
+.attention-panel {
+    padding: 18px;
+    border: 1px solid #ece2e6;
+    border-radius: 14px;
+    background: #fcfafb;
+}
+
+.attention-panel h3 {
+    color: #33262b;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.attention-scope {
+    margin-top: 5px;
+    color: #777;
+    font-size: 10px;
+}
+
+.attention-ranking {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 16px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.attention-ranking li {
+    padding: 0;
+    border-bottom: 1px solid #eee8eb;
+}
+
+.attention-place {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 0;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+}
+
+.attention-place:hover .attention-city,
+.attention-place:focus-visible .attention-city {
+    color: #7a1f3d;
+}
+
+.attention-place:focus-visible {
+    outline: 2px solid #7a1f3d;
+    outline-offset: 2px;
+    border-radius: 5px;
+}
+
+.attention-rank {
+    display: grid;
+    width: 22px;
+    height: 22px;
+    place-items: center;
+    border-radius: 50%;
+    background: #f3e8ec;
+    color: #7a1f3d;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.attention-city {
+    min-width: 0;
+    color: #333;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.attention-uf {
+    display: block;
+    margin-top: 2px;
+    color: #888;
+    font-size: 9px;
+    font-weight: 400;
+}
+
+.attention-score {
+    color: #7a1f3d;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.attention-empty {
+    display: block !important;
+    color: #777;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.attention-note {
+    color: #888;
+    font-size: 9px;
+    line-height: 1.5;
+}
+
 .opportunity-map .leaflet-interactive:focus {
     outline: none;
 }
@@ -488,6 +603,10 @@
 
     .network-grid {
         grid-template-columns: 1fr
+    }
+
+    .opportunity-layout {
+        grid-template-columns: 1fr;
     }
 }
 

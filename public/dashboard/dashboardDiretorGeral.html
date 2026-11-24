@@ -157,22 +157,34 @@
       <div class="chart-header opportunity-header">
         <div>
           <h2>Mapa de oportunidade de expansão</h2>
-          <p>Selecione um estado para visualizar seus municípios. Os municípios aparecem sem classificação por índice.</p>
+          <p>Selecione um estado para visualizar seus municípios.</p>
         </div>
         <span class="score-pill">Mapa geográfico</span>
       </div>
 
-      <div class="opportunity-map-toolbar">
-        <button id="map-back-to-brazil" class="map-back-button" type="button" hidden>← Voltar ao Brasil</button>
-        <span id="map-current-view">Brasil</span>
-      </div>
-      <div class="opportunity-map-wrap">
-        <div id="opportunity-map" class="opportunity-map" role="application" aria-label="Mapa interativo do Brasil"></div>
-        <p id="opportunity-map-status" class="opportunity-map-status" role="status">Carregando estados brasileiros...</p>
-      </div>
-      <div class="map-legend">
-        <span class="map-legend-swatch"></span>
-        <span>Municípios sem classificação por índice</span>
+      <div class="opportunity-layout">
+        <div class="opportunity-map-column">
+          <div class="opportunity-map-toolbar">
+            <button id="map-back-to-brazil" class="map-back-button" type="button" hidden>← Voltar ao Brasil</button>
+            <span id="map-current-view">Brasil</span>
+          </div>
+          <div class="opportunity-map-wrap">
+            <div id="opportunity-map" class="opportunity-map" role="application" aria-label="Mapa interativo do Brasil"></div>
+            <p id="opportunity-map-status" class="opportunity-map-status" role="status">Carregando estados brasileiros...</p>
+          </div>
+          <div class="map-legend">
+            <span class="map-legend-swatch"></span>
+            <span>Municípios sem classificação por índice</span>
+          </div>
+        </div>
+
+        <aside class="attention-panel" aria-labelledby="attention-title">
+          <h3 id="attention-title">5 municípios que precisam de atenção</h3>
+          <p id="attention-scope" class="attention-scope">Brasil · menores médias ENEM</p>
+          <ol id="attention-ranking" class="attention-ranking" aria-live="polite">
+            <li class="attention-empty">Carregando médias...</li>
+          </ol>
+        </aside>
       </div>
     </section>
   </main>
