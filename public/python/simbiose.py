@@ -1,490 +1,333 @@
-import io
-import os
-import tempfile
-from datetime import datetime
+"""
+Geração modular dos quatro relatórios GrowthMap.
+Usa Matplotlib para gráficos PNG e openpyxl para montar o XLSX.
+"""
 
-import pandas as pd
-import xlwings as xw
+from datetime import datetime, date
+from io import BytesIO
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+from openpyxl import Workbook
+from openpyxl.drawing.image import Image as ExcelImage
+from openpyxl.styles import Font, PatternFill, Alignment
+from openpyxl.utils import get_column_letter
 
 import banco
-from graficos import gerar_graficos
 
 
-AREAS = {
-    "linguagens": "Linguagens",
-    "humanas": "Ciências Humanas",
-    "natureza": "Ciências da Natureza",
-    "matematica": "Matemática",
-    "redacao": "Redação"
-}
-
-# Dia de aplicação do ENEM em que cada área é feita
-# (define qual taxa de abstenção aparece: dia 1 ou dia 2)
-DIA_PROVA = {
-    "linguagens": 1,
-    "humanas": 1,
-    "natureza": 2,
-    "matematica": 2,
-    "redacao": 1
-}
-
-# Mesmos nomes usados no dashboard do professor
-COMPETENCIAS_REDACAO = [
-    "Norma culta da língua escrita",
-    "Compreensão do tema e repertório",
-    "Argumentação",
-    "Coesão textual",
-    "Proposta de intervenção"
+VINHO = "#7A1F3D"
+VINHO_CLARO = "#F5EBEF"
+CINZA = "#666666"
+AREAS = banco.AREAS
+COMPETENCIAS = [
+    "Norma culta", "Compreensão do tema", "Argumentação",
+    "Coesão textual", "Intervenção"
 ]
-
-VINHO = (122, 31, 61)
-VINHO_CLARO = (245, 235, 239)
-BRANCO = (255, 255, 255)
-CINZA_CLARO = (245, 245, 247)
-CINZA_TEXTO = (100, 100, 100)
-
-
-# ---------------------------------------------------------------------------
-# FUNÇÕES COMUNS (reaproveitadas por todos os relatórios)
-# ---------------------------------------------------------------------------
-
-def formatar_cartao(aba, colunas, titulo, valor, formato=None):
-
-    coluna_inicio, coluna_fim = colunas
-
-    faixa_titulo = f"{coluna_inicio}6:{coluna_fim}6"
-    faixa_valor = f"{coluna_inicio}7:{coluna_fim}8"
-
-    aba.range(faixa_titulo).merge()
-    aba.range(faixa_valor).merge()
-
-    aba.range(faixa_titulo).value = titulo
-    aba.range(f"{coluna_inicio}7").value = valor
-
-    # Fundo do cartão
-    aba.range(f"{coluna_inicio}6:{coluna_fim}8").color = CINZA_CLARO
-
-    # Título
-    aba.range(faixa_titulo).font.bold = True
-    aba.range(faixa_titulo).font.size = 9
-    aba.range(faixa_titulo).font.color = CINZA_TEXTO
-    aba.range(faixa_titulo).api.HorizontalAlignment = -4108
-
-    # Valor
-    aba.range(faixa_valor).font.bold = True
-    aba.range(faixa_valor).font.size = 18
-    aba.range(faixa_valor).font.color = VINHO
-    aba.range(faixa_valor).api.HorizontalAlignment = -4108
-    aba.range(faixa_valor).api.VerticalAlignment = -4108
-
-    # Formatação numérica aplicada somente à célula principal
-    if formato is not None:
-        aba.range(f"{coluna_inicio}7").api.NumberFormat = formato
 
 
 def numero(valor):
-    """Converte para float. None e NaN viram None."""
-    if valor is None or pd.isna(valor):
-        return None
-    return float(valor)
-
-
-def variacao_percentual(atual, base):
-    """((atual - base) / base) * 100. Devolve 0.0 se não der para calcular."""
-    if atual is None or not base:
-        return 0.0
-    return (atual - base) / base * 100
-
-
-def valor_ou_nd(valor, divisor=1):
-    """Para exibir no cartão: 'N/D' quando o dado não existe no banco."""
-    if valor is None:
-        return "N/D"
-    return valor / divisor
-
-
-def gerar_excel(preencher):
-    """
-    Cuida do ciclo de vida do Excel, igual para qualquer relatório:
-    cria o arquivo temporário, abre o Excel, chama preencher(wb, pasta_graficos),
-    salva, fecha tudo e devolve o arquivo em memória (BytesIO).
-    """
-
-    arquivo_temporario = tempfile.NamedTemporaryFile(
-        suffix=".xlsx",
-        delete=False
-    )
-
-    caminho_excel = arquivo_temporario.name
-    arquivo_temporario.close()
-
-    app = None
-    wb = None
-
-    try:
-
-        app = xw.App(visible=False)
-        app.display_alerts = False
-        app.screen_updating = False
-
-        wb = app.books.add()
-
-        with tempfile.TemporaryDirectory() as pasta_graficos:
-
-            preencher(wb, pasta_graficos)
-
-            wb.save(caminho_excel)
-
-        wb.close()
-        wb = None
-
-        app.quit()
-        app = None
-
-        with open(caminho_excel, "rb") as arquivo:
-            conteudo = arquivo.read()
-
-        return io.BytesIO(conteudo)
-
-    finally:
-
-        if wb is not None:
-            try:
-                wb.close()
-            except Exception:
-                pass
-
-        if app is not None:
-            try:
-                app.quit()
-            except Exception:
-                pass
-
-        if os.path.exists(caminho_excel):
-            os.remove(caminho_excel)
-
-
-# ---------------------------------------------------------------------------
-# DADOS DE UMA ÁREA (banco -> dicionário que o graficos.py já entende)
-# ---------------------------------------------------------------------------
-
-def montar_dados_area(chave, historico, planejamento):
-    """
-    Recebe o DataFrame de banco.buscar_historico() e calcula, para uma área,
-    os mesmos indicadores que o dashboard calcula no JavaScript.
-    """
-
-    sufixo = banco.COLUNAS_AREA[chave]
-
-    serie_municipio = historico[f"municipio_{sufixo}"]
-    serie_estado = historico[f"estado_{sufixo}"]
-
-    media_atual = numero(serie_municipio.iloc[-1])
-    media_inicial = numero(serie_municipio.iloc[0])
-    estado_atual = numero(serie_estado.iloc[-1])
-
-    dia = DIA_PROVA[chave]
-    abstencao = numero(historico[f"taxa_abstencao_dia{dia}"].iloc[-1])
-
-    kpis = {
-        "media": media_atual,
-        "abstencao": abstencao,
-        "evolucao": variacao_percentual(media_atual, media_inicial),
-        "diferencial": variacao_percentual(media_atual, estado_atual),
-        "eventosCadastrados": planejamento["cadastrados"],
-        "metaEventos": planejamento["meta"],
-        "diaProva": dia
-    }
-
-    lista_historico = []
-
-    for ano, municipio, estado in zip(
-        historico["ano"], serie_municipio, serie_estado
-    ):
-        lista_historico.append({
-            "ano": int(ano),
-            "municipio": numero(municipio),
-            "estado": numero(estado)
-        })
-
-    dados_area = {
-        "kpis": kpis,
-        "historico": lista_historico,
-        "anos": (int(historico["ano"].iloc[0]), int(historico["ano"].iloc[-1]))
-    }
-
-    # Exclusivo da Redação: competências e gargalo
-    if chave == "redacao":
-
-        ultimo = historico.iloc[-1]
-
-        notas = [
-            numero(ultimo[f"media_comp{i}"]) or 0.0
-            for i in range(1, 6)
-        ]
-
-        dados_area["competencias"] = [
-            {"nome": f"Comp. {i + 1}", "pontuacao": nota}
-            for i, nota in enumerate(notas)
-        ]
-
-        indice_gargalo = notas.index(min(notas))
-
-        dados_area["gargalo"] = {
-            "titulo": f"Competência {indice_gargalo + 1}",
-            "descricao": COMPETENCIAS_REDACAO[indice_gargalo],
-            "pontuacao": notas[indice_gargalo]
-        }
-
-    return dados_area
-
-
-# ---------------------------------------------------------------------------
-# UMA ABA DE ÁREA (a mesma para qualquer relatório que mostre áreas do ENEM)
-# ---------------------------------------------------------------------------
-
-def criar_aba_area(wb, indice, chave, nome_aba, dados_area, cabecalho,
-                   pasta_graficos):
-    """
-    cabecalho = {"subtitulo": "...", "rodape": "..."}
-    """
-
-    if indice == 0:
-        aba = wb.sheets[0]
-        aba.name = nome_aba
-    else:
-        aba = wb.sheets.add(nome_aba)
-
-    kpis = dados_area["kpis"]
-    ano_inicial, ano_final = dados_area["anos"]
-
-    # CONFIGURAÇÃO VISUAL DA ABA
-
-    aba.activate()
-
-    aba.api.Application.ActiveWindow.DisplayGridlines = False
-    aba.api.Application.ActiveWindow.Zoom = 90
-
-    aba.range("B:K").column_width = 13
-    aba.range("1:1").row_height = 8
-    aba.range("2:3").row_height = 25
-    aba.range("4:4").row_height = 24
-    aba.range("5:5").row_height = 12
-    aba.range("6:6").row_height = 23
-    aba.range("7:8").row_height = 27
-    aba.range("9:10").row_height = 10
-
-    # Fundo geral
-    aba.range("A1:L52").color = BRANCO
-
-    # CABEÇALHO
-
-    aba.range("B2:K3").merge()
-
-    aba.range("B2").value = f"GROWTHMAP  |  {nome_aba.upper()}"
-
-    aba.range("B2:K3").color = VINHO
-    aba.range("B2").font.bold = True
-    aba.range("B2").font.size = 20
-    aba.range("B2").font.color = BRANCO
-    aba.range("B2").api.VerticalAlignment = -4108
-
-    # Subtítulo
-    aba.range("B4:K4").merge()
-    aba.range("B4").value = cabecalho["subtitulo"]
-    aba.range("B4").font.size = 10
-    aba.range("B4").font.color = CINZA_TEXTO
-
-    # Rodapé do cabeçalho (unidade, data de geração)
-    aba.range("B5:K5").merge()
-    aba.range("B5").value = cabecalho["rodape"]
-    aba.range("B5").font.size = 8
-    aba.range("B5").font.italic = True
-    aba.range("B5").font.color = CINZA_TEXTO
-
-    # INDICADORES
-
-    formatar_cartao(
-        aba, ("B", "C"),
-        "MÉDIA DE DESEMPENHO",
-        valor_ou_nd(kpis["media"]),
-        "0.00"
-    )
-
-    formatar_cartao(
-        aba, ("D", "E"),
-        "TAXA DE ABSTENÇÃO",
-        valor_ou_nd(kpis["abstencao"], 100),
-        "0.0%"
-    )
-
-    formatar_cartao(
-        aba, ("F", "G"),
-        f"EVOLUÇÃO {ano_inicial}–{ano_final}",
-        kpis["evolucao"] / 100,
-        "+0.00%;-0.00%;0.00%"
-    )
-
-    formatar_cartao(
-        aba, ("H", "I"),
-        "DIFERENCIAL REGIONAL",
-        kpis["diferencial"] / 100,
-        "+0.00%;-0.00%;0.00%"
-    )
-
-    formatar_cartao(
-        aba, ("J", "K"),
-        "EVENTOS CADASTRADOS",
-        f"{kpis['eventosCadastrados']} / {kpis['metaEventos']}"
-    )
-
-    # INFORMAÇÃO DO DIA DE PROVA
-
-    aba.range("B9:K9").merge()
-
-    aba.range("B9").value = (
-        f"Taxa de abstenção referente ao "
-        f"{kpis['diaProva']}º dia de prova"
-    )
-
-    aba.range("B9").font.size = 9
-    aba.range("B9").font.italic = True
-    aba.range("B9").font.color = CINZA_TEXTO
-
-    # GRÁFICOS
-
-    caminhos = gerar_graficos(chave, dados_area, pasta_graficos)
-
-    aba.pictures.add(
-        caminhos["progresso"],
-        name=f"Progresso_{chave}",
-        left=aba.range("B11").left,
-        top=aba.range("B11").top,
-        width=330,
-        height=250
-    )
-
-    aba.pictures.add(
-        caminhos["historico"],
-        name=f"Historico_{chave}",
-        left=aba.range("F11").left,
-        top=aba.range("F11").top,
-        width=520,
-        height=250
-    )
-
-    # EXCLUSIVO DA REDAÇÃO: faixa de gargalo + gráfico de competências
-
-    if chave == "redacao":
-
-        gargalo = dados_area["gargalo"]
-
-        aba.range("B28:K28").merge()
-        aba.range("28:28").row_height = 24
-
-        aba.range("B28").value = (
-            f"GARGALO NA REDAÇÃO:  {gargalo['titulo']} - "
-            f"{gargalo['descricao']} "
-            f"({gargalo['pontuacao']:.1f} pts)"
-        )
-
-        aba.range("B28:K28").color = VINHO_CLARO
-        aba.range("B28").font.bold = True
-        aba.range("B28").font.size = 10
-        aba.range("B28").font.color = VINHO
-        aba.range("B28").api.HorizontalAlignment = -4108
-        aba.range("B28").api.VerticalAlignment = -4108
-
-        aba.pictures.add(
-            caminhos["competencias"],
-            name="Competencias_Redacao",
-            left=aba.range("B30").left,
-            top=aba.range("B30").top,
-            width=850,
-            height=280
-        )
-
-
-# ---------------------------------------------------------------------------
-# RELATÓRIO DO PROFESSOR
-# ---------------------------------------------------------------------------
-
-def gerar_relatorio_professor(id_usuario, co_municipio=None):
-
-    usuario = banco.buscar_usuario(id_usuario)
-
-    if usuario is None:
-        raise PermissionError("Usuário não encontrado.")
-
-    if usuario["cargo"].strip().lower() != "professor":
-        raise PermissionError(
-            "Este relatório é exclusivo para professores."
-        )
-
-    # Município: o escolhido na tela ou, se não veio, o da unidade
-    if co_municipio is None:
-
-        municipio = {
-            "co_municipio": usuario["co_municipio"],
-            "nome_municipio": usuario["nome_municipio"],
-            "uf": usuario["uf"]
-        }
-
-    else:
-
-        municipio = banco.buscar_municipio(co_municipio)
-
-        if municipio is None:
-            raise ValueError("Município não encontrado.")
-
-    historico = banco.buscar_historico(municipio["co_municipio"])
-
-    if historico.empty:
-        raise ValueError(
-            "Não há dados de desempenho para este município."
-        )
-
-    planejamento = banco.buscar_planejamento(usuario["id_unidade"])
-
-    cabecalho = {
-        "subtitulo": (
-            f"Desempenho de {municipio['nome_municipio']} - "
-            f"{municipio['uf']}"
-        ),
-        "rodape": (
-            f"Unidade: {usuario['nome_unidade']}  |  "
-            f"Planejamento: {planejamento['ano']}/"
-            f"{planejamento['semestre']}º semestre  |  "
-            f"Gerado em {datetime.now():%d/%m/%Y %H:%M}"
-        )
-    }
-
-    def preencher(wb, pasta_graficos):
-
-        for indice, (chave, nome_aba) in enumerate(AREAS.items()):
-
-            dados_area = montar_dados_area(chave, historico, planejamento)
-
-            criar_aba_area(
-                wb, indice, chave, nome_aba,
-                dados_area, cabecalho, pasta_graficos
-            )
-
-    return gerar_excel(preencher)
-
-
-# ---------------------------------------------------------------------------
-# PONTO DE ENTRADA (chamado pelo api.py)
-# ---------------------------------------------------------------------------
-
-def gerar_relatorio(tipo, id_usuario, co_municipio=None):
+    return float(valor) if valor is not None else None
+
+
+def criar_grafico(tipo, titulo, categorias, series, nomes_series=None,
+                  eixo_y="Pontuação", limite_y=None):
+    """Cria imagem de gráfico reutilizável e retorna BytesIO."""
+    fig, ax = plt.subplots(figsize=(8, 3.8))
+    cores = [VINHO, "#B66A83", "#777777", "#C9A3AF", "#444444"]
+
+    if tipo == "linha":
+        for i, valores in enumerate(series):
+            ax.plot(categorias, valores, marker="o", linewidth=2.4,
+                    color=cores[i % len(cores)],
+                    label=(nomes_series[i] if nomes_series else f"Série {i+1}"))
+        if nomes_series:
+            ax.legend(frameon=False)
+    elif tipo == "barra":
+        valores = series[0]
+        ax.bar(categorias, valores, color=VINHO, width=0.62)
+        ax.tick_params(axis="x", rotation=20)
+    elif tipo == "barras_grupo":
+        import numpy as np
+        x = np.arange(len(categorias))
+        largura = 0.8 / max(len(series), 1)
+        for i, valores in enumerate(series):
+            ax.bar(x + (i - (len(series)-1)/2) * largura, valores,
+                   largura, label=nomes_series[i], color=cores[i % len(cores)])
+        ax.set_xticks(x)
+        ax.set_xticklabels(categorias, rotation=15, ha="right")
+        ax.legend(frameon=False)
+    elif tipo == "donut":
+        vals = series[0]
+        if sum(vals) > 0:
+            ax.pie(vals, labels=categorias, autopct="%1.0f%%",
+                   startangle=90, colors=[VINHO, "#D9C3CB"],
+                   wedgeprops={"width": 0.42, "edgecolor": "white"})
+        else:
+            ax.text(0.5, 0.5, "Sem registros", ha="center", va="center")
+            ax.axis("off")
+
+    ax.set_title(titulo, loc="left", color=VINHO, fontsize=12, fontweight="bold")
+    if tipo != "donut":
+        ax.set_ylabel(eixo_y, color=CINZA)
+        ax.grid(axis="y", alpha=0.2)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        if limite_y:
+            ax.set_ylim(*limite_y)
+    fig.tight_layout()
+    imagem = BytesIO()
+    fig.savefig(imagem, format="png", dpi=160, bbox_inches="tight")
+    plt.close(fig)
+    imagem.seek(0)
+    return imagem
+
+
+def nova_aba(wb, titulo, subtitulo):
+    aba = wb.active if len(wb.sheetnames) == 1 and wb.active.max_row == 1 else wb.create_sheet()
+    aba.title = titulo[:31]
+    aba.sheet_view.showGridLines = False
+    for col, largura in {"A": 4, "B": 28, "C": 18, "D": 18, "E": 18,
+                         "F": 18, "G": 18, "H": 18, "I": 18}.items():
+        aba.column_dimensions[col].width = largura
+    aba.merge_cells("B2:I2")
+    aba["B2"] = "GROWTHMAP | " + titulo.upper()
+    aba["B2"].font = Font(name="Arial", size=17, bold=True, color="FFFFFF")
+    aba["B2"].fill = PatternFill("solid", fgColor="7A1F3D")
+    aba["B2"].alignment = Alignment(vertical="center")
+    aba.row_dimensions[2].height = 32
+    aba.merge_cells("B3:I3")
+    aba["B3"] = subtitulo
+    aba["B3"].font = Font(name="Arial", size=9, color=CINZA[1:])
+    aba["B4"] = f"Gerado em {datetime.now():%d/%m/%Y %H:%M}"
+    aba["B4"].font = Font(size=8, color="777777")
+    return aba
+
+
+def escrever_tabela(aba, linha, cabecalhos, registros):
+    for c, valor in enumerate(cabecalhos, 2):
+        cel = aba.cell(linha, c, valor)
+        cel.font = Font(bold=True, color="FFFFFF")
+        cel.fill = PatternFill("solid", fgColor="7A1F3D")
+    for r, registro in enumerate(registros, linha + 1):
+        for c, valor in enumerate(registro, 2):
+            cel = aba.cell(r, c, valor)
+            if r % 2 == 0:
+                cel.fill = PatternFill("solid", fgColor="F5EBEF")
+    return linha + len(registros) + 1
+
+
+def inserir_grafico(aba, imagem, ancora):
+    figura = ExcelImage(imagem)
+    figura.width = 650
+    figura.height = 300
+    aba.add_image(figura, ancora)
+
+
+def salvar_workbook(wb):
+    saida = BytesIO()
+    wb.save(saida)
+    saida.seek(0)
+    return saida
+
+
+def dados_historico(usuario):
+    historico = banco.buscar_historico(usuario["co_municipio"])
+    if not historico:
+        raise ValueError("Não há dados do ENEM para o município da unidade.")
+    return historico
+
+
+def relatorio_professor(usuario):
+    historico = dados_historico(usuario)
+    planejamento = banco.buscar_planejamento_unidade(usuario["id_unidade"])
+    wb = Workbook()
+    wb.remove(wb.active)
+
+    for area, sufixo in AREAS.items():
+        aba = wb.create_sheet(area[:31])
+        aba.sheet_view.showGridLines = False
+        for col in range(1, 10):
+            aba.column_dimensions[get_column_letter(col)].width = 18
+        aba.merge_cells("B2:I2")
+        aba["B2"] = f"GROWTHMAP | PROFESSOR — {area.upper()}"
+        aba["B2"].font = Font(size=16, bold=True, color="FFFFFF")
+        aba["B2"].fill = PatternFill("solid", fgColor="7A1F3D")
+        aba.merge_cells("B3:I3")
+        aba["B3"] = f"{usuario['nome_unidade']} · {usuario['nome_municipio']}/{usuario['uf']}"
+        atual = historico[-1]
+        estado = numero(atual.get(f"estado_{sufixo}"))
+        media = numero(atual.get(f"municipio_{sufixo}"))
+        aba["B5"], aba["C5"] = "Indicador", "Valor"
+        escrever_tabela(aba, 5, ["Indicador", "Valor"], [
+            ["Média municipal", media], ["Média estadual", estado],
+            ["Diferença (município - estado)", (media - estado) if media is not None and estado is not None else None],
+            ["Eventos no semestre", planejamento["cadastrados"]],
+            ["Meta de eventos", planejamento["meta"]],
+        ])
+        anos = [str(x["ano"]) for x in historico]
+        municipio = [numero(x.get(f"municipio_{sufixo}")) for x in historico]
+        estadual = [numero(x.get(f"estado_{sufixo}")) for x in historico]
+        inserir_grafico(aba, criar_grafico("linha", f"Evolução — {area}",
+                                           anos, [municipio, estadual],
+                                           ["Município", "Estado"]), "B14")
+        if area == "Redação":
+            competencias = [numero(atual.get(f"media_comp{i}")) for i in range(1, 6)]
+            escrever_tabela(aba, 32, ["Competência", "Pontuação"], [
+                [COMPETENCIAS[i], competencias[i]] for i in range(5)
+            ])
+            inserir_grafico(aba, criar_grafico(
+                "barra", "Média por competência", [f"C{i}" for i in range(1, 6)],
+                [competencias]), "B40")
+    return salvar_workbook(wb)
+
+
+def relatorio_coordenador(usuario):
+    """Relatório da unidade do coordenador; o schema atual não associa várias unidades."""
+    historico = dados_historico(usuario)
+    eventos = banco.buscar_eventos_unidade(usuario["id_unidade"])
+    usuarios = banco.buscar_usuarios_unidade(usuario["id_unidade"])
+    planejamento = banco.buscar_planejamento_unidade(usuario["id_unidade"])
+    wb = Workbook()
+    aba = nova_aba(wb, "Visão do Coordenador",
+                   f"{usuario['nome_unidade']} · {usuario['nome_municipio']}/{usuario['uf']}")
+    atual = historico[-1]
+    registros = []
+    for nome, sufixo in AREAS.items():
+        mun = numero(atual.get(f"municipio_{sufixo}"))
+        est = numero(atual.get(f"estado_{sufixo}"))
+        registros.append([nome, mun, est, (mun-est) if mun is not None and est is not None else None])
+    escrever_tabela(aba, 6, ["Área", "Município", "Estado", "Diferença"], registros)
+    anos = [str(x["ano"]) for x in historico]
+    medias = [sum(numero(x.get(f"municipio_{sufixo}")) or 0 for sufixo in AREAS.values()) /
+              sum(1 for sufixo in AREAS.values() if x.get(f"municipio_{sufixo}") is not None)
+              for x in historico]
+    inserir_grafico(aba, criar_grafico("linha", "Evolução da média das áreas",
+                                       anos, [medias], ["Município"]), "B15")
+    contagem = {}
+    for ev in eventos:
+        contagem[ev["professor"]] = contagem.get(ev["professor"], 0) + 1
+    escrever_tabela(aba, 34, ["Professor", "Registros no ano"],
+                    [[n, q] for n, q in sorted(contagem.items())])
+    inserir_grafico(aba, criar_grafico("barra", "Registros por professor",
+                                       list(contagem) or ["Sem registros"],
+                                       [list(contagem.values()) or [0]],
+                                       eixo_y="Registros"), "B43")
+    escrever_tabela(aba, 62, ["Indicador", "Valor"], [
+        ["Eventos cadastrados no semestre", planejamento["cadastrados"]],
+        ["Meta de eventos no semestre", planejamento["meta"]],
+        ["Usuários vinculados à unidade", len(usuarios)],
+    ])
+    escrever_tabela(aba, 70, ["Data", "Professor", "Evento", "Área", "Status"], [
+        [str(e["data"]), e["professor"], e["nome"], e["area"] or "Não informada",
+         "Concluído" if e["feita"] else "Pendente"] for e in eventos[:20]
+    ])
+    return salvar_workbook(wb)
+
+
+def relatorio_diretor_filial(usuario, id_unidade):
+    unidade = banco.validar_unidade_empresa(id_unidade, usuario["id_empresa"])
+    historico = banco.buscar_historico(unidade["co_municipio"])
+    if not historico:
+        raise ValueError("Não há dados do ENEM para o município desta unidade.")
+    eventos = banco.buscar_eventos_unidade(unidade["id"])
+    planejamento = banco.buscar_planejamento_unidade(unidade["id"])
+    wb = Workbook()
+    aba = nova_aba(wb, "Diretor - Filial",
+                   f"{unidade['nome']} · {unidade['nome_municipio']}/{unidade['uf']}")
+    atual = historico[-1]
+    comparativo = []
+    for nome, suf in AREAS.items():
+        comparativo.append([nome, numero(atual.get(f"municipio_{suf}")),
+                            numero(atual.get(f"estado_{suf}"))])
+    escrever_tabela(aba, 6, ["Área", "Município", "Estado"], comparativo)
+    inserir_grafico(aba, criar_grafico(
+        "barras_grupo", "Município x Estado por área",
+        [x[0] for x in comparativo],
+        [[x[1] or 0 for x in comparativo], [x[2] or 0 for x in comparativo]],
+        ["Município", "Estado"]), "B15")
+    anos = [str(x["ano"]) for x in historico]
+    medias = [sum(numero(x.get(f"municipio_{s}")) or 0 for s in AREAS.values()) /
+              max(1, sum(1 for s in AREAS.values() if x.get(f"municipio_{s}") is not None))
+              for x in historico]
+    inserir_grafico(aba, criar_grafico("linha", "Evolução da média municipal",
+                                       anos, [medias], ["Município"]), "B34")
+    escrever_tabela(aba, 54, ["Indicador", "Valor"], [
+        ["Eventos cadastrados no semestre", planejamento["cadastrados"]],
+        ["Meta de eventos no semestre", planejamento["meta"]],
+        ["Professores com eventos no ano", len(set(e["id_usuario"] for e in eventos))],
+    ])
+    return salvar_workbook(wb)
+
+
+def relatorio_diretor_rede(usuario):
+    unidades = banco.buscar_unidades_empresa(usuario["id_empresa"])
+    eventos = banco.buscar_eventos_empresa(usuario["id_empresa"])
+    wb = Workbook()
+    aba = nova_aba(wb, "Diretor - Rede", f"Empresa: {usuario['id_empresa']} · {len(unidades)} unidade(s)")
+    linhas = []
+    for un in unidades:
+        hist = banco.buscar_historico(un["co_municipio"], limite=1)
+        if not hist:
+            continue
+        atual = hist[-1]
+        valores = [numero(atual.get(f"municipio_{s}")) for s in AREAS.values()]
+        validos = [v for v in valores if v is not None]
+        media = sum(validos) / len(validos) if validos else None
+        linhas.append([un["nome"], un["nome_municipio"], un["uf"], media,
+                       sum(1 for e in eventos if e["id_unidade"] == un["id"])])
+    escrever_tabela(aba, 6, ["Unidade", "Município", "UF", "Média das áreas", "Eventos no ano"], linhas)
+    inserir_grafico(aba, criar_grafico("barra", "Média por unidade",
+                                       [x[0] for x in linhas] or ["Sem dados"],
+                                       [[x[3] or 0 for x in linhas] or [0]]), "B16")
+    por_area = []
+    for nome, suf in AREAS.items():
+        valores = []
+        for un in unidades:
+            hist = banco.buscar_historico(un["co_municipio"], limite=1)
+            if hist and hist[-1].get(f"municipio_{suf}") is not None:
+                valores.append(float(hist[-1][f"municipio_{suf}"]))
+        por_area.append([nome, sum(valores)/len(valores) if valores else None])
+    escrever_tabela(aba, 36, ["Área", "Média municipal média da rede"], por_area)
+    inserir_grafico(aba, criar_grafico("barra", "Média por área na rede",
+                                       [x[0] for x in por_area],
+                                       [[x[1] or 0 for x in por_area]]), "B45")
+    escrever_tabela(aba, 64, ["Indicador", "Valor"], [
+        ["Unidades na empresa", len(unidades)],
+        ["Eventos registrados no ano", len(eventos)],
+        ["Professores com eventos registrados", len(set(e["id_usuario"] for e in eventos))],
+    ])
+    return salvar_workbook(wb)
+
+
+def gerar_relatorio(tipo, id_usuario, id_unidade=None):
+    """Valida cargo e escopo no banco antes de gerar o arquivo."""
+    acesso = banco.buscar_escopo_usuario(id_usuario)
+    usuario = acesso["usuario"]
+    tipo = tipo.strip().lower()
 
     if tipo == "professor":
-        return gerar_relatorio_professor(id_usuario, co_municipio)
+        if acesso["escopo"] != "individual":
+            raise PermissionError("Somente professores podem gerar este relatório.")
+        return relatorio_professor(usuario)
 
-    if tipo in ("diretor", "coordenador"):
-        raise NotImplementedError(
-            f"O relatório do {tipo} ainda não foi implementado."
-        )
+    if tipo == "coordenador":
+        if acesso["escopo"] != "unidade":
+            raise PermissionError("Somente coordenadores podem gerar este relatório.")
+        return relatorio_coordenador(usuario)
 
-    raise ValueError(f"Tipo de relatório desconhecido: {tipo}")
+    if tipo in ("diretor_rede", "diretor"):
+        if acesso["escopo"] != "empresa":
+            raise PermissionError("Somente o diretor geral pode gerar a visão da rede.")
+        return relatorio_diretor_rede(usuario)
+
+    if tipo == "diretor_filial":
+        if acesso["escopo"] != "empresa":
+            raise PermissionError("Somente o diretor geral pode consultar filiais.")
+        if not id_unidade:
+            raise ValueError("Informe id_unidade para o relatório da filial.")
+        return relatorio_diretor_filial(usuario, int(id_unidade))
+
+    raise ValueError("Tipo inválido. Use professor, coordenador, diretor_rede ou diretor_filial.")
