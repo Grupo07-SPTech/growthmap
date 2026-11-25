@@ -1,6 +1,7 @@
 .diretor-dashboard {
-    max-width: 1560px;
-    margin-right: auto;
+    max-width: none;
+    margin-right: 0;
+    padding-right: 32px;
 }
 
 .dash-header {
@@ -25,7 +26,7 @@
 .eyebrow {
     display: block;
     color: #7a1f3d;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .8px;
@@ -34,13 +35,13 @@
 
 .dash-title h1 {
     color: #7a1f3d;
-    font-size: 28px;
+    font-size: 32px;
     line-height: 1.2;
 }
 
 .dash-title p {
     color: #666;
-    font-size: 14px;
+    font-size: 16px;
     margin-top: 5px;
     max-width: 720px;
 }
@@ -63,7 +64,7 @@
 .view-button {
     padding: 8px 13px;
     border-radius: 9px;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 600;
     color: #555;
     transition: .2s ease;
@@ -86,7 +87,7 @@
 }
 
 .filter-group label {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 700;
     color: #666;
     text-transform: uppercase;
@@ -100,7 +101,7 @@
     border-radius: 8px;
     background: #f9f9f9;
     color: #333;
-    font: 500 13px "Poppins", sans-serif;
+    font: 500 15px "Poppins", sans-serif;
     outline: none;
 }
 
@@ -117,11 +118,11 @@
     border-radius: 10px;
     background: rgba(122, 31, 61, .07);
     color: #6e3549;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .info-banner i {
-    font-size: 17px;
+    font-size: 19px;
 }
 
 .kpi-grid {
@@ -152,14 +153,14 @@
 }
 
 .kpi-title {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     color: #666;
     letter-spacing: .45px;
 }
 
 .kpi-value {
-    font-size: 30px;
+    font-size: 34px;
     line-height: 1.15;
     color: #1a1a1a;
 }
@@ -170,7 +171,7 @@
 }
 
 .kpi-footer {
-    font-size: 13px;
+    font-size: 15px;
     line-height: 1.45;
     color: #555;
 }
@@ -180,6 +181,11 @@
     grid-template-columns: 1fr 1.08fr;
     gap: 20px;
     margin-bottom: 20px;
+}
+
+.city-gap-card {
+    display: flex;
+    flex-direction: column;
 }
 
 .chart-card {
@@ -195,13 +201,13 @@
 }
 
 .chart-header h2 {
-    font-size: 17px;
+    font-size: 19px;
     color: #1a1a1a;
     font-weight: 700;
 }
 
 .chart-header p {
-    font-size: 12.5px;
+    font-size: 14.5px;
     color: #777;
     margin-top: 3px;
     line-height: 1.45;
@@ -211,6 +217,23 @@
     display: flex;
     flex-direction: column;
     gap: 13px;
+}
+
+.network-chart-scroll {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 320px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+}
+
+.network-chart-container {
+    position: relative;
+    flex: 0 0 auto;
+    width: 100%;
+    margin-block: auto;
 }
 
 .city-row {
@@ -226,12 +249,12 @@
 }
 
 .city-label strong {
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .city-label span {
     color: #888;
-    font-size: 11px;
+    font-size: 13px;
 }
 
 .bar-axis {
@@ -261,7 +284,7 @@
 }
 
 .bar-number {
-    font-size: 12.5px;
+    font-size: 14.5px;
     text-align: right;
 }
 
@@ -280,7 +303,7 @@
     flex-wrap: wrap;
     margin-top: 18px;
     color: #666;
-    font-size: 11.5px;
+    font-size: 13.5px;
 }
 
 .legend span {
@@ -320,7 +343,7 @@
 .dashboard-status {
     margin: 12px 0;
     color: #555;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .dashboard-status.erro {
@@ -336,11 +359,11 @@
 }
 
 .heatmap-row>strong {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .heatmap-head span {
-    font-size: 12px;
+    font-size: 14px;
     color: #666;
     text-align: center;
     padding: 0 2px 4px;
@@ -350,7 +373,7 @@
     border-radius: 6px;
     padding: 10px 4px;
     text-align: center;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .neg4 {
@@ -383,7 +406,7 @@
     gap: 12px;
     flex-wrap: wrap;
     margin-top: 15px;
-    font-size: 12px;
+    font-size: 14px;
     color: #666;
 }
 
@@ -405,11 +428,11 @@
 }
 
 .opportunity-card .chart-header h2 {
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .opportunity-card .chart-header p {
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .opportunity-header {
@@ -423,7 +446,7 @@
     white-space: nowrap;
     background: #f3e8ec;
     color: #7a1f3d;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 700;
     padding: 6px 9px;
     border-radius: 999px;
@@ -447,7 +470,7 @@
     flex-wrap: wrap;
     min-height: 38px;
     color: #555;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .map-target-control {
@@ -456,7 +479,7 @@
     gap: 7px;
     margin-left: auto;
     color: #51434a;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
 }
 
@@ -467,7 +490,7 @@
     border-radius: 7px;
     background: #fff;
     color: #33262b;
-    font: 600 13px "Poppins", sans-serif;
+    font: 600 15px "Poppins", sans-serif;
 }
 
 .map-target-input:focus-visible {
@@ -478,7 +501,7 @@
 .map-target-help {
     margin: 0 0 8px;
     color: #777;
-    font-size: 11px;
+    font-size: 13px;
 }
 
 .map-back-button {
@@ -487,7 +510,7 @@
     border-radius: 8px;
     background: #f8f2f4;
     color: #7a1f3d;
-    font: 600 12px "Poppins", sans-serif;
+    font: 600 14px "Poppins", sans-serif;
     cursor: pointer;
 }
 
@@ -500,7 +523,7 @@
 }
 
 .opportunity-map {
-    height: min(58vh, 560px);
+    height: min(68vh, 610px);
     min-height: 340px;
     border: 1px solid #e0e6eb;
     border-radius: 14px;
@@ -518,7 +541,7 @@
     border-radius: 7px;
     background: rgba(255, 255, 255, .95);
     color: #555;
-    font-size: 12px;
+    font-size: 14px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
 }
 
@@ -532,7 +555,7 @@
     gap: 9px 12px;
     margin-top: 12px;
     color: #666;
-    font-size: 11px;
+    font-size: 13px;
     flex-wrap: wrap;
 }
 
@@ -540,6 +563,7 @@
     display: inline-block;
     width: 12px;
     height: 12px;
+    margin-right: 4px;
     border: 1px solid #fff;
     border-radius: 3px;
     background: #d8e1e8;
@@ -554,11 +578,11 @@
 
 .opportunity-map .leaflet-tooltip {
     padding: 7px 9px;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .opportunity-map .leaflet-popup-content {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.5;
 }
 
@@ -593,14 +617,14 @@
 
 .attention-panel h3 {
     color: #33262b;
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.4;
 }
 
 .attention-scope {
     margin-top: 5px;
     color: #777;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .attention-ranking {
@@ -623,11 +647,23 @@
     grid-template-columns: 24px minmax(0, 1fr) auto;
     align-items: center;
     gap: 8px;
-    padding: 9px 0;
+    padding: 9px 8px;
     border: 0;
+    border-radius: 8px;
     background: transparent;
     text-align: left;
     cursor: pointer;
+    transition: background-color .18s ease, transform .18s ease;
+}
+
+.attention-place:hover,
+.attention-place:focus-visible {
+    background: #f3e8ec;
+    transform: translateX(2px);
+}
+
+.attention-place:active {
+    background: #ead4dd;
 }
 
 .attention-place:hover .attention-city,
@@ -649,14 +685,14 @@
     border-radius: 50%;
     background: #f3e8ec;
     color: #7a1f3d;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 700;
 }
 
 .attention-city {
     min-width: 0;
     color: #333;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
 }
 
@@ -664,13 +700,13 @@
     display: block;
     margin-top: 2px;
     color: #888;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 400;
 }
 
 .attention-score {
     color: #7a1f3d;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     white-space: nowrap;
 }
@@ -678,13 +714,13 @@
 .attention-empty {
     display: block !important;
     color: #777;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.5;
 }
 
 .attention-note {
     color: #888;
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.5;
 }
 
@@ -750,6 +786,10 @@
         width: 100%;
         height: 315px;
         min-height: 250px;
+    }
+
+    .network-chart-scroll {
+        max-height: 460px;
     }
 
     .director-chart-container canvas {
