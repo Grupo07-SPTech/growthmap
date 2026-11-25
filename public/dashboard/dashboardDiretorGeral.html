@@ -165,12 +165,9 @@
             <div id="opportunity-map" class="opportunity-map" role="application" aria-label="Mapa interativo do Brasil"></div>
             <p id="opportunity-map-status" class="opportunity-map-status" role="status">Carregando estados brasileiros...</p>
           </div>
-          <div id="legend-estados" class="map-legend" aria-label="Legenda de municípios abaixo da meta de média ENEM">
-            <strong>Municípios abaixo da meta (600)</strong>
-            <span><i class="map-legend-swatch map-count-zero"></i>0</span>
-            <span><i class="map-legend-swatch map-count-one"></i>1</span>
-            <span><i class="map-legend-swatch map-count-two"></i>2</span>
-            <span><i class="map-legend-swatch map-count-many"></i>3 ou mais</span>
+          <div id="legend-estados" class="map-legend map-legend-notas" aria-label="Legenda da média estadual ENEM">
+            <strong>Média estadual ENEM</strong>
+            <span>Menor</span><i class="map-nota-gradient"></i><span>Maior</span>
             <span><i class="map-legend-swatch map-count-empty"></i>Sem dados</span>
           </div>
           <div id="legend-municipios" class="map-legend map-legend-notas" aria-label="Legenda de médias ENEM por município" hidden>
@@ -229,14 +226,7 @@ if (typeof Chart !== "undefined") {
 (function () {
     const URL_ESTADOS = "https://cdn.jsdelivr.net/gh/henriquemalvar/br-geojson@main/dist/estados.geojson";
     const URL_MUNICIPIOS = "https://cdn.jsdelivr.net/gh/henriquemalvar/br-geojson@main/dist/municipios/";
-    const META_MEDIA_ENEM = 600;
-    const CORES_CONTAGEM = {
-        semDados: "#e5e7eb",
-        zero: "#d8e9df",
-        um: "#f5d775",
-        dois: "#ee9a57",
-        tresOuMais: "#c85858"
-    };
+    const COR_SEM_DADOS = "#e5e7eb";
     const ESCALA_NOTAS = [
         { nota: 500, cor: "#7f1d1d" },
         { nota: 560, cor: "#c2413b" },
@@ -342,35 +332,16 @@ if (typeof Chart !== "undefined") {
         return {
             color: "#ffffff",
             weight: 0.45,
-            fillColor: nota === undefined ? CORES_CONTAGEM.semDados : interpolarCorNota(nota),
+            fillColor: nota === undefined ? COR_SEM_DADOS : interpolarCorNota(nota),
             fillOpacity: 0.9
         };
     }
 
-    function resumoEstado(uf) {
-        const municipiosComNota = municipiosDemonstrativos.filter(function (municipio) {
-            return municipio.uf === uf && municipio.mediaEnem !== null && municipio.mediaEnem !== undefined &&
-                Number.isFinite(Number(municipio.mediaEnem));
-        });
-
-        return {
-            total: municipiosComNota.length,
-            abaixoDaMeta: municipiosComNota.filter(function (municipio) {
-                return Number(municipio.mediaEnem) < META_MEDIA_ENEM;
-            }).length
-        };
-    }
-
     function estiloEstado(feature) {
-        const resumo = resumoEstado(siglaEstado(feature));
-        let fillColor = CORES_CONTAGEM.semDados;
-
-        if (resumo.total > 0) {
-            if (resumo.abaixoDaMeta === 0) fillColor = CORES_CONTAGEM.zero;
-            else if (resumo.abaixoDaMeta === 1) fillColor = CORES_CONTAGEM.um;
-            else if (resumo.abaixoDaMeta === 2) fillColor = CORES_CONTAGEM.dois;
-            else fillColor = CORES_CONTAGEM.tresOuMais;
-        }
+        const mediaEstadual = mediasEstaduaisPorUf.get(siglaEstado(feature));
+        const fillColor = mediaEstadual === undefined
+            ? COR_SEM_DADOS
+            : interpolarCorNota(mediaEstadual);
 
         return {
             color: "#ffffff",
@@ -383,13 +354,9 @@ if (typeof Chart !== "undefined") {
     }
 
     function descricaoEstado(uf) {
-        const resumo = resumoEstado(uf);
-        if (resumo.total === 0) return "Sem médias disponíveis";
-        const mediaEstado = mediasEstaduaisPorUf.get(uf);
-        const referencia = mediaEstado === undefined
-            ? ""
-            : " · média estadual: " + mediaEstado.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
-        return resumo.abaixoDaMeta + " de " + resumo.total + " municípios abaixo de " + META_MEDIA_ENEM + referencia;
+        const mediaEstadual = mediasEstaduaisPorUf.get(uf);
+        if (mediaEstadual === undefined) return "Sem média estadual disponível";
+        return "Média estadual: " + mediaEstadual.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
     }
 
     function atualizarRankingAtencao() {

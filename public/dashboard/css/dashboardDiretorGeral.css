@@ -518,10 +518,6 @@
     display: none;
 }
 
-.map-count-zero { background: #d8e9df; }
-.map-count-one { background: #f5d775; }
-.map-count-two { background: #ee9a57; }
-.map-count-many { background: #c85858; }
 .map-count-empty { background: #e5e7eb; }
 
 .opportunity-map .leaflet-tooltip {
