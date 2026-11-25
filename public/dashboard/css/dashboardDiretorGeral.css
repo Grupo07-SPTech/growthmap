@@ -586,6 +586,12 @@
     line-height: 1.5;
 }
 
+.opportunity-map .map-popup-unit {
+    display: inline-block;
+    margin-top: 5px;
+    color: #24623a;
+}
+
 .map-legend-notas[hidden] {
     display: none;
 }

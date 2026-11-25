@@ -267,6 +267,9 @@ if (typeof Chart !== "undefined") {
     let notasPorCodigo = new Map();
     let notasPorNome = new Map();
     let mediasEstaduaisPorUf = new Map();
+    let codigosMunicipiosComUnidade = new Set();
+    let quantidadesUnidadesPorUf = new Map();
+    let unidadesEmpresaCarregadas = false;
     const tooltipMapa = L.tooltip({ sticky: true, direction: "top", opacity: 0.95 });
 
     const botaoVoltar = document.getElementById("map-back-to-brazil");
@@ -382,8 +385,20 @@ if (typeof Chart !== "undefined") {
 
     function descricaoEstado(uf) {
         const mediaEstadual = mediasEstaduaisPorUf.get(uf);
-        if (mediaEstadual === undefined) return "Sem média estadual disponível";
-        return "Média estadual: " + mediaEstadual.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+        const quantidadeUnidades = quantidadesUnidadesPorUf.get(uf) || 0;
+        const media = mediaEstadual === undefined
+            ? "Sem média estadual disponível"
+            : "Média estadual: " + mediaEstadual.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+        const textoUnidades = unidadesEmpresaCarregadas
+            ? "Unidades da empresa: " + quantidadeUnidades
+            : "Carregando unidades da empresa";
+        return media + " · " + textoUnidades;
+    }
+
+    function municipioPossuiUnidade(feature) {
+        const propriedades = feature.properties || {};
+        const codigo = String(propriedades.cd_geocmu || propriedades.codigo_ibge || "");
+        return Boolean(codigo && codigosMunicipiosComUnidade.has(codigo));
     }
 
     function atualizarRankingAtencao() {
@@ -591,11 +606,21 @@ if (typeof Chart !== "undefined") {
                     const nomeMunicipio = propriedades.nome || propriedades.name || "Município";
                     const nota = obterNotaMunicipio(feature);
                     const mediaEstado = mediasEstaduaisPorUf.get(ufSelecionada);
-                    const textoPopup = nota === undefined
-                        ? nomeMunicipio + "<br>Sem média disponível"
-                        : nomeMunicipio + "<br>Média ENEM: " + nota.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) +
-                            " pontos" + (mediaEstado === undefined ? "" : "<br>Média estadual: " + mediaEstado.toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + " pontos");
-                    camada.bindPopup(textoPopup);
+                    function obterTextoPopup() {
+                        const textoBase = nota === undefined
+                            ? nomeMunicipio + "<br>Sem média disponível"
+                            : nomeMunicipio + "<br>Média ENEM: " + nota.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) +
+                                " pontos" + (mediaEstado === undefined ? "" : "<br>Média estadual: " + mediaEstado.toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + " pontos");
+                        const avisoUnidade = municipioPossuiUnidade(feature)
+                            ? "<br><strong class=\"map-popup-unit\">✓ A empresa já possui uma unidade neste município.</strong>"
+                            : "";
+                        return textoBase + avisoUnidade;
+                    }
+
+                    camada.bindPopup(obterTextoPopup());
+                    camada.on("popupopen", function () {
+                        camada.setPopupContent(obterTextoPopup());
+                    });
                     camada.on("mouseover", function (evento) {
                         if (municipioEmDestaque && municipioEmDestaque !== camada) {
                             municipioEmDestaque.setStyle(estiloMunicipio(municipioEmDestaque.feature));
@@ -604,7 +629,7 @@ if (typeof Chart !== "undefined") {
                         camada.bringToFront();
                         camada.setStyle(Object.assign({}, estiloMunicipio(camada.feature), { weight: 2, color: "#7a1f3d" }));
                         tooltipMapa
-                            .setContent(textoPopup)
+                            .setContent(obterTextoPopup())
                             .setLatLng(evento.latlng);
                         mapa.openTooltip(tooltipMapa);
                     });
@@ -673,6 +698,26 @@ if (typeof Chart !== "undefined") {
     }
 
     botaoVoltar.addEventListener("click", voltarAoBrasil);
+    window.atualizarUnidadesMapaDiretor = function (unidades) {
+        const registrosUnidades = unidades || [];
+        unidadesEmpresaCarregadas = true;
+        codigosMunicipiosComUnidade = new Set(registrosUnidades.map(function (unidade) {
+            return String(unidade.co_municipio || "");
+        }).filter(Boolean));
+
+        const idsPorUf = new Map();
+        registrosUnidades.forEach(function (unidade) {
+            const uf = String(unidade.uf || "");
+            const idUnidade = String(unidade.id_unidade || "");
+            if (!uf || !idUnidade) return;
+            if (!idsPorUf.has(uf)) idsPorUf.set(uf, new Set());
+            idsPorUf.get(uf).add(idUnidade);
+        });
+        quantidadesUnidadesPorUf = new Map();
+        idsPorUf.forEach(function (ids, uf) {
+            quantidadesUnidadesPorUf.set(uf, ids.size);
+        });
+    };
     seletorMeta.addEventListener("change", function () {
         if (seletorMeta.value.trim() === "") {
             seletorMeta.value = String(metaMediaEnem);
@@ -977,6 +1022,7 @@ if (typeof Chart !== "undefined") {
             const payload = await resposta.json();
             if (idRequisicao !== requisicao) return;
 
+            if (window.atualizarUnidadesMapaDiretor) window.atualizarUnidadesMapaDiretor(payload.unidades);
             const dados = prepararDados(payload);
             atualizarIndicadores(dados);
             atualizarGrafico(dados.municipios);

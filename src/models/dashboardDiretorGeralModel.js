@@ -51,6 +51,7 @@ function listarUsuariosUnidades(idEmpresa) {
             u.nome AS nome_unidade,
             m.co_municipio,
             m.nome_municipio,
+            m.uf,
             us.id AS id_usuario,
             us.area_atuacao
         FROM unidade u
