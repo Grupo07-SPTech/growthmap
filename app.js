@@ -25,6 +25,7 @@ var professorRouter = require("./src/routes/professor");
 var eventosRouter = require("./src/routes/eventos");
 var permissoesRouter = require("./src/routes/permissoes");
 var dashboardProfessorRouter = require("./src/routes/dashboardProfessor");
+var dashboardCoordenadorRouter = require("./src/routes/dashboardCoordenador");
 
 
 app.use(express.json());
@@ -43,6 +44,7 @@ app.use("/professor", professorRouter);
 app.use("/eventos", eventosRouter);
 app.use("/permissoes", permissoesRouter);
 app.use("/dashboardProfessor", dashboardProfessorRouter);
+app.use("/dashboardCoordenador", dashboardCoordenadorRouter);
 
 
 app.listen(PORTA_APP, function () {
