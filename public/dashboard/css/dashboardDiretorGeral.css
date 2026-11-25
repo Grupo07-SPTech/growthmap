@@ -444,9 +444,41 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-wrap: wrap;
     min-height: 38px;
     color: #555;
     font-size: 13px;
+}
+
+.map-target-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-left: auto;
+    color: #51434a;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.map-target-input {
+    width: 78px;
+    padding: 7px 8px;
+    border: 1px solid #d9c8cf;
+    border-radius: 7px;
+    background: #fff;
+    color: #33262b;
+    font: 600 13px "Poppins", sans-serif;
+}
+
+.map-target-input:focus-visible {
+    outline: 2px solid #8d2146;
+    outline-offset: 2px;
+}
+
+.map-target-help {
+    margin: 0 0 8px;
+    color: #777;
+    font-size: 11px;
 }
 
 .map-back-button {
@@ -535,10 +567,21 @@
 }
 
 .map-nota-gradient {
+    position: relative;
     width: 110px;
     height: 12px;
     border-radius: 999px;
-    background: linear-gradient(90deg, #7f1d1d, #c2413b, #fca5a5, #f4e6a1, #d8e9df);
+    background: linear-gradient(90deg, #c85858, #ee9a57, #f5d775, #a8c982, #5b9b70);
+}
+
+.map-nota-gradient::after {
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 2px;
+    height: 18px;
+    background: #33262b;
+    content: "";
 }
 
 .attention-panel {

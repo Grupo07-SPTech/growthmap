@@ -160,19 +160,27 @@
           <div class="opportunity-map-toolbar">
             <button id="map-back-to-brazil" class="map-back-button" type="button" hidden>← Voltar ao Brasil</button>
             <span id="map-current-view">Brasil</span>
+            <label class="map-target-control" for="map-target-score">
+              Meta ENEM
+              <input id="map-target-score" class="map-target-input" type="number" min="0" max="1000" step="any" value="600" inputmode="decimal" aria-describedby="map-target-help">
+              <span>pontos</span>
+            </label>
           </div>
+          <p id="map-target-help" class="map-target-help">A meta define o ponto central das cores: vermelho abaixo e verde acima.</p>
           <div class="opportunity-map-wrap">
             <div id="opportunity-map" class="opportunity-map" role="application" aria-label="Mapa interativo do Brasil"></div>
             <p id="opportunity-map-status" class="opportunity-map-status" role="status">Carregando estados brasileiros...</p>
           </div>
-          <div id="legend-estados" class="map-legend map-legend-notas" aria-label="Legenda da média estadual ENEM">
+          <div id="legend-estados" class="map-legend map-legend-notas" aria-label="Legenda da média estadual em relação à meta ENEM">
             <strong>Média estadual ENEM</strong>
-            <span>Menor</span><i class="map-nota-gradient"></i><span>Maior</span>
+            <span>Abaixo</span><i class="map-nota-gradient"></i><span>Acima</span>
+            <span id="map-meta-estados">Meta: 600 pts</span>
             <span><i class="map-legend-swatch map-count-empty"></i>Sem dados</span>
           </div>
-          <div id="legend-municipios" class="map-legend map-legend-notas" aria-label="Legenda de médias ENEM por município" hidden>
+          <div id="legend-municipios" class="map-legend map-legend-notas" aria-label="Legenda da média municipal em relação à meta ENEM" hidden>
             <strong>Média ENEM</strong>
-            <span>Menor</span><i class="map-nota-gradient"></i><span>Maior</span>
+            <span>Abaixo</span><i class="map-nota-gradient"></i><span>Acima</span>
+            <span id="map-meta-municipios">Meta: 600 pts</span>
             <span><i class="map-legend-swatch map-count-empty"></i>Sem dados</span>
           </div>
         </div>
@@ -227,13 +235,7 @@ if (typeof Chart !== "undefined") {
     const URL_ESTADOS = "https://cdn.jsdelivr.net/gh/henriquemalvar/br-geojson@main/dist/estados.geojson";
     const URL_MUNICIPIOS = "https://cdn.jsdelivr.net/gh/henriquemalvar/br-geojson@main/dist/municipios/";
     const COR_SEM_DADOS = "#e5e7eb";
-    const ESCALA_NOTAS = [
-        { nota: 500, cor: "#7f1d1d" },
-        { nota: 560, cor: "#c2413b" },
-        { nota: 600, cor: "#fca5a5" },
-        { nota: 650, cor: "#f4e6a1" },
-        { nota: 700, cor: "#d8e9df" }
-    ];
+    const CORES_ESCALA_META = ["#c85858", "#ee9a57", "#f5d775", "#a8c982", "#5b9b70"];
 
     const elementoMapa = document.getElementById("opportunity-map");
     if (!elementoMapa) return;
@@ -271,6 +273,22 @@ if (typeof Chart !== "undefined") {
     const escopoAtencao = document.getElementById("attention-scope");
     const legendaEstados = document.getElementById("legend-estados");
     const legendaMunicipios = document.getElementById("legend-municipios");
+    const seletorMeta = document.getElementById("map-target-score");
+    const metaEstados = document.getElementById("map-meta-estados");
+    const metaMunicipios = document.getElementById("map-meta-municipios");
+    let metaMediaEnem = 600;
+
+    try {
+        const metaSalva = Number(localStorage.getItem("metaMapaOportunidade"));
+        if (localStorage.getItem("metaMapaOportunidade") !== null && Number.isFinite(metaSalva) && metaSalva >= 0 && metaSalva <= 1000) {
+            metaMediaEnem = metaSalva;
+        }
+    } catch (erro) {
+        // O mapa continua funcionando com a meta padrão se o armazenamento local estiver indisponível.
+    }
+    seletorMeta.value = String(metaMediaEnem);
+    metaEstados.textContent = "Meta: " + metaMediaEnem.toLocaleString("pt-BR") + " pts";
+    metaMunicipios.textContent = "Meta: " + metaMediaEnem.toLocaleString("pt-BR") + " pts";
 
     function reconstruirIndiceNotas() {
         notasPorCodigo = new Map();
@@ -300,14 +318,21 @@ if (typeof Chart !== "undefined") {
     }
 
     function interpolarCorNota(nota) {
-        const valor = Math.max(ESCALA_NOTAS[0].nota, Math.min(ESCALA_NOTAS[ESCALA_NOTAS.length - 1].nota, nota));
-        let inferior = ESCALA_NOTAS[0];
-        let superior = ESCALA_NOTAS[ESCALA_NOTAS.length - 1];
+        const escalaNotas = [
+            { nota: metaMediaEnem - 100, cor: CORES_ESCALA_META[0] },
+            { nota: metaMediaEnem - 50, cor: CORES_ESCALA_META[1] },
+            { nota: metaMediaEnem, cor: CORES_ESCALA_META[2] },
+            { nota: metaMediaEnem + 50, cor: CORES_ESCALA_META[3] },
+            { nota: metaMediaEnem + 100, cor: CORES_ESCALA_META[4] }
+        ];
+        const valor = Math.max(escalaNotas[0].nota, Math.min(escalaNotas[escalaNotas.length - 1].nota, nota));
+        let inferior = escalaNotas[0];
+        let superior = escalaNotas[escalaNotas.length - 1];
 
-        for (let indice = 1; indice < ESCALA_NOTAS.length; indice++) {
-            if (valor <= ESCALA_NOTAS[indice].nota) {
-                inferior = ESCALA_NOTAS[indice - 1];
-                superior = ESCALA_NOTAS[indice];
+        for (let indice = 1; indice < escalaNotas.length; indice++) {
+            if (valor <= escalaNotas[indice].nota) {
+                inferior = escalaNotas[indice - 1];
+                superior = escalaNotas[indice];
                 break;
             }
         }
@@ -646,6 +671,29 @@ if (typeof Chart !== "undefined") {
     }
 
     botaoVoltar.addEventListener("click", voltarAoBrasil);
+    seletorMeta.addEventListener("change", function () {
+        if (seletorMeta.value.trim() === "") {
+            seletorMeta.value = String(metaMediaEnem);
+            return;
+        }
+        const novaMeta = Number(seletorMeta.value);
+        if (!Number.isFinite(novaMeta) || novaMeta < 0 || novaMeta > 1000) {
+            seletorMeta.value = String(metaMediaEnem);
+            return;
+        }
+
+        metaMediaEnem = novaMeta;
+        const textoMeta = "Meta: " + metaMediaEnem.toLocaleString("pt-BR") + " pts";
+        metaEstados.textContent = textoMeta;
+        metaMunicipios.textContent = textoMeta;
+        try {
+            localStorage.setItem("metaMapaOportunidade", String(metaMediaEnem));
+        } catch (erro) {
+            // A atualização das cores não depende da persistência da meta.
+        }
+        if (camadaEstados) camadaEstados.setStyle(estiloEstado);
+        if (camadaMunicipios) camadaMunicipios.setStyle(estiloMunicipio);
+    });
     window.atualizarDadosMapaDiretor = carregarMediasEnem;
     iniciar();
 })();
