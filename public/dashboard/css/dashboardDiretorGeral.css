@@ -311,6 +311,22 @@
     overflow-x: auto;
 }
 
+.heatmap-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dashboard-status {
+    margin: 12px 0;
+    color: #555;
+    font-size: 14px;
+}
+
+.dashboard-status.erro {
+    color: #a12f24;
+}
+
 .heatmap-row {
     display: grid;
     grid-template-columns: 78px repeat(5, minmax(58px, 1fr));
