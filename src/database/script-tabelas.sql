@@ -1,4 +1,4 @@
-CREATE DATABASE growthmap;
+CREATE DATABASE IF NOT EXISTS growthmap;
 
 USE growthmap;
 
@@ -185,5 +185,15 @@ INSERT INTO modulo (nome) VALUES
 ('Gráficos / Dashboard'),
 ('Gerenciamento de Usuários');
 
-INSERT INTO cargo_modulo (fk_cargo, fk_modulo) VALUES
-(1, 1);
+INSERT INTO cargo (nome, nivel_acesso) VALUES
+('Diretor Geral', 'Administrativo'),
+('Coordenador', 'Operacional'),
+('Professor', 'Operacional');
+
+INSERT INTO cargo_modulo (fk_cargo, fk_modulo)
+SELECT cargo.id_cargo, modulo.id_modulo
+FROM cargo
+CROSS JOIN modulo
+WHERE cargo.nome = 'Diretor Geral'
+   OR (cargo.nome = 'Coordenador' AND modulo.nome IN ('Painel de Eventos', 'Filiais', 'Gráficos / Dashboard'))
+   OR (cargo.nome = 'Professor' AND modulo.nome IN ('Painel de Eventos', 'Filiais'));
