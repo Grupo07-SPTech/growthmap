@@ -80,14 +80,14 @@
     <section class="kpi-grid" aria-label="Indicadores principais da unidade">
       <article class="kpi-card warning">
         <span class="kpi-title">DIFERENÇA VS. ESTADO</span>
-        <strong class="kpi-value">-20 pts</strong>
-        <span class="kpi-footer">Média das 4 áreas objetivas. Área mais fraca: Matemática (-41 pts).</span>
+        <strong class="kpi-value" id="kpi-diferenca">—</strong>
+        <span class="kpi-footer" id="kpi-diferenca-descricao">Carregando desempenho...</span>
       </article>
 
       <article class="kpi-card">
         <span class="kpi-title">BASE DE CANDIDATOS</span>
-        <strong class="kpi-value">9.840</strong>
-        <span class="kpi-footer">Participantes do ENEM 2025 no município, +3,2% em relação a 2024.</span>
+        <strong class="kpi-value" id="kpi-participantes">—</strong>
+        <span class="kpi-footer" id="kpi-participantes-descricao">Carregando participantes...</span>
       </article>
 
       <article class="kpi-card danger coverage-card">
@@ -109,14 +109,14 @@
       <article class="chart-card area-chart-card">
         <div class="chart-header">
           <h2>Município, estado e rede por área</h2>
-          <p>Média no ENEM (escala de 0 a 700) em Sorocaba, no estado e nos municípios atendidos pela rede.</p>
+          <p id="descricao-grafico-areas">Média no ENEM por área no município selecionado, no estado e na rede.</p>
         </div>
 
         <div class="director-chart-container branch-chart-container">
           <canvas id="graficoAreasEnem"></canvas>
         </div>
 
-        <div class="legend"><span><i class="legend-dot city"></i>Sorocaba</span><span><i
+        <div class="legend"><span><i class="legend-dot city"></i><span id="legenda-municipio">Município</span></span><span><i
               class="legend-dot state"></i>Estado</span><span><i class="legend-dot network"></i>Média da rede</span>
         </div>
       </article>
@@ -210,6 +210,156 @@
       var status = document.getElementById("status-filtros");
       var idEmpresa = sessionStorage.getItem("ID_EMPRESA");
       var idUnidadeSessao = sessionStorage.getItem("ID_UNIDADE");
+      var graficoAreas;
+      var requisicaoDados = 0;
+      var areas = [
+        { nome: "Linguagens", municipio: "municipio_lc", estado: "estado_lc", rede: "media_lc" },
+        { nome: "Humanas", municipio: "municipio_ch", estado: "estado_ch", rede: "media_ch" },
+        { nome: "Natureza", municipio: "municipio_cn", estado: "estado_cn", rede: "media_cn" },
+        { nome: "Matemática", municipio: "municipio_mt", estado: "estado_mt", rede: "media_mt" },
+        { nome: "Redação", municipio: "municipio_redacao", estado: "estado_redacao", rede: "media_redacao" }
+      ];
+
+      function numero(valor) {
+        if (valor === null || valor === undefined || valor === "") return null;
+        var resultado = Number(valor);
+        return Number.isFinite(resultado) ? resultado : null;
+      }
+
+      function formatarNumero(valor, casas) {
+        return new Intl.NumberFormat("pt-BR", { maximumFractionDigits: casas || 0 }).format(valor);
+      }
+
+      function formatarPontos(valor) {
+        var sinal = valor > 0 ? "+" : "";
+        return sinal + formatarNumero(valor, 1);
+      }
+
+      function mediaPonderada(registros, campo) {
+        var somaPonderada = 0;
+        var totalParticipantes = 0;
+        registros.forEach(function (registro) {
+          var nota = numero(registro[campo]);
+          var participantes = numero(registro.qtd_participantes);
+          if (nota === null || participantes === null || participantes <= 0) return;
+          somaPonderada += nota * participantes;
+          totalParticipantes += participantes;
+        });
+        return totalParticipantes > 0 ? somaPonderada / totalParticipantes : null;
+      }
+
+      function limparDados() {
+        document.getElementById("kpi-diferenca").textContent = "—";
+        document.getElementById("kpi-diferenca-descricao").textContent = "Sem dados comparáveis para o ano selecionado.";
+        document.getElementById("kpi-participantes").textContent = "—";
+        document.getElementById("kpi-participantes-descricao").textContent = "Sem dados de participantes.";
+        if (graficoAreas) {
+          graficoAreas.destroy();
+          graficoAreas = null;
+        }
+      }
+
+      function atualizarIndicadores(desempenho, historico, ano) {
+        var diferencas = areas.slice(0, 4).map(function (area) {
+          var notaMunicipal = numero(desempenho[area.municipio]);
+          var notaEstadual = numero(desempenho[area.estado]);
+          return notaMunicipal === null || notaEstadual === null ? null : notaMunicipal - notaEstadual;
+        });
+        if (diferencas.some(function (valor) { return valor === null; })) {
+          document.getElementById("kpi-diferenca").textContent = "—";
+          document.getElementById("kpi-diferenca-descricao").textContent = "Sem dados comparáveis nas quatro áreas objetivas.";
+        } else {
+          var mediaDiferencas = diferencas.reduce(function (soma, valor) { return soma + valor; }, 0) / diferencas.length;
+          var menorDiferenca = Math.min.apply(null, diferencas);
+          var areasComMaiorDefasagem = areas.slice(0, 4).filter(function (area, indice) {
+            return diferencas[indice] === menorDiferenca;
+          }).map(function (area) { return area.nome; });
+          var descricaoDiferenca = menorDiferenca < 0
+            ? "Maior defasagem: " + areasComMaiorDefasagem.join(", ") + " (" + formatarPontos(menorDiferenca) + " pts)."
+            : "Nenhuma área objetiva está abaixo da média estadual.";
+          document.getElementById("kpi-diferenca").textContent = formatarPontos(mediaDiferencas) + " pts";
+          document.getElementById("kpi-diferenca-descricao").textContent = "Média das quatro áreas objetivas. " + descricaoDiferenca;
+        }
+
+        var participantes = numero(desempenho.qtd_participantes);
+        document.getElementById("kpi-participantes").textContent = participantes === null ? "—" : formatarNumero(participantes);
+        var anteriores = historico.filter(function (registro) { return Number(registro.ano) < ano; });
+        anteriores.sort(function (a, b) { return Number(b.ano) - Number(a.ano); });
+        var participanteAnterior = anteriores.length ? numero(anteriores[0].qtd_participantes) : null;
+        var descricaoParticipantes = "Participantes do ENEM " + ano + " no município.";
+        if (participantes !== null && participanteAnterior !== null && participanteAnterior > 0) {
+          var variacao = ((participantes - participanteAnterior) / participanteAnterior) * 100;
+          descricaoParticipantes += " " + formatarPontos(variacao) + "% em relação a " + anteriores[0].ano + ".";
+        }
+        document.getElementById("kpi-participantes-descricao").textContent = descricaoParticipantes;
+      }
+
+      function desenharGrafico(desempenho, registrosRede, ano) {
+        var municipio = areas.map(function (area) { return numero(desempenho[area.municipio]); });
+        var estado = areas.map(function (area) { return numero(desempenho[area.estado]); });
+        var rede = areas.map(function (area) { return mediaPonderada(registrosRede, area.rede); });
+        var nomeMunicipio = desempenho.nome_municipio;
+        document.getElementById("legenda-municipio").textContent = nomeMunicipio;
+        document.getElementById("descricao-grafico-areas").textContent =
+          "Médias do ENEM " + ano + " em " + nomeMunicipio + ", no estado e nos municípios atendidos pela rede.";
+
+        if (graficoAreas) graficoAreas.destroy();
+        graficoAreas = new Chart(document.getElementById("graficoAreasEnem"), {
+          type: "bar",
+          data: {
+            labels: areas.map(function (area) { return area.nome; }),
+            datasets: [
+              { label: nomeMunicipio, data: municipio, backgroundColor: "#8d2146", borderRadius: 4 },
+              { label: "Estado", data: estado, backgroundColor: "#a9a9a9", borderRadius: 4 },
+              { label: "Média da rede", data: rede, backgroundColor: "#2f71aa", borderRadius: 4 }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, max: 700, ticks: { stepSize: 100 } } },
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
+
+      function atualizarDados() {
+        var ano = Number(seletorAno.value);
+        var idUnidade = seletorUnidade.value;
+        if (!ano || !idUnidade) {
+          limparDados();
+          return;
+        }
+
+        var requisicaoAtual = ++requisicaoDados;
+        var desempenhoUrl = "/dashboardDiretorFilial/desempenho/" + encodeURIComponent(idEmpresa) + "/" + encodeURIComponent(idUnidade);
+        var redeUrl = "/dashboardDiretorFilial/rede/" + encodeURIComponent(idEmpresa) + "?ano=" + encodeURIComponent(ano);
+        mostrarStatus("Carregando dados do ENEM " + ano + "...");
+        Promise.all([fetch(desempenhoUrl), fetch(redeUrl)])
+          .then(function (respostas) {
+            if (!respostas[0].ok || !respostas[1].ok) throw new Error("Não foi possível carregar o desempenho da unidade.");
+            return Promise.all([respostas[0].json(), respostas[1].json()]);
+          })
+          .then(function (resultados) {
+            if (requisicaoAtual !== requisicaoDados) return;
+            var historico = resultados[0];
+            var desempenho = historico.find(function (registro) { return Number(registro.ano) === ano; });
+            if (!desempenho) {
+              limparDados();
+              mostrarStatus("Não há desempenho para o ano selecionado.", true);
+              return;
+            }
+            atualizarIndicadores(desempenho, historico, ano);
+            desenharGrafico(desempenho, resultados[1], ano);
+            mostrarStatus("Dados do ENEM " + ano + " carregados.");
+          })
+          .catch(function (erro) {
+            if (requisicaoAtual !== requisicaoDados) return;
+            console.error("Erro ao carregar indicadores da filial:", erro);
+            limparDados();
+            mostrarStatus(erro.message || "Não foi possível carregar os dados.", true);
+          });
+      }
 
       function mostrarStatus(mensagem, erro) {
         status.textContent = mensagem;
@@ -223,6 +373,8 @@
       }
 
       function carregarAnos(idUnidade) {
+        requisicaoDados++;
+        limparDados();
         seletorAno.disabled = true;
         seletorAno.replaceChildren(new Option("Carregando anos...", ""));
         return fetch("/dashboardDiretorFilial/anos/" + encodeURIComponent(idEmpresa) + "/" + encodeURIComponent(idUnidade))
@@ -241,7 +393,7 @@
             }
             anos.forEach(function (ano) { seletorAno.add(new Option(String(ano), String(ano))); });
             seletorAno.disabled = false;
-            mostrarStatus(anos.length + " ano(s) com dados disponíveis.");
+            atualizarDados();
           });
       }
 
@@ -296,6 +448,8 @@
           });
         }
       });
+
+      seletorAno.addEventListener("change", atualizarDados);
     })();
   </script>
 </body>
