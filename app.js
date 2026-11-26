@@ -26,6 +26,7 @@ var eventosRouter = require("./src/routes/eventos");
 var permissoesRouter = require("./src/routes/permissoes");
 var dashboardProfessorRouter = require("./src/routes/dashboardProfessor");
 var dashboardDiretorGeralRouter = require("./src/routes/dashboardDiretorGeral");
+var dashboardDiretorFilialRouter = require("./src/routes/dashboardDiretorFilial");
 var dashboardCoordenadorRouter = require("./src/routes/dashboardCoordenador");
 
 
@@ -46,6 +47,7 @@ app.use("/eventos", eventosRouter);
 app.use("/permissoes", permissoesRouter);
 app.use("/dashboardProfessor", dashboardProfessorRouter);
 app.use("/dashboardDiretorGeral", dashboardDiretorGeralRouter);
+app.use("/dashboardDiretorFilial", dashboardDiretorFilialRouter);
 app.use("/dashboardCoordenador", dashboardCoordenadorRouter);
 
 
