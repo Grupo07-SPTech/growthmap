@@ -396,19 +396,21 @@
           .filter(function (ano) { return Number.isInteger(ano); })
           .sort(function (a, b) { return a - b; });
         tabela.replaceChildren();
+        tabela.style.width = "100%";
+        tabela.style.minWidth = "0";
+        tabela.style.setProperty("--evolution-font-size", anos.length > 8 ? "10px" : anos.length > 5 ? "11px" : "13px");
+        tabela.style.setProperty("--evolution-cell-padding", anos.length > 8 ? "7px 1px" : "10px 3px");
         if (anos.length === 0) {
-          tabela.style.minWidth = "0";
           descricao.textContent = "Não há histórico de desempenho para esta unidade.";
           return;
         }
 
-        tabela.style.minWidth = (145 + anos.length * 58) + "px";
         descricao.textContent = anos.length > 1
           ? "Médias disponíveis de " + anos[0] + " a " + anos[anos.length - 1] + ". A variação compara o primeiro e o último ano."
           : "Média disponível no ENEM " + anos[0] + ". É necessário mais de um ano para calcular a variação.";
         var cabecalho = document.createElement("div");
         cabecalho.className = "evolution-row evolution-head";
-        cabecalho.style.gridTemplateColumns = "94px repeat(" + anos.length + ", minmax(48px, 1fr)) 58px";
+        cabecalho.style.gridTemplateColumns = "100px repeat(" + anos.length + ", minmax(0, 1fr)) 72px";
         cabecalho.appendChild(document.createElement("span"));
         anos.forEach(function (ano) {
           var celula = document.createElement("span");
@@ -423,7 +425,7 @@
         areas.forEach(function (area) {
           var linha = document.createElement("div");
           linha.className = "evolution-row";
-          linha.style.gridTemplateColumns = "94px repeat(" + anos.length + ", minmax(48px, 1fr)) 58px";
+          linha.style.gridTemplateColumns = "100px repeat(" + anos.length + ", minmax(0, 1fr)) 72px";
           var nome = document.createElement("strong");
           nome.textContent = area.nome;
           linha.appendChild(nome);
@@ -642,8 +644,14 @@
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            scales: { y: { beginAtZero: true, max: 700, ticks: { stepSize: 100 } } },
-            plugins: { legend: { display: false } }
+            scales: {
+              x: { ticks: { font: { size: 14 } } },
+              y: { beginAtZero: true, max: 700, ticks: { stepSize: 100, font: { size: 13 } } }
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: { titleFont: { size: 15 }, bodyFont: { size: 14 } }
+            }
           }
         });
       }
@@ -692,7 +700,7 @@
             atualizarEvolucao(historico);
             atualizarLeituraRapida();
             desenharGrafico(desempenho, resultados[1], ano);
-            mostrarStatus("Dados do ENEM " + ano + " carregados.");
+            mostrarStatus("");
           })
           .catch(function (erro) {
             if (requisicaoAtual !== requisicaoDados) return;
