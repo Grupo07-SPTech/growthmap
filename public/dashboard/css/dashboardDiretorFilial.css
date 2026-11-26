@@ -507,6 +507,11 @@
     gap: 4px
 }
 
+.evolution-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
 .evolution-row {
     display: grid;
     grid-template-columns: 94px repeat(3, 1fr) 50px;

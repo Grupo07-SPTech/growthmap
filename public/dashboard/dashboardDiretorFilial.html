@@ -169,22 +169,11 @@
       <article class="chart-card evolution-card">
         <div class="chart-header">
           <h2>Evolução do município por área</h2>
-          <p>Média no ENEM de 2023 a 2025. A última coluna mostra a variação no período.</p>
+          <p id="descricao-evolucao">Médias disponíveis no banco para o município selecionado.</p>
         </div>
 
-        <div class="evolution-table">
-          <div class="evolution-row evolution-head">
-            <span></span><span>2023</span><span>2024</span><span>2025</span><span>Variação</span></div>
-          <div class="evolution-row"><strong>Linguagens</strong><span class="grade g3">522</span><span
-              class="grade g3">527</span><span class="grade g3">531</span><b class="positive">+9</b></div>
-          <div class="evolution-row"><strong>Humanas</strong><span class="grade g4">541</span><span
-              class="grade g4">546</span><span class="grade g4">550</span><b class="positive">+9</b></div>
-          <div class="evolution-row"><strong>Natureza</strong><span class="grade g1">478</span><span
-              class="grade g1">481</span><span class="grade g1">484</span><b class="positive">+6</b></div>
-          <div class="evolution-row"><strong>Matemática</strong><span class="grade g2">498</span><span
-              class="grade g2">492</span><span class="grade g1">487</span><b class="negative">−11</b></div>
-          <div class="evolution-row"><strong>Redação</strong><span class="grade g5">575</span><span
-              class="grade g5">584</span><span class="grade g5">592</span><b class="positive">+17</b></div>
+        <div class="evolution-scroll">
+          <div class="evolution-table" id="evolution-table"></div>
         </div>
 
         <div class="grade-legend"><span><i class="g1"></i>até 490</span><span><i class="g2"></i>491 a 520</span><span><i
@@ -194,13 +183,12 @@
 
       <article class="chart-card quick-read-card">
         <div class="chart-header">
-          <h2>Leitura rápida: Matemática</h2>
+          <h2 id="leitura-titulo">Leitura rápida</h2>
           <p>Resumo do principal ponto de atenção para a coordenação.</p>
         </div>
-        <div class="quick-stat"><strong>-41</strong><span>pontos abaixo do estado, com queda de 11 pontos desde
-            2023</span></div>
-        <div class="quick-stat"><strong>0</strong><span>professores cadastrados na área nesta unidade</span></div>
-        <div class="quick-stat"><strong>1/12</strong><span>eventos do período agendados na área</span></div>
+        <div class="quick-stat"><strong id="leitura-diferenca">—</strong><span id="leitura-resumo-diferenca">Carregando desempenho.</span></div>
+        <div class="quick-stat"><strong id="leitura-professores">—</strong><span id="leitura-resumo-professores">Carregando professores.</span></div>
+        <div class="quick-stat"><strong id="leitura-eventos">—</strong><span id="leitura-resumo-eventos">Carregando eventos.</span></div>
         <div class="decision-note"><i class="fi fi-rr-shield-check"></i>
           <p>A plataforma mostra a evidência. A decisão de priorizar continua com a coordenação.</p>
         </div>
@@ -226,6 +214,7 @@
       var requisicaoPedagogica = 0;
       var requisicaoProfessores = 0;
       var desempenhoAtual = null;
+      var historicoAtual = [];
       var professoresAtuais = [];
       var eventosAtuais = [];
       var anoPlanejamento = new Date().getFullYear();
@@ -382,6 +371,118 @@
         atualizarTabelaEsforco();
       }
 
+      function atualizarEvolucao(historico) {
+        var tabela = document.getElementById("evolution-table");
+        var descricao = document.getElementById("descricao-evolucao");
+        var anos = Array.from(new Set(historico.map(function (registro) { return Number(registro.ano); })))
+          .filter(function (ano) { return Number.isInteger(ano); })
+          .sort(function (a, b) { return a - b; });
+        tabela.replaceChildren();
+        if (anos.length === 0) {
+          tabela.style.minWidth = "0";
+          descricao.textContent = "Não há histórico de desempenho para esta unidade.";
+          return;
+        }
+
+        tabela.style.minWidth = (145 + anos.length * 58) + "px";
+        descricao.textContent = anos.length > 1
+          ? "Médias disponíveis de " + anos[0] + " a " + anos[anos.length - 1] + ". A variação compara o primeiro e o último ano."
+          : "Média disponível no ENEM " + anos[0] + ". É necessário mais de um ano para calcular a variação.";
+        var cabecalho = document.createElement("div");
+        cabecalho.className = "evolution-row evolution-head";
+        cabecalho.style.gridTemplateColumns = "94px repeat(" + anos.length + ", minmax(48px, 1fr)) 58px";
+        cabecalho.appendChild(document.createElement("span"));
+        anos.forEach(function (ano) {
+          var celula = document.createElement("span");
+          celula.textContent = ano;
+          cabecalho.appendChild(celula);
+        });
+        var tituloVariacao = document.createElement("span");
+        tituloVariacao.textContent = "Variação";
+        cabecalho.appendChild(tituloVariacao);
+        tabela.appendChild(cabecalho);
+
+        areas.forEach(function (area) {
+          var linha = document.createElement("div");
+          linha.className = "evolution-row";
+          linha.style.gridTemplateColumns = "94px repeat(" + anos.length + ", minmax(48px, 1fr)) 58px";
+          var nome = document.createElement("strong");
+          nome.textContent = area.nome;
+          linha.appendChild(nome);
+          var notas = anos.map(function (ano) {
+            var registro = historico.find(function (item) { return Number(item.ano) === ano; });
+            return registro ? numero(registro[area.municipio]) : null;
+          });
+          notas.forEach(function (nota) {
+            var celula = document.createElement("span");
+            celula.className = "grade";
+            celula.textContent = nota === null ? "—" : formatarNumero(nota, 1);
+            if (nota !== null) {
+              celula.classList.add(nota <= 490 ? "g1" : nota <= 520 ? "g2" : nota <= 550 ? "g3" : nota <= 580 ? "g4" : "g5");
+            }
+            linha.appendChild(celula);
+          });
+          var variacao = document.createElement("b");
+          if (anos.length > 1 && notas[0] !== null && notas[notas.length - 1] !== null) {
+            var diferenca = notas[notas.length - 1] - notas[0];
+            variacao.textContent = formatarPontos(diferenca);
+            variacao.className = diferenca >= 0 ? "positive" : "negative";
+          } else {
+            variacao.textContent = "—";
+          }
+          linha.appendChild(variacao);
+          tabela.appendChild(linha);
+        });
+      }
+
+      function atualizarLeituraRapida() {
+        var titulo = document.getElementById("leitura-titulo");
+        var fracas = areasMaisFracas();
+        if (!desempenhoAtual || !fracas.length) {
+          titulo.textContent = "Leitura rápida";
+          document.getElementById("leitura-diferenca").textContent = "—";
+          document.getElementById("leitura-resumo-diferenca").textContent = desempenhoAtual
+            ? "Nenhuma área objetiva está abaixo da média estadual."
+            : "Aguardando desempenho do município.";
+          document.getElementById("leitura-professores").textContent = "—";
+          document.getElementById("leitura-resumo-professores").textContent = "Sem área de maior defasagem no ano selecionado.";
+          document.getElementById("leitura-eventos").textContent = "—";
+          document.getElementById("leitura-resumo-eventos").textContent = "Sem área prioritária para comparar eventos.";
+          return;
+        }
+
+        var areaPrincipal = fracas[0];
+        var diferenca = numero(desempenhoAtual[areaPrincipal.municipio]) - numero(desempenhoAtual[areaPrincipal.estado]);
+        titulo.textContent = "Leitura rápida: " + fracas.map(function (area) { return area.nome; }).join(", ");
+        document.getElementById("leitura-diferenca").textContent = formatarPontos(diferenca);
+        var historicoOrdenado = historicoAtual.slice().sort(function (a, b) { return Number(a.ano) - Number(b.ano); });
+        var primeiraNota = historicoOrdenado.length ? numero(historicoOrdenado[0][areaPrincipal.municipio]) : null;
+        var ultimaNota = historicoOrdenado.length ? numero(historicoOrdenado[historicoOrdenado.length - 1][areaPrincipal.municipio]) : null;
+        var resumoDiferenca = areaPrincipal.nome + " em relação ao estado.";
+        if (primeiraNota !== null && ultimaNota !== null && historicoOrdenado.length > 1) {
+          resumoDiferenca += " Variação municipal de " + formatarPontos(ultimaNota - primeiraNota) + " pts entre " +
+            historicoOrdenado[0].ano + " e " + historicoOrdenado[historicoOrdenado.length - 1].ano + ".";
+        }
+        document.getElementById("leitura-resumo-diferenca").textContent = resumoDiferenca;
+
+        var professores = criarContagemAreas();
+        professoresAtuais.forEach(function (registro) {
+          var chave = mapearArea(registro.area_atuacao);
+          if (chave) professores[chave] += Number(registro.quantidade) || 0;
+        });
+        var totalProfessores = fracas.reduce(function (soma, area) { return soma + professores[area.chave]; }, 0);
+        document.getElementById("leitura-professores").textContent = totalProfessores;
+        document.getElementById("leitura-resumo-professores").textContent = "professores nas áreas de maior defasagem.";
+
+        var eventosPrioritarios = eventosAtuais.filter(function (evento) {
+          var chave = mapearArea(evento.area);
+          return fracas.some(function (area) { return area.chave === chave; });
+        }).length;
+        document.getElementById("leitura-eventos").textContent = eventosPrioritarios + "/" + eventosAtuais.length;
+        document.getElementById("leitura-resumo-eventos").textContent = "eventos nas áreas prioritárias no " +
+          Number(seletorSemestre.value) + "º semestre de " + anoPlanejamento + ".";
+      }
+
       function carregarProfessores(idUnidade) {
         var requisicaoAtual = ++requisicaoProfessores;
         var url = "/dashboardDiretorFilial/professores/" + encodeURIComponent(idEmpresa) + "/" + encodeURIComponent(idUnidade);
@@ -392,11 +493,13 @@
           if (requisicaoAtual !== requisicaoProfessores) return;
           professoresAtuais = registros;
           atualizarCobertura();
+          atualizarLeituraRapida();
         }).catch(function (erro) {
           if (requisicaoAtual !== requisicaoProfessores) return;
           console.error("Erro ao carregar professores da unidade:", erro);
           professoresAtuais = [];
           atualizarCobertura();
+          atualizarLeituraRapida();
           document.getElementById("kpi-cobertura-descricao").textContent = erro.message;
         });
       }
@@ -407,6 +510,7 @@
         var requisicaoAtual = ++requisicaoPedagogica;
         eventosAtuais = [];
         atualizarAderencia();
+        atualizarLeituraRapida();
         var semestre = Number(seletorSemestre.value);
         var url = "/dashboardDiretorFilial/eventos/" + encodeURIComponent(idEmpresa) + "/" + encodeURIComponent(idUnidade) +
           "?ano=" + anoPlanejamento + "&semestre=" + semestre;
@@ -417,17 +521,20 @@
           if (requisicaoAtual !== requisicaoPedagogica) return;
           eventosAtuais = registros;
           atualizarAderencia();
+          atualizarLeituraRapida();
         }).catch(function (erro) {
           if (requisicaoAtual !== requisicaoPedagogica) return;
           console.error("Erro ao carregar eventos da unidade:", erro);
           eventosAtuais = [];
           atualizarAderencia();
+          atualizarLeituraRapida();
           document.getElementById("kpi-aderencia-descricao").textContent = erro.message;
         });
       }
 
       function limparDados() {
         desempenhoAtual = null;
+        historicoAtual = [];
         document.getElementById("kpi-diferenca").textContent = "—";
         document.getElementById("kpi-diferenca-descricao").textContent = "Sem dados comparáveis para o ano selecionado.";
         document.getElementById("kpi-participantes").textContent = "—";
@@ -436,8 +543,10 @@
           graficoAreas.destroy();
           graficoAreas = null;
         }
+        atualizarEvolucao([]);
         atualizarCobertura();
         atualizarAderencia();
+        atualizarLeituraRapida();
       }
 
       function atualizarIndicadores(desempenho, historico, ano) {
@@ -531,9 +640,12 @@
               return;
             }
             desempenhoAtual = desempenho;
+            historicoAtual = historico;
             atualizarIndicadores(desempenho, historico, ano);
             atualizarCobertura();
             atualizarAderencia();
+            atualizarEvolucao(historico);
+            atualizarLeituraRapida();
             desenharGrafico(desempenho, resultados[1], ano);
             mostrarStatus("Dados do ENEM " + ano + " carregados.");
           })
