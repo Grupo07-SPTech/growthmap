@@ -205,57 +205,51 @@
     'use strict';
 
     /* ── Constantes ──────────────────────────────────────────────── */
-    var COR      = '#7a1f3d';
-    var COR_VERDE= '#2b9348';
-    var MESES    = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-    var ANO_ATUAL= new Date().getFullYear();
+    var COR   = '#7a1f3d';
+    var MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    var ANO_ATUAL = new Date().getFullYear();
 
     /* ── Estado em memória ───────────────────────────────────────── */
-    var dadosHistorico   = [];
-    var metaAtual        = 10;     /* definida pelo coordenador — persiste no localStorage */
-    var registrosAtuais  = 0;
-    var unidadeAtual     = null;   /* objeto completo da unidade */
-    var todasUnidades    = [];     /* lista para o modal */
+    var dadosHistorico  = [];
+    var metaAtual       = 10;
+    var registrosAtuais = 0;
+    var unidadeAtual    = null;
+    var todasUnidades   = [];
+    var professoresCache= [];
 
-    /* Carrega/salva meta no localStorage por unidade */
-    function chaveMetaLocal(idUnidade) { return 'meta_coordenador_' + idUnidade; }
-    function carregarMetaLocal(idUnidade) {
-        var v = localStorage.getItem(chaveMetaLocal(idUnidade));
+    /* ── Meta persiste no localStorage por unidade ───────────────── */
+    function chaveMetaLocal(id) { return 'meta_coordenador_' + id; }
+    function carregarMetaLocal(id) {
+        var v = localStorage.getItem(chaveMetaLocal(id));
         return v ? parseInt(v, 10) : 10;
     }
-    function salvarMetaLocal(idUnidade, valor) {
-        localStorage.setItem(chaveMetaLocal(idUnidade), String(valor));
+    function salvarMetaLocal(id, valor) {
+        localStorage.setItem(chaveMetaLocal(id), String(valor));
     }
 
     /* ── Helpers ─────────────────────────────────────────────────── */
     function $(id) { return document.getElementById(id); }
     function setText(id, v) { var el = $(id); if (el) el.textContent = v; }
-    function abrirModal(id) { var el = $(id); if (el) el.classList.add('aberto'); }
-    function fecharModal(id){ var el = $(id); if (el) el.classList.remove('aberto'); }
-
+    function abrirModal(id)  { var el = $(id); if (el) el.classList.add('aberto'); }
+    function fecharModal(id) { var el = $(id); if (el) el.classList.remove('aberto'); }
     function formatPts(v) {
         return Number.isFinite(Number(v)) ? Number(v).toFixed(0) + ' pts' : '—';
     }
-
-    /* Tempo relativo simples (ex.: "há 2h", "3 dias") */
     function tempoRelativo(dataStr) {
         var diff = Date.now() - new Date(dataStr).getTime();
         var min  = Math.floor(diff / 60000);
-        if (min < 60)   return 'há ' + min + ' min';
-        var h    = Math.floor(min / 60);
-        if (h   < 24)   return 'há ' + h + 'h';
-        var d    = Math.floor(h  / 24);
+        if (min < 60)  return 'há ' + min + ' min';
+        var h = Math.floor(min / 60);
+        if (h < 24)    return 'há ' + h + 'h';
+        var d = Math.floor(h / 24);
         return d + ' dia' + (d > 1 ? 's' : '');
     }
 
-    /* ── Gráfico 1: Evolução das médias (ApexCharts linha) ───────── */
+    /* ── Gráfico 1: Evolução das médias (linha) ──────────────────── */
     var chartEvolucao = new ApexCharts($('chart'), {
         series: [{ name: 'C.Natureza', data: [] }],
-        chart: {
-            height: 260, type: 'line',
-            zoom: { enabled: false }, toolbar: { show: false },
-            fontFamily: 'Poppins, sans-serif',
-        },
+        chart: { height: 260, type: 'line', zoom: { enabled: false },
+                 toolbar: { show: false }, fontFamily: 'Poppins, sans-serif' },
         colors: [COR],
         stroke: { curve: 'smooth', width: 3 },
         markers: { size: 5, strokeWidth: 0 },
@@ -268,7 +262,6 @@
     });
     chartEvolucao.render();
 
-    /* Troca de competência nos botões */
     document.querySelectorAll('.evolucao_medias_button').forEach(function (btn) {
         btn.addEventListener('click', function () {
             document.querySelectorAll('.evolucao_medias_button')
@@ -284,18 +277,15 @@
             return r[campo] == null ? null : Number(r[campo]);
         });
         chartEvolucao.updateOptions({
-            series:  [{ name: nome, data: valores }],
-            xaxis:   { categories: anos },
+            series: [{ name: nome, data: valores }],
+            xaxis:  { categories: anos },
         });
     }
 
-    /* ── Gráfico 2: Eventos por Mês (ApexCharts linha) ───────────── */
+    /* ── Gráfico 2: Eventos por Mês (linha) ──────────────────────── */
     var chartEventos = new ApexCharts($('chartA'), {
-        chart: {
-            type: 'line', height: 300,
-            zoom: { enabled: false }, toolbar: { show: false },
-            fontFamily: 'Poppins, sans-serif',
-        },
+        chart: { type: 'line', height: 300, zoom: { enabled: false },
+                 toolbar: { show: false }, fontFamily: 'Poppins, sans-serif' },
         series: [{ name: 'Registros', data: new Array(12).fill(0) }],
         colors: [COR],
         stroke: { curve: 'smooth', width: 3 },
@@ -309,29 +299,20 @@
     });
     chartEventos.render();
 
-    /* ── Gráfico 3: Registros por Professor (ApexCharts barras) ──── */
+    /* ── Gráfico 3: Registros por Professor (barras) ─────────────── */
     var chartProfessores = new ApexCharts($('chartProfessores'), {
-        chart: {
-            type: 'bar', height: 300,
-            toolbar: { show: false }, fontFamily: 'Poppins, sans-serif',
-        },
-        plotOptions: {
-            bar: { horizontal: false, columnWidth: '55%', borderRadius: 6, distributed: true },
-        },
+        chart: { type: 'bar', height: 300, toolbar: { show: false },
+                 fontFamily: 'Poppins, sans-serif' },
+        plotOptions: { bar: { horizontal: false, columnWidth: '55%',
+                              borderRadius: 6, distributed: true } },
         colors: ['#7a1f3d','#a84060','#c86882','#d9a0b0','#e8c4cf'],
-        dataLabels: {
-            enabled: true,
-            formatter: function (val) { return val; },
-            style: { fontSize: '12px', colors: ['#333'] },
-            offsetY: -6,
-        },
+        dataLabels: { enabled: true, style: { fontSize: '12px', colors: ['#333'] }, offsetY: -6 },
         series: [{ name: 'Registros', data: [] }],
         xaxis: { categories: [] },
         yaxis: { title: { text: 'Nº de registros' }, min: 0, forceNiceScale: true },
         grid: { borderColor: '#f1f1f1' },
         legend: { show: false },
         tooltip: {
-            /* Mostra a área de atuação no tooltip */
             custom: function (opts) {
                 var idx  = opts.dataPointIndex;
                 var val  = opts.series[0][idx];
@@ -339,28 +320,20 @@
                 return '<div style="padding:8px 12px;font-family:Poppins,sans-serif;font-size:12px;">'
                      + '<strong>' + (prof.nome || '') + '</strong><br>'
                      + 'Área: ' + (prof.area_atuacao || '—') + '<br>'
-                     + 'Registros: <strong>' + val + '</strong>'
-                     + '</div>';
+                     + 'Registros: <strong>' + val + '</strong></div>';
             },
         },
         noData: { text: 'Nenhum professor encontrado para esta unidade.' },
     });
     chartProfessores.render();
 
-    /* cache dos professores para o tooltip */
-    var professoresCache = [];
-
     /* ── KPI 1: Área mais fraca ──────────────────────────────────── */
     function renderizarAreaFraca(areaFraca) {
         if (!areaFraca) {
-            setText('kpi-area-fraca',     '—');
-            setText('kpi-nota-municipio', '—');
-            setText('kpi-nota-estado',    '—');
-            setText('kpi-diff-area',      'Sem dados de desempenho regional.');
+            setText('kpi-area-fraca', '—'); setText('kpi-nota-municipio', '—');
+            setText('kpi-nota-estado', '—'); setText('kpi-diff-area', 'Sem dados de desempenho regional.');
             return;
         }
-
-        /* campos do schema */
         var mapa = {
             media_cn:      { nome: 'C.Natureza', est: 'estado_cn'       },
             media_ch:      { nome: 'C.Humanas',  est: 'estado_ch'       },
@@ -368,28 +341,18 @@
             media_mt:      { nome: 'Matemática', est: 'estado_mt'       },
             media_redacao: { nome: 'Redação',    est: 'estado_redacao'  },
         };
-
-        /* encontra a menor média do município */
         var fraca = null;
         Object.keys(mapa).forEach(function (campo) {
             var val = Number(areaFraca[campo]);
             if (!Number.isFinite(val)) return;
             if (!fraca || val < fraca.val) {
-                fraca = {
-                    nome: mapa[campo].nome,
-                    val:  val,
-                    est:  Number(areaFraca[mapa[campo].est]),
-                };
+                fraca = { nome: mapa[campo].nome, val: val,
+                          est: Number(areaFraca[mapa[campo].est]) };
             }
         });
-
-        if (!fraca) {
-            setText('kpi-area-fraca', 'Sem dados');
-            return;
-        }
+        if (!fraca) { setText('kpi-area-fraca', 'Sem dados'); return; }
 
         var diff = Number.isFinite(fraca.est) ? fraca.val - fraca.est : null;
-
         setText('kpi-area-fraca',     fraca.nome);
         setText('kpi-nota-municipio', formatPts(fraca.val));
         setText('kpi-nota-estado',    Number.isFinite(fraca.est) ? formatPts(fraca.est) : '—');
@@ -399,8 +362,6 @@
             elDiff.textContent = (diff >= 0 ? '+' : '') + diff.toFixed(0) + ' pts em relação ao estado';
             elDiff.className   = 'kpi-diff ' + (diff >= 0 ? 'kpi-positivo' : 'kpi-negativo');
         }
-
-        /* destaca a nota do município */
         var elMun = $('kpi-nota-municipio');
         if (elMun && diff !== null) {
             elMun.className = 'kpi-comp-valor ' + (diff >= 0 ? 'kpi-positivo' : 'kpi-negativo');
@@ -408,29 +369,23 @@
     }
 
     /* ── KPI 2: Variação da média geral ─────────────────────────── */
-    function renderizarVariacaoMedia(variacaoRows) {
-        if (!variacaoRows || variacaoRows.length === 0) {
-            setText('kpi-media-anterior', '—');
-            setText('kpi-media-atual',    '—');
-            setText('kpi-variacao',       'Sem dados para 2024/2025.');
-            return;
+    function renderizarVariacaoMedia(rows) {
+        if (!rows || !rows.length) {
+            setText('kpi-media-anterior', '—'); setText('kpi-media-atual', '—');
+            setText('kpi-variacao', 'Sem dados para 2024/2025.'); return;
         }
-
-        /* pode vir 1 ou 2 linhas */
-        var linha2024 = variacaoRows.find(function (r) { return Number(r.ano) === 2024; });
-        var linha2025 = variacaoRows.find(function (r) { return Number(r.ano) === 2025; });
-
+        var l2024 = rows.find(function (r) { return Number(r.ano) === 2024; });
+        var l2025 = rows.find(function (r) { return Number(r.ano) === 2025; });
         setText('kpi-ano-anterior-label', '2024');
         setText('kpi-ano-atual-label',    '2025');
-        setText('kpi-media-anterior', linha2024 ? formatPts(linha2024.media_geral) : '—');
-        setText('kpi-media-atual',    linha2025 ? formatPts(linha2025.media_geral) : '—');
-
-        if (linha2024 && linha2025) {
-            var variacao = Number(linha2025.media_geral) - Number(linha2024.media_geral);
-            var elVar    = $('kpi-variacao');
-            if (elVar) {
-                elVar.textContent = (variacao >= 0 ? '+' : '') + variacao.toFixed(0) + ' pts em relação ao ano anterior';
-                elVar.className   = 'kpi-diff ' + (variacao >= 0 ? 'kpi-positivo' : 'kpi-negativo');
+        setText('kpi-media-anterior', l2024 ? formatPts(l2024.media_geral) : '—');
+        setText('kpi-media-atual',    l2025 ? formatPts(l2025.media_geral) : '—');
+        if (l2024 && l2025) {
+            var v   = Number(l2025.media_geral) - Number(l2024.media_geral);
+            var elV = $('kpi-variacao');
+            if (elV) {
+                elV.textContent = (v >= 0 ? '+' : '') + v.toFixed(0) + ' pts em relação ao ano anterior';
+                elV.className   = 'kpi-diff ' + (v >= 0 ? 'kpi-positivo' : 'kpi-negativo');
             }
         }
     }
@@ -439,49 +394,37 @@
     function renderizarMeta() {
         var pct    = metaAtual > 0 ? Math.min(Math.round((registrosAtuais / metaAtual) * 100), 100) : 0;
         var faltam = Math.max(metaAtual - registrosAtuais, 0);
-
         setText('meta-valor',          metaAtual);
         setText('kpi-registros-atual', registrosAtuais);
         setText('meta-pct',            pct + '% da meta');
-        setText('meta-faltam',         faltam > 0
-            ? 'Faltam ' + faltam + ' registros para a meta'
-            : 'Meta atingida! 🎉');
-
+        setText('meta-faltam', faltam > 0 ? 'Faltam ' + faltam + ' registros para a meta' : 'Meta atingida! 🎉');
         var barra = $('meta-barra');
         if (barra) barra.style.width = pct + '%';
     }
 
     /* ── Painel: Atividade Recente ───────────────────────────────── */
-    var iconePorTipo = {
-        'aula':       'fi-rr-book-alt',
-        'simulado':   'fi-rr-document',
-        'revisao':    'fi-rr-refresh',
-        'avaliacao':  'fi-rr-star',
-    };
+    var iconePorTipo = { 'aula': 'fi-rr-book-alt', 'simulado': 'fi-rr-document',
+                         'revisao': 'fi-rr-refresh', 'avaliacao': 'fi-rr-star' };
 
     function renderizarAtividade(atividades) {
         var lista = $('lista-atividade');
         if (!lista) return;
-
         if (!atividades || !atividades.length) {
             lista.innerHTML = '<p style="color:#aaa;font-size:13px;padding:8px 0;">Nenhuma atividade registrada.</p>';
             return;
         }
-
         lista.innerHTML = atividades.map(function (a) {
             var icone = iconePorTipo[(a.tipo || '').toLowerCase()] || 'fi-rr-chart-line-up';
             var tempo = a.data ? tempoRelativo(a.data) : '—';
             var area  = a.area || a.area_atuacao || '—';
-            return [
-                '<div class="atividade-item">',
-                '  <div class="atividade-icone"><i class="fi ' + icone + '"></i></div>',
-                '  <div class="atividade-texto">',
-                '    <span class="atividade-titulo">' + (a.nome_evento || a.tipo || 'Registro') + '</span>',
-                '    <span class="atividade-sub">' + (a.nome_professor || '—') + ' · ' + area + '</span>',
-                '  </div>',
-                '  <span class="atividade-tempo">' + tempo + '</span>',
-                '</div>',
-            ].join('');
+            return '<div class="atividade-item">'
+                 + '  <div class="atividade-icone"><i class="fi ' + icone + '"></i></div>'
+                 + '  <div class="atividade-texto">'
+                 + '    <span class="atividade-titulo">' + (a.nome_evento || a.tipo || 'Registro') + '</span>'
+                 + '    <span class="atividade-sub">' + (a.nome_professor || '—') + ' · ' + area + '</span>'
+                 + '  </div>'
+                 + '  <span class="atividade-tempo">' + tempo + '</span>'
+                 + '</div>';
         }).join('');
     }
 
@@ -491,8 +434,8 @@
         if (!select) return;
         select.innerHTML = '';
         (unidades || []).forEach(function (u) {
-            var opt       = document.createElement('option');
-            opt.value     = u.id;
+            var opt = document.createElement('option');
+            opt.value = u.id;
             opt.textContent = u.nome + ' — ' + u.nome_municipio + '/' + u.uf;
             select.appendChild(opt);
         });
@@ -503,19 +446,16 @@
         preencherSelectUnidades(todasUnidades, unidadeAtual ? unidadeAtual.id : null);
         abrirModal('modal-unidade-overlay');
     });
-
     $('btn-cancelar-unidade') && $('btn-cancelar-unidade').addEventListener('click', function () {
         fecharModal('modal-unidade-overlay');
     });
-
     $('btn-confirmar-unidade') && $('btn-confirmar-unidade').addEventListener('click', function () {
-        var select    = $('select-unidade');
-        var idEscolha = select ? Number(select.value) : 0;
-        if (!idEscolha) return;
+        var select = $('select-unidade');
+        var id = select ? Number(select.value) : 0;
+        if (!id) return;
         fecharModal('modal-unidade-overlay');
-        carregarDashboard(idEscolha);
+        carregarDashboard(id);
     });
-
     $('modal-unidade-overlay') && $('modal-unidade-overlay').addEventListener('click', function (e) {
         if (e.target === this) fecharModal('modal-unidade-overlay');
     });
@@ -543,8 +483,7 @@
 
     /* ── Carregamento da API ──────────────────────────────────────── */
     async function carregarDashboard(idUnidadeSelecionada) {
-        var idUnidade = idUnidadeSelecionada
-            || Number(sessionStorage.getItem('ID_UNIDADE'));
+        var idUnidade = idUnidadeSelecionada || Number(sessionStorage.getItem('ID_UNIDADE'));
         var idUsuario = Number(sessionStorage.getItem('ID_USUARIO'));
 
         if (!idUnidade || !idUsuario) {
@@ -553,7 +492,6 @@
         }
 
         try {
-            /* 1 — Dados completos da dashboard para a unidade */
             var res = await fetch('/dashboardCoordenador/dados/' + idUnidade);
             if (!res.ok) {
                 var err = await res.json().catch(function () { return {}; });
@@ -561,14 +499,14 @@
             }
             var d = await res.json();
 
-            /* Guarda unidade atual e atualiza badge */
+            /* badge de unidade */
             unidadeAtual = d.unidade || null;
             if (unidadeAtual) {
                 setText('badge-unidade',
                     unidadeAtual.nome + ' — ' + unidadeAtual.nome_municipio + '/' + unidadeAtual.uf);
             }
 
-            /* 2 — Carrega lista de unidades da empresa (para o modal) */
+            /* lista de unidades para o modal */
             if (unidadeAtual && unidadeAtual.id_empresa && !todasUnidades.length) {
                 var resUn = await fetch('/dashboardCoordenador/unidades/' + unidadeAtual.id_empresa);
                 if (resUn.ok) todasUnidades = await resUn.json();
@@ -585,7 +523,7 @@
             metaAtual       = carregarMetaLocal(idUnidade);
             renderizarMeta();
 
-            /* Gráfico 1 — evolução das médias */
+            /* Gráfico 1 */
             dadosHistorico = d.historico || [];
             var btnAtivo   = document.querySelector('.evolucao_medias_button.ativo');
             renderizarEvolucao(
@@ -593,18 +531,16 @@
                 btnAtivo ? btnAtivo.dataset.nome  : 'C.Natureza'
             );
 
-            /* Gráfico 2 — eventos por mês */
+            /* Gráfico 2 */
             setText('label-ano-eventos', String(ANO_ATUAL));
             var eventosMes = new Array(12).fill(0);
             (d.eventosPorMes || []).forEach(function (item) {
                 var idx = Number(item.mes) - 1;
                 if (idx >= 0 && idx < 12) eventosMes[idx] = Number(item.registros) || 0;
             });
-            chartEventos.updateOptions({
-                series: [{ name: 'Registros', data: eventosMes }],
-            });
+            chartEventos.updateOptions({ series: [{ name: 'Registros', data: eventosMes }] });
 
-            /* Gráfico 3 — professores */
+            /* Gráfico 3 */
             var profs = d.professores || [];
             professoresCache = profs;
             chartProfessores.updateOptions({
@@ -612,7 +548,7 @@
                 xaxis:  { categories: profs.map(function (p) { return p.nome; }) },
             });
 
-            /* Painel atividade recente */
+            /* Atividade recente */
             renderizarAtividade(d.atividadeRecente);
 
         } catch (erro) {

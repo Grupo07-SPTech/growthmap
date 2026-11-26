@@ -1,25 +1,20 @@
 var express = require("express");
-var router = express.Router();
+var router  = express.Router();
+var ctrl    = require("../controllers/dashboardCoordenadorController");
 
-var dashboardCoordenadorController = require("../controllers/dashboardCoordenadorController");
-
-/* Lista municípios por UF — usado no filtro da dashboard */
-router.get("/municipios/:uf", function (req, res) {
-    dashboardCoordenadorController.listarMunicipios(req, res);
+/* Dados básicos da unidade (resolve co_municipio e id_empresa) */
+router.get("/unidade/:idUnidade", function (req, res) {
+    ctrl.buscarUnidade(req, res);
 });
 
-/*
- * Retorna histórico de desempenho do município + progresso
- * do planejamento (gráficos e KPIs da dashboard).
- * Query params opcionais: idUnidade, idUsuario, ano, semestre
- */
-router.get("/dados/:coMunicipio", function (req, res) {
-    dashboardCoordenadorController.obterDadosDashboard(req, res);
+/* Lista de unidades da empresa — popula o modal de seleção */
+router.get("/unidades/:idEmpresa", function (req, res) {
+    ctrl.listarUnidades(req, res);
 });
 
-/* Professores da unidade com contagem de registros */
-router.get("/professores/:idUnidade", function (req, res) {
-    dashboardCoordenadorController.listarProfessores(req, res);
+/* Payload completo da dashboard — query param opcional: ?ano=<ano> */
+router.get("/dados/:idUnidade", function (req, res) {
+    ctrl.obterDadosDashboard(req, res);
 });
 
 module.exports = router;
