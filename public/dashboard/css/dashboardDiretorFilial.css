@@ -1,6 +1,7 @@
 .diretor-dashboard {
-    max-width: 1560px;
-    margin-right: auto;
+    max-width: none;
+    margin-right: 0;
+    padding-right: 32px;
 }
 
 .dash-header {
@@ -25,11 +26,11 @@
 .eyebrow {
     display: block;
     color: #7a1f3d;
-    font-size: 10px;
+    font-size: 14px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .8px;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
 }
 
 .back-link {
@@ -37,7 +38,7 @@
     align-items: center;
     gap: 5px;
     color: #777;
-    font-size: 9px;
+    font-size: 14px;
     font-weight: 600;
     margin-bottom: 5px;
 }
@@ -48,13 +49,13 @@
 
 .dash-title h1 {
     color: #7a1f3d;
-    font-size: 24px;
+    font-size: 32px;
     line-height: 1.2;
 }
 
 .dash-title p {
     color: #666;
-    font-size: 12px;
+    font-size: 16px;
     margin-top: 5px;
     max-width: 720px;
 }
@@ -62,7 +63,7 @@
 .dash-controls {
     display: flex;
     align-items: flex-end;
-    gap: 12px;
+    gap: 14px;
     flex-wrap: wrap;
 }
 
@@ -77,7 +78,7 @@
 .view-button {
     padding: 8px 13px;
     border-radius: 9px;
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 600;
     color: #555;
     transition: .2s ease;
@@ -100,7 +101,7 @@
 }
 
 .filter-group label {
-    font-size: 9px;
+    font-size: 13px;
     font-weight: 700;
     color: #666;
     text-transform: uppercase;
@@ -108,18 +109,29 @@
 }
 
 .filter-group select {
-    min-width: 110px;
-    padding: 8px 28px 8px 11px;
+    min-width: 112px;
+    padding: 8px 30px 8px 11px;
     border: 1px solid #ccc;
     border-radius: 8px;
     background: #f9f9f9;
     color: #333;
-    font: 500 11px "Poppins", sans-serif;
+    font: 500 15px "Poppins", sans-serif;
     outline: none
 }
 
 .filter-group select:focus {
     border-color: #7a1f3d
+}
+
+.filter-status {
+    max-width: 180px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.filter-status.erro {
+    color: #a83434;
 }
 
 .info-banner {
@@ -131,11 +143,11 @@
     border-radius: 10px;
     background: rgba(122, 31, 61, .07);
     color: #6e3549;
-    font-size: 11px;
+    font-size: 15px;
 }
 
 .info-banner i {
-    font-size: 15px
+    font-size: 19px
 }
 
 .kpi-grid {
@@ -147,7 +159,7 @@
 
 .kpi-card {
     background: #fff;
-    min-height: 160px;
+    min-height: 148px;
     padding: 20px 21px;
     border-radius: 16px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, .04);
@@ -166,14 +178,14 @@
 }
 
 .kpi-title {
-    font-size: 10px;
+    font-size: 14px;
     font-weight: 700;
     color: #666;
     letter-spacing: .45px
 }
 
 .kpi-value {
-    font-size: 25px;
+    font-size: 34px;
     line-height: 1.15;
     color: #1a1a1a
 }
@@ -184,7 +196,7 @@
 }
 
 .kpi-footer {
-    font-size: 10.5px;
+    font-size: 15px;
     line-height: 1.45;
     color: #555
 }
@@ -201,7 +213,7 @@
     color: #666;
     padding: 3px 6px;
     border-radius: 5px;
-    font-size: 8px;
+    font-size: 11px;
     font-weight: 600
 }
 
@@ -234,13 +246,13 @@
 }
 
 .chart-header h2 {
-    font-size: 15px;
+    font-size: 19px;
     color: #1a1a1a;
     font-weight: 700
 }
 
 .chart-header p {
-    font-size: 10.5px;
+    font-size: 14.5px;
     color: #777;
     margin-top: 3px;
     line-height: 1.45
@@ -356,7 +368,7 @@
     flex-wrap: wrap;
     margin-top: 16px;
     color: #666;
-    font-size: 9px
+    font-size: 14px
 }
 
 .legend span {
@@ -383,6 +395,39 @@
     background: #2f71aa
 }
 
+.director-chart-container {
+    position: relative;
+    width: 100%;
+    height: 315px;
+    min-height: 250px;
+}
+
+.director-chart-container canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.director-chart-container canvas[hidden] {
+    display: none !important;
+}
+
+.chart-empty-state {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    color: #777;
+    font-size: 14px;
+    text-align: center;
+}
+
+.chart-empty-state[hidden] {
+    display: none !important;
+}
+
 .effort-table {
     display: flex;
     flex-direction: column;
@@ -398,7 +443,7 @@
 }
 
 .effort-head {
-    font-size: 8px;
+    font-size: 14px;
     color: #777;
     padding: 0 8px 5px
 }
@@ -413,7 +458,7 @@
 }
 
 .effort-row>strong {
-    font-size: 9.5px
+    font-size: 14px
 }
 
 .need,
@@ -453,7 +498,7 @@
 
 .need b,
 .events b {
-    font-size: 9px;
+    font-size: 13px;
     text-align: right;
     color: #555
 }
@@ -468,44 +513,57 @@
     align-items: flex-start;
     margin-top: 15px;
     color: #777;
-    font-size: 8.5px;
+    font-size: 13px;
     line-height: 1.45
 }
 
 .chart-note i {
     color: #b54708;
-    font-size: 12px
+    font-size: 16px
 }
 
 .evolution-table {
     display: flex;
     flex-direction: column;
-    gap: 4px
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+}
+
+.evolution-scroll {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .evolution-row {
     display: grid;
-    grid-template-columns: 94px repeat(3, 1fr) 50px;
+    grid-template-columns: 100px repeat(3, minmax(0, 1fr)) 72px;
     gap: 4px;
-    align-items: center
+    align-items: center;
+    width: 100%;
+    min-width: 0;
 }
 
 .evolution-row>strong {
-    font-size: 9px
+    font-size: 13px
 }
 
 .evolution-head span {
-    font-size: 8px;
+    font-size: var(--evolution-font-size, 13px);
     color: #777;
     text-align: center;
     padding-bottom: 3px
 }
 
 .grade {
-    padding: 10px 5px;
+    min-width: 0;
+    overflow: hidden;
+    padding: var(--evolution-cell-padding, 10px 3px);
     border-radius: 6px;
     text-align: center;
-    font-size: 9px;
+    font-size: var(--evolution-font-size, 13px);
     color: #15344e
 }
 
@@ -532,7 +590,7 @@
 }
 
 .evolution-row>b {
-    font-size: 9px;
+    font-size: 13px;
     text-align: center
 }
 
@@ -550,7 +608,7 @@
     gap: 11px;
     margin-top: 14px;
     color: #666;
-    font-size: 8px
+    font-size: 12px
 }
 
 .grade-legend span {
@@ -602,13 +660,13 @@
 }
 
 .quick-stat strong {
-    font-size: 24px;
+    font-size: 28px;
     line-height: 1;
     color: #b54708
 }
 
 .quick-stat span {
-    font-size: 10px;
+    font-size: 14px;
     line-height: 1.45;
     color: #555
 }
@@ -628,11 +686,11 @@
 }
 
 .decision-note p {
-    font-size: 9px;
+    font-size: 13px;
     line-height: 1.5
 }
 
-@media(max-width:1180px) {
+@media(max-width:1150px) {
     .kpi-grid {
         grid-template-columns: repeat(2, 1fr)
     }
@@ -686,31 +744,7 @@
         font-size: 7px
     }
 
-    .effort-head,
-    .effort-row {
-        grid-template-columns: 70px 1fr .8fr
-    }
-
-    .evolution-row {
-        grid-template-columns: 80px repeat(3, 1fr) 43px
-    }
-
     .director-chart-container {
-        position: relative;
-        width: 100%;
-        height: 315px;
-        min-height: 250px;
-    }
-
-    .director-chart-container canvas {
-        display: block;
-        width: 100% !important;
-        height: 100% !important;
-    }
-
-    @media (max-width: 760px) {
-        .director-chart-container {
-            height: 285px;
-        }
+        height: 285px;
     }
 }
