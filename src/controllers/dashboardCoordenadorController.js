@@ -1,55 +1,92 @@
 var dashboardCoordenadorModel = require("../models/dashboardCoordenadorModel");
 
-/* Retorna a lista de municípios de uma UF. */
-function listarMunicipios(req, res) {
-    var uf = req.params.uf;
-
-    if (!uf) {
-        return res.status(400).json({ mensagem: "A UF não foi informada." });
+/*
+ * GET /dashboardCoordenador/unidade/:idUnidade
+ * Dados básicos da unidade — resolve co_municipio e id_empresa a partir da sessão.
+ */
+function buscarUnidade(req, res) {
+    var idUnidade = Number(req.params.idUnidade);
+    if (!Number.isInteger(idUnidade) || idUnidade <= 0) {
+        return res.status(400).json({ mensagem: "ID de unidade inválido." });
     }
-
-    dashboardCoordenadorModel.listarMunicipiosPorUf(uf.toUpperCase())
+    dashboardCoordenadorModel.buscarDadosUnidade(idUnidade)
         .then(function (resultado) {
-            res.status(200).json(resultado);
+            if (!resultado.length) {
+                return res.status(404).json({ mensagem: "Unidade não encontrada." });
+            }
+            res.status(200).json(resultado[0]);
         })
         .catch(function (erro) {
-            console.error("Erro ao listar municípios:", erro);
+            console.error("Erro ao buscar unidade:", erro);
             res.status(500).json(erro.sqlMessage || erro);
         });
 }
 
 /*
- * Retorna histórico de desempenho do município + progresso do
- * planejamento da unidade (para popular os gráficos e KPIs).
+ * GET /dashboardCoordenador/unidades/:idEmpresa
+ * Lista todas as unidades da empresa para o modal de seleção.
+ */
+function listarUnidades(req, res) {
+    var idEmpresa = Number(req.params.idEmpresa);
+    if (!Number.isInteger(idEmpresa) || idEmpresa <= 0) {
+        return res.status(400).json({ mensagem: "ID de empresa inválido." });
+    }
+    dashboardCoordenadorModel.listarUnidadesDaEmpresa(idEmpresa)
+        .then(function (resultado) {
+            res.status(200).json(resultado);
+        })
+        .catch(function (erro) {
+            console.error("Erro ao listar unidades:", erro);
+            res.status(500).json(erro.sqlMessage || erro);
+        });
+}
+
+/*
+ * GET /dashboardCoordenador/dados/:idUnidade
+ *
+ * Payload completo da dashboard em um único fetch:
+ *   unidade, areaFraca, variacaoMedia, totalRegistros,
+ *   historico, eventosPorMes, professores, atividadeRecente
+ *
+ * Query param opcional: ?ano=<ano>  (padrão = ano atual)
  */
 function obterDadosDashboard(req, res) {
-    var coMunicipio = req.params.coMunicipio;
-    var idUnidade   = req.query.idUnidade   || null;
-    var idUsuario   = req.query.idUsuario   || null;
-
-    var dataAtual     = new Date();
-    var anoAtual      = Number(req.query.ano)      || dataAtual.getFullYear();
-    var semestreAtual = Number(req.query.semestre) || (dataAtual.getMonth() < 6 ? 1 : 2);
-
-    if (!coMunicipio) {
-        return res.status(400).json({ mensagem: "O código do município (coMunicipio) é obrigatório." });
+    var idUnidade = Number(req.params.idUnidade);
+    if (!Number.isInteger(idUnidade) || idUnidade <= 0) {
+        return res.status(400).json({ mensagem: "ID de unidade inválido." });
     }
 
-    Promise.all([
-        dashboardCoordenadorModel.buscarHistoricoDesempenho(coMunicipio),
-        dashboardCoordenadorModel.buscarProgressoPlanejamento(idUnidade, idUsuario, anoAtual, semestreAtual),
-    ])
-        .then(function (resultados) {
-            var historico       = resultados[0];
-            var planejamentoRow = resultados[1][0] || {};
+    var anoAtual = Number(req.query.ano) || new Date().getFullYear();
 
-            res.status(200).json({
-                historico: historico,
-                planejamento: {
-                    cadastrados: Number(planejamentoRow.total_eventos)      || 0,
-                    concluidos:  Number(planejamentoRow.eventos_concluidos) || 0,
-                    meta:        Number(planejamentoRow.meta_eventos)       || 10,
-                },
+    /* Passo 1 — resolve co_municipio a partir do idUnidade */
+    dashboardCoordenadorModel.buscarDadosUnidade(idUnidade)
+        .then(function (unidadeRows) {
+            if (!unidadeRows.length) {
+                return res.status(404).json({ mensagem: "Unidade não encontrada." });
+            }
+            var unidade     = unidadeRows[0];
+            var coMunicipio = unidade.co_municipio;
+
+            /* Passo 2 — 7 queries em paralelo */
+            return Promise.all([
+                dashboardCoordenadorModel.buscarAreaMaisFraca(coMunicipio),
+                dashboardCoordenadorModel.buscarVariacaoMediaGeral(coMunicipio),
+                dashboardCoordenadorModel.buscarTotalRegistros(idUnidade),
+                dashboardCoordenadorModel.buscarHistoricoDesempenho(coMunicipio),
+                dashboardCoordenadorModel.buscarEventosPorMes(idUnidade, anoAtual),
+                dashboardCoordenadorModel.buscarRegistrosPorProfessor(idUnidade),
+                dashboardCoordenadorModel.buscarAtividadeRecente(idUnidade),
+            ]).then(function (r) {
+                res.status(200).json({
+                    unidade:          unidade,
+                    areaFraca:        r[0][0] || null,
+                    variacaoMedia:    r[1],
+                    totalRegistros:   Number((r[2][0] || {}).total_registros) || 0,
+                    historico:        r[3],
+                    eventosPorMes:    r[4],
+                    professores:      r[5],
+                    atividadeRecente: r[6],
+                });
             });
         })
         .catch(function (erro) {
@@ -58,26 +95,8 @@ function obterDadosDashboard(req, res) {
         });
 }
 
-/* Retorna os professores da unidade com contagem de registros. */
-function listarProfessores(req, res) {
-    var idUnidade = Number(req.params.idUnidade);
-
-    if (!Number.isInteger(idUnidade) || idUnidade <= 0) {
-        return res.status(400).json({ mensagem: "ID de unidade inválido." });
-    }
-
-    dashboardCoordenadorModel.listarProfessoresDaUnidade(idUnidade)
-        .then(function (resultado) {
-            res.status(200).json(resultado);
-        })
-        .catch(function (erro) {
-            console.error("Erro ao listar professores:", erro);
-            res.status(500).json(erro.sqlMessage || erro);
-        });
-}
-
 module.exports = {
-    listarMunicipios,
+    buscarUnidade,
+    listarUnidades,
     obterDadosDashboard,
-    listarProfessores,
 };
