@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8">
@@ -47,7 +47,7 @@
       <div class="dash-title">
         <a class="back-link" href="./dashboardDiretorGeral.html"><i class="fi fi-rr-arrow-left"></i> Visão rede</a>
         <span class="eyebrow">Growth Map · Visão da unidade</span>
-        <h1>Unidade Sorocaba</h1>
+        <h1 id="titulo-unidade">Dashboard da unidade</h1>
         <p>Análise local de desempenho, capacidade docente e aderência do planejamento pedagógico.</p>
       </div>
 
@@ -58,28 +58,23 @@
         </nav>
         <div class="filter-group">
           <label for="unidade">Unidade</label>
-          <select id="unidade">
-            <option selected>Sorocaba</option>
-            <option>Itu</option>
-            <option>Piracicaba</option>
-            <option>Jundiaí</option>
-            <option>Campinas</option>
+          <select id="unidade" disabled>
+            <option value="">Carregando unidades...</option>
           </select>
         </div>
         <div class="filter-group">
           <label for="ano-enem">Ano do ENEM</label>
-          <select id="ano-enem">
-            <option selected>2025</option>
-            <option>2024</option>
-            <option>2023</option>
+          <select id="ano-enem" disabled>
+            <option value="">Carregando anos...</option>
           </select>
         </div>
+        <span class="filter-status" id="status-filtros" role="status" aria-live="polite"></span>
       </div>
     </header>
 
     <div class="info-banner">
       <i class="fi fi-rr-info"></i>
-      <span>As notas do ENEM são do município de Sorocaba, não dos alunos desta unidade.</span>
+      <span id="texto-municipio">As notas do ENEM representam o município da unidade selecionada, não os alunos da unidade.</span>
     </div>
 
     <section class="kpi-grid" aria-label="Indicadores principais da unidade">
@@ -204,9 +199,105 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-  <script src="../js/dashboardDiretorCharts.js"></script>
   <script src="../js/menu.js"></script>
   <script src="../js/controleAcesso.js"></script>
+  <script>
+    (function () {
+      var seletorUnidade = document.getElementById("unidade");
+      var seletorAno = document.getElementById("ano-enem");
+      var tituloUnidade = document.getElementById("titulo-unidade");
+      var textoMunicipio = document.getElementById("texto-municipio");
+      var status = document.getElementById("status-filtros");
+      var idEmpresa = sessionStorage.getItem("ID_EMPRESA");
+      var idUnidadeSessao = sessionStorage.getItem("ID_UNIDADE");
+
+      function mostrarStatus(mensagem, erro) {
+        status.textContent = mensagem;
+        status.classList.toggle("erro", Boolean(erro));
+      }
+
+      function mostrarErro(mensagem) {
+        seletorUnidade.disabled = true;
+        seletorAno.disabled = true;
+        mostrarStatus(mensagem, true);
+      }
+
+      function carregarAnos(idUnidade) {
+        seletorAno.disabled = true;
+        seletorAno.replaceChildren(new Option("Carregando anos...", ""));
+        return fetch("/dashboardDiretorFilial/anos/" + encodeURIComponent(idEmpresa) + "/" + encodeURIComponent(idUnidade))
+          .then(function (resposta) {
+            if (!resposta.ok) throw new Error("Não foi possível carregar os anos disponíveis.");
+            return resposta.json();
+          })
+          .then(function (registros) {
+            var anos = registros.map(function (registro) { return Number(registro.ano); })
+              .filter(function (ano) { return Number.isInteger(ano); });
+            seletorAno.replaceChildren();
+            if (anos.length === 0) {
+              seletorAno.add(new Option("Sem anos disponíveis", ""));
+              mostrarStatus("Não há anos com dados municipais e estaduais para esta unidade.", true);
+              return;
+            }
+            anos.forEach(function (ano) { seletorAno.add(new Option(String(ano), String(ano))); });
+            seletorAno.disabled = false;
+            mostrarStatus(anos.length + " ano(s) com dados disponíveis.");
+          });
+      }
+
+      function selecionarUnidade(unidade) {
+        tituloUnidade.textContent = unidade.nome_municipio;
+        textoMunicipio.textContent = "As notas do ENEM representam " + unidade.nome_municipio + " (" + unidade.uf + "), não os alunos da unidade.";
+        return carregarAnos(unidade.id_unidade);
+      }
+
+      if (!idEmpresa) {
+        mostrarErro("Não foi possível identificar a empresa da sessão.");
+        return;
+      }
+
+      fetch("/dashboardDiretorFilial/unidades/" + encodeURIComponent(idEmpresa))
+        .then(function (resposta) {
+          if (!resposta.ok) throw new Error("Não foi possível carregar as unidades da empresa.");
+          return resposta.json();
+        })
+        .then(function (unidades) {
+          if (idUnidadeSessao) {
+            unidades = unidades.filter(function (unidade) { return String(unidade.id_unidade) === String(idUnidadeSessao); });
+          }
+          seletorUnidade.replaceChildren();
+          if (unidades.length === 0) throw new Error("Nenhuma unidade disponível para esta conta.");
+
+          unidades.forEach(function (unidade) {
+            var opcao = new Option(unidade.nome_municipio, String(unidade.id_unidade));
+            opcao.dataset.municipio = unidade.nome_municipio + " (" + unidade.uf + ")";
+            seletorUnidade.add(opcao);
+          });
+          seletorUnidade.disabled = Boolean(idUnidadeSessao);
+          return selecionarUnidade(unidades[0]);
+        })
+        .catch(function (erro) {
+          console.error("Erro ao carregar filtros da dashboard da filial:", erro);
+          mostrarErro(erro.message || "Não foi possível carregar os filtros.");
+        });
+
+      seletorUnidade.addEventListener("change", function () {
+        var unidade = seletorUnidade.options[seletorUnidade.selectedIndex];
+        var municipio = unidade && unidade.dataset.municipio;
+        if (unidade) {
+          tituloUnidade.textContent = unidade.textContent;
+          textoMunicipio.textContent = municipio
+            ? "As notas do ENEM representam " + municipio + ", não os alunos da unidade."
+            : "As notas do ENEM representam o município da unidade selecionada, não os alunos da unidade.";
+          carregarAnos(seletorUnidade.value).catch(function (erro) {
+            console.error("Erro ao carregar anos da unidade:", erro);
+            seletorAno.replaceChildren(new Option("Erro ao carregar anos", ""));
+            mostrarStatus(erro.message || "Não foi possível carregar os anos.", true);
+          });
+        }
+      });
+    })();
+  </script>
 </body>
 
 </html>
