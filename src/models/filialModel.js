@@ -3,50 +3,49 @@ var database = require("../database/config");
 function cadastrarMunicipioSeNaoExistir(coMunicipio, nomeMunicipio, uf) {
     var instrucaoSql = `
         INSERT IGNORE INTO municipio (co_municipio, nome_municipio, uf) 
-        VALUES (${coMunicipio}, '${nomeMunicipio}', '${uf}');
+        VALUES (?, ?, ?);
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [coMunicipio, nomeMunicipio, uf]);
 }
 
-function cadastrar(nome, endereco, coMunicipio, idEmpresa, cnpj) {
+function cadastrar(nome, { logradouro, numero, bairro, cep }, coMunicipio, idEmpresa, cnpj) {
     var instrucaoSql = `
-        INSERT INTO unidade (nome, endereco, co_municipio, id_empresa, cnpj) 
-        VALUES ('${nome}', '${endereco}', ${coMunicipio}, '${idEmpresa}', '${cnpj}')
+        INSERT INTO unidade (nome, logradouro, numero, bairro, cep, co_municipio, id_empresa, cnpj)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?);
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [nome, logradouro, numero, bairro, cep, coMunicipio, idEmpresa, cnpj]);
 }
 
 function listarPorEmpresa(idEmpresa) {
     var instrucaoSql = `
-        SELECT u.id, u.nome, u.cnpj, u.endereco, m.nome_municipio, m.uf, m.co_municipio 
+        SELECT u.id, u.nome, u.cnpj, u.logradouro, u.numero, u.bairro, u.cep,
+               m.nome_municipio, m.uf, m.co_municipio
         FROM unidade u 
         JOIN municipio m ON u.co_municipio = m.co_municipio 
-        WHERE u.id_empresa = ${idEmpresa};
+        WHERE u.id_empresa = ?;
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [idEmpresa]);
 }
 
 function buscarPorId(id) {
     var instrucaoSql = `
-        SELECT u.id, u.nome, u.cnpj, u.endereco, m.nome_municipio, m.uf, m.co_municipio 
+        SELECT u.id, u.nome, u.cnpj, u.logradouro, u.numero, u.bairro, u.cep,
+               m.nome_municipio, m.uf, m.co_municipio
         FROM unidade u 
         JOIN municipio m ON u.co_municipio = m.co_municipio 
-        WHERE u.id = ${id};
+        WHERE u.id = ?;
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [id]);
 }
 
-function atualizar(id, nome, endereco, coMunicipio, cnpj) {
+function atualizar(id, nome, { logradouro, numero, bairro, cep }, coMunicipio, cnpj) {
     var instrucaoSql = `
         UPDATE unidade 
-        SET nome = '${nome}', 
-            endereco = '${endereco}', 
-            co_municipio = ${coMunicipio}, 
-            cnpj = '${cnpj}' 
-        WHERE id = ${id};
+        SET nome = ?, logradouro = ?, numero = ?, bairro = ?, cep = ?,
+            co_municipio = ?, cnpj = ?
+        WHERE id = ?;
     `;
-    console.log("Executando: " + instrucaoSql);
-    return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [nome, logradouro, numero, bairro, cep, coMunicipio, cnpj, id]);
 }
 
 function deletar(id) {

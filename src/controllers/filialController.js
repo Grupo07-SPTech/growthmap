@@ -1,12 +1,44 @@
 var filialModel = require("../models/filialModel");
 
+function obterEndereco(dados) {
+    var rua = dados.rua;
+    var numero = dados.numero;
+    var bairro = dados.bairro;
+    var cep = dados.cep;
+
+    if (numero === undefined) {
+        numero = "";
+    }
+
+    if (typeof rua !== "string" || typeof numero !== "string" ||
+        typeof bairro !== "string" || typeof cep !== "string") {
+        return null;
+    }
+
+    var logradouro = rua.trim();
+    var cepSemMascara = cep.trim().replace("-", "");
+    var bairroLimpo = bairro.trim();
+    var numeroLimpo = numero.trim();
+
+    if (!logradouro || logradouro.length > 150 || !bairroLimpo || bairroLimpo.length > 100 ||
+        cepSemMascara.length !== 8 || numeroLimpo.length > 20) {
+        return null;
+    }
+
+    for (var i = 0; i < cepSemMascara.length; i++) {
+        var digito = cepSemMascara[i];
+        if (digito < "0" || digito > "9") {
+            return null;
+        }
+    }
+
+    return { logradouro, numero: numeroLimpo || null, bairro: bairroLimpo, cep: cepSemMascara };
+}
+
 function cadastrar(req, res) {
     var nome = req.body.nome;
     var cnpj = req.body.cnpj;
-    var cep = req.body.cep;
-    var rua = req.body.rua;
-    var numero = req.body.numero;
-    var bairro = req.body.bairro;
+    var endereco = obterEndereco(req.body);
     var cidade = req.body.cidade;
     var estado = req.body.estado;
     var coMunicipio = req.body.coMunicipio;
@@ -20,12 +52,12 @@ function cadastrar(req, res) {
         res.status(400).send("O código do município (IBGE) não foi obtido através do CEP!");
     } else if (!idEmpresa) {
         res.status(403).send("ID da empresa não encontrado. Faça login novamente.");
+    } else if (!endereco) {
+        res.status(400).send("Informe logradouro, bairro e CEP válidos.");
     } else {
-        var enderecoCompleto = `${rua}, ${numero} - ${bairro}, CEP: ${cep}`;
-
         filialModel.cadastrarMunicipioSeNaoExistir(coMunicipio, cidade, estado)
             .then(function () {
-                return filialModel.cadastrar(nome, enderecoCompleto, coMunicipio, idEmpresa, cnpj);
+                return filialModel.cadastrar(nome, endereco, coMunicipio, idEmpresa, cnpj);
             })
             .then(function (resultado) {
                 res.json(resultado);
@@ -67,10 +99,7 @@ function atualizar(req, res) {
     var id = req.params.id;
     var nome = req.body.nome;
     var cnpj = req.body.cnpj;
-    var cep = req.body.cep;
-    var rua = req.body.rua;
-    var numero = req.body.numero;
-    var bairro = req.body.bairro;
+    var endereco = obterEndereco(req.body);
     var cidade = req.body.cidade;
     var estado = req.body.estado;
     var coMunicipio = req.body.coMunicipio;
@@ -79,11 +108,13 @@ function atualizar(req, res) {
         return res.status(400).send("Campos obrigatórios ausentes para atualização.");
     }
 
-    var enderecoCompleto = `${rua}, ${numero} - ${bairro}, CEP: ${cep}`;
+    if (!endereco) {
+        return res.status(400).send("Informe logradouro, bairro e CEP válidos.");
+    }
 
     filialModel.cadastrarMunicipioSeNaoExistir(coMunicipio, cidade, estado)
         .then(function () {
-            return filialModel.atualizar(id, nome, enderecoCompleto, coMunicipio, cnpj);
+            return filialModel.atualizar(id, nome, endereco, coMunicipio, cnpj);
         })
         .then(function (resultado) {
             res.json(resultado);

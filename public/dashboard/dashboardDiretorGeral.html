@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8">
@@ -9,6 +9,7 @@
     href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/dashboardDiretorGeral.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -58,9 +59,14 @@
         <div class="filter-group">
           <label for="ano-enem">Ano do ENEM</label>
           <select id="ano-enem">
-            <option selected>2025</option>
-            <option>2024</option>
-            <option>2023</option>
+            <option value="">Carregando anos...</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="semestre-planejamento">Semestre dos eventos</label>
+          <select id="semestre-planejamento">
+            <option value="1">1º semestre</option>
+            <option value="2">2º semestre</option>
           </select>
         </div>
       </div>
@@ -71,31 +77,31 @@
       <span>As notas do ENEM representam os municípios onde as unidades estão localizadas, não os alunos de cada
         unidade.</span>
     </div>
+    <p id="dashboard-status" class="dashboard-status" role="status" hidden></p>
 
     <section class="kpi-grid" aria-label="Indicadores principais da rede">
       <article class="kpi-card warning">
         <span class="kpi-title">DIFERENÇA VS. ESTADO</span>
-        <strong class="kpi-value">-3 pts</strong>
-        <span class="kpi-footer">Média das 4 áreas objetivas dos 5 municípios atendidos, ponderada por
-          participantes.</span>
+        <strong class="kpi-value" id="kpi-diferenca">Carregando...</strong>
+        <span class="kpi-footer" id="kpi-diferenca-descricao">Média das áreas objetivas, ponderada por participantes.</span>
       </article>
 
       <article class="kpi-card">
         <span class="kpi-title">BASE DE CANDIDATOS</span>
-        <strong class="kpi-value">33.440</strong>
-        <span class="kpi-footer">Participantes do ENEM 2025 nos municípios atendidos pela rede.</span>
+        <strong class="kpi-value" id="kpi-participantes">Carregando...</strong>
+        <span class="kpi-footer" id="kpi-participantes-descricao">Participantes do ENEM nos municípios atendidos pela rede.</span>
       </article>
 
       <article class="kpi-card warning">
         <span class="kpi-title">COBERTURA DE PROFESSORES</span>
-        <strong class="kpi-value">3 de 5</strong>
-        <span class="kpi-footer">Unidades sem professor na área de menor média do município.</span>
+        <strong class="kpi-value" id="kpi-cobertura">Carregando...</strong>
+        <span class="kpi-footer" id="kpi-cobertura-descricao">Unidades sem professor na área de menor média do município.</span>
       </article>
 
       <article class="kpi-card danger">
         <span class="kpi-title">ADERÊNCIA PEDAGÓGICA</span>
-        <strong class="kpi-value">58%</strong>
-        <span class="kpi-footer">29 de 50 eventos do período estão na área de menor média do município.</span>
+        <strong class="kpi-value" id="kpi-aderencia">Carregando...</strong>
+        <span class="kpi-footer" id="kpi-aderencia-descricao">Eventos do semestre na área de menor média do município.</span>
       </article>
     </section>
 
@@ -106,8 +112,10 @@
           <p>Pontos, média das 4 áreas objetivas. Cada município corresponde a uma unidade da rede.</p>
         </div>
 
-        <div class="director-chart-container network-chart-container">
-          <canvas id="graficoMunicipios"></canvas>
+        <div class="network-chart-scroll">
+          <div class="director-chart-container network-chart-container">
+            <canvas id="graficoMunicipios"></canvas>
+          </div>
         </div>
 
         <div class="legend">
@@ -126,21 +134,9 @@
           <div class="heatmap-row heatmap-head">
             <span></span><span>Linguagens</span><span>Humanas</span><span>Natureza</span><span>Matemática</span><span>Redação</span>
           </div>
-          <div class="heatmap-row"><strong>Itu</strong><span class="h neg2">-14</span><span
-              class="h neg2">-12</span><span class="h neg3">-28</span><span class="h neg4">-38</span><span
-              class="h neg3">-27</span></div>
-          <div class="heatmap-row"><strong>Sorocaba</strong><span class="h neutral">−9</span><span
-              class="h neutral">-6</span><span class="h neg3">-22</span><span class="h neg4">-41</span><span
-              class="h neg2">-18</span></div>
-          <div class="heatmap-row"><strong>Piracicaba</strong><span class="h neutral">−3</span><span
-              class="h neutral">-2</span><span class="h neutral">-9</span><span class="h neg2">-14</span><span
-              class="h neutral">-6</span></div>
-          <div class="heatmap-row"><strong>Jundiaí</strong><span class="h neutral">+8</span><span
-              class="h neutral">+10</span><span class="h neutral">+3</span><span class="h neutral">+4</span><span
-              class="h neutral">+5</span></div>
-          <div class="heatmap-row"><strong>Campinas</strong><span class="h pos2">+12</span><span
-              class="h pos2">+15</span><span class="h neutral">+8</span><span class="h neutral">+10</span><span
-              class="h pos2">+14</span></div>
+          <div id="heatmap-body" class="heatmap-body" aria-live="polite">
+            <div class="heatmap-row"><strong>Carregando dados...</strong></div>
+          </div>
         </div>
 
         <div class="heat-legend">
@@ -156,67 +152,926 @@
       <div class="chart-header opportunity-header">
         <div>
           <h2>Mapa de oportunidade de expansão</h2>
-          <p>Índice de 0 a 100 por município: participantes x déficit vs. estado, normalizado. Mede necessidade
-            pedagógica e volume, não poder de compra.</p>
+          <p>Selecione um estado para visualizar seus municípios.</p>
         </div>
-        <span class="score-pill">Índice 0-100</span>
+        <span class="score-pill">Mapa geográfico</span>
       </div>
 
       <div class="opportunity-layout">
-        <div class="opportunity-map" role="img" aria-label="Mapa esquemático de oportunidade de expansão">
-          <span class="map-grid-line vertical v1"></span><span class="map-grid-line vertical v2"></span><span
-            class="map-grid-line vertical v3"></span>
-          <span class="map-grid-line horizontal h1"></span><span class="map-grid-line horizontal h2"></span><span
-            class="map-grid-line horizontal h3"></span>
-          <span class="hotspot hs1"></span><span class="hotspot hs2"></span><span class="hotspot hs3"></span><span
-            class="hotspot hs4"></span>
-          <span class="map-point itu"><i></i><b>Itu</b></span>
-          <span class="map-point sorocaba"><i></i><b>Sorocaba</b></span>
-          <span class="map-point jundiai"><i></i><b>Jundiaí</b></span>
-          <span class="map-point campinas"><i></i><b>Campinas</b></span>
-          <span class="map-point piracicaba"><i></i><b>Piracicaba</b></span>
-          <small>Esquema ilustrativo. O mapa real usa a malha municipal do IBGE.</small>
-        </div>
-
-        <div class="opportunity-list">
-          <h3>Maiores oportunidades</h3>
-          <div class="opp-row"><span class="rank">1</span>
-            <div class="opp-name"><strong>Hortolândia</strong><small>sem unidade</small></div>
-            <div class="opp-bar"><i style="--score:91%"></i></div><strong>91</strong>
+        <div class="opportunity-map-column">
+          <div class="opportunity-map-toolbar">
+            <button id="map-back-to-brazil" class="map-back-button" type="button" hidden>← Voltar ao Brasil</button>
+            <span id="map-current-view">Brasil</span>
+            <label class="map-target-control" for="map-target-score">
+              Meta ENEM
+              <input id="map-target-score" class="map-target-input" type="number" min="0" max="1000" step="any" value="600" inputmode="decimal" aria-describedby="map-target-help">
+              <span>pontos</span>
+            </label>
           </div>
-          <div class="opp-row"><span class="rank">2</span>
-            <div class="opp-name"><strong>Sorocaba</strong><small class="served">atendido</small></div>
-            <div class="opp-bar"><i style="--score:84%"></i></div><strong>84</strong>
+          <p id="map-target-help" class="map-target-help">A meta define o ponto central das cores: vermelho abaixo e verde acima.</p>
+          <div class="opportunity-map-wrap">
+            <div id="opportunity-map" class="opportunity-map" role="application" aria-label="Mapa interativo do Brasil"></div>
+            <p id="opportunity-map-status" class="opportunity-map-status" role="status">Carregando estados brasileiros...</p>
           </div>
-          <div class="opp-row"><span class="rank">3</span>
-            <div class="opp-name"><strong>Sumaré</strong><small>sem unidade</small></div>
-            <div class="opp-bar"><i style="--score:80%"></i></div><strong>80</strong>
+          <div id="legend-estados" class="map-legend map-legend-notas" aria-label="Legenda da média estadual em relação à meta ENEM">
+            <strong>Média estadual ENEM</strong>
+            <span>Abaixo</span><i class="map-nota-gradient"></i><span>Acima</span>
+            <span id="map-meta-estados">Meta: 600 pts</span>
+            <span><i class="map-legend-swatch map-count-empty"></i>Sem dados</span>
           </div>
-          <div class="opp-row"><span class="rank">4</span>
-            <div class="opp-name"><strong>Votorantim</strong><small>sem unidade</small></div>
-            <div class="opp-bar"><i style="--score:73%"></i></div><strong>73</strong>
-          </div>
-          <div class="opp-row"><span class="rank">5</span>
-            <div class="opp-name"><strong>Itu</strong><small class="served">atendido</small></div>
-            <div class="opp-bar"><i style="--score:69%"></i></div><strong>69</strong>
-          </div>
-          <div class="opp-row"><span class="rank">6</span>
-            <div class="opp-name"><strong>Salto</strong><small>sem unidade</small></div>
-            <div class="opp-bar"><i style="--score:61%"></i></div><strong>61</strong>
+          <div id="legend-municipios" class="map-legend map-legend-notas" aria-label="Legenda da média municipal em relação à meta ENEM" hidden>
+            <strong>Média ENEM</strong>
+            <span>Abaixo</span><i class="map-nota-gradient"></i><span>Acima</span>
+            <span id="map-meta-municipios">Meta: 600 pts</span>
+            <span><i class="map-legend-swatch map-count-empty"></i>Sem dados</span>
           </div>
         </div>
-      </div>
 
-      <div class="map-legend">
-        <span>Baixa</span><i class="gradient-scale"></i><span>Alta oportunidade</span><span
-          class="existing-unit"><i></i>Unidade existente</span>
+        <aside class="attention-panel" aria-labelledby="attention-title">
+          <h3 id="attention-title">10 municípios que precisam de atenção</h3>
+          <p id="attention-scope" class="attention-scope">Brasil · menores médias ENEM</p>
+          <ol id="attention-ranking" class="attention-ranking" aria-live="polite">
+            <li class="attention-empty">Carregando médias...</li>
+          </ol>
+        </aside>
       </div>
     </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-  <script src="../js/dashboardDiretorCharts.js"></script>
+  <script>
+function plotarGraficoAreas() {
+    const areas = ["Linguagens", "Humanas", "Natureza", "Matemática", "Redação"];
+    new Chart(document.getElementById("graficoAreasEnem"), {
+        type: "bar",
+        data: {
+            labels: areas,
+            datasets: [
+                { label: "Sorocaba", data: [531, 550, 484, 487, 592], backgroundColor: "#8d2146" },
+                { label: "Estado", data: [540, 556, 506, 528, 610], backgroundColor: "#a9a9a9" },
+                { label: "Média da rede", data: [541, 560, 500, 516, 608], backgroundColor: "#2f71aa" }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, max: 700 },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+}
+
+if (typeof Chart !== "undefined") {
+    Chart.defaults.font.size = 16;
+    Chart.defaults.font.family = "Poppins, sans-serif";
+    if (document.getElementById("graficoAreasEnem")) plotarGraficoAreas();
+}
+
+</script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+(function () {
+    const URL_ESTADOS = "https://cdn.jsdelivr.net/gh/henriquemalvar/br-geojson@main/dist/estados.geojson";
+    const URL_MUNICIPIOS = "https://cdn.jsdelivr.net/gh/henriquemalvar/br-geojson@main/dist/municipios/";
+    const COR_SEM_DADOS = "#e5e7eb";
+    const CORES_ESCALA_META = ["#c85858", "#ee9a57", "#f5d775", "#a8c982", "#5b9b70"];
+
+    const elementoMapa = document.getElementById("opportunity-map");
+    if (!elementoMapa) return;
+
+    const status = document.getElementById("opportunity-map-status");
+    if (typeof L === "undefined") {
+        status.textContent = "Não foi possível iniciar o mapa. Verifique sua conexão e recarregue a página.";
+        return;
+    }
+
+    const mapa = L.map(elementoMapa, {
+        minZoom: 3,
+        maxZoom: 12,
+        scrollWheelZoom: false,
+        renderer: L.svg({ padding: 0.25 })
+    });
+
+    let camadaEstados;
+    let camadaMunicipios;
+    let solicitacaoAtual = 0;
+    let solicitacaoDados = 0;
+    let municipiosDemonstrativos = [];
+    let ufSelecionada = "";
+    let nomeEstadoSelecionado = "";
+    let estadoEmDestaque = null;
+    let municipioEmDestaque = null;
+    let notasPorCodigo = new Map();
+    let notasPorNome = new Map();
+    let mediasEstaduaisPorUf = new Map();
+    let codigosMunicipiosComUnidade = new Set();
+    let quantidadesUnidadesPorUf = new Map();
+    let unidadesEmpresaCarregadas = false;
+    const tooltipMapa = L.tooltip({ sticky: true, direction: "top", opacity: 0.95 });
+
+    const botaoVoltar = document.getElementById("map-back-to-brazil");
+    const visualizacaoAtual = document.getElementById("map-current-view");
+    const listaAtencao = document.getElementById("attention-ranking");
+    const escopoAtencao = document.getElementById("attention-scope");
+    const legendaEstados = document.getElementById("legend-estados");
+    const legendaMunicipios = document.getElementById("legend-municipios");
+    const seletorMeta = document.getElementById("map-target-score");
+    const metaEstados = document.getElementById("map-meta-estados");
+    const metaMunicipios = document.getElementById("map-meta-municipios");
+    let metaMediaEnem = 600;
+
+    try {
+        const metaSalva = Number(localStorage.getItem("metaMapaOportunidade"));
+        if (localStorage.getItem("metaMapaOportunidade") !== null && Number.isFinite(metaSalva) && metaSalva >= 0 && metaSalva <= 1000) {
+            metaMediaEnem = metaSalva;
+        }
+    } catch (erro) {
+        // O mapa continua funcionando com a meta padrão se o armazenamento local estiver indisponível.
+    }
+    seletorMeta.value = String(metaMediaEnem);
+    metaEstados.textContent = "Meta: " + metaMediaEnem.toLocaleString("pt-BR") + " pts";
+    metaMunicipios.textContent = "Meta: " + metaMediaEnem.toLocaleString("pt-BR") + " pts";
+
+    function reconstruirIndiceNotas() {
+        notasPorCodigo = new Map();
+        notasPorNome = new Map();
+        mediasEstaduaisPorUf = new Map();
+
+        municipiosDemonstrativos.forEach(function (municipio) {
+            const mediaEstadual = Number(municipio.mediaEstadualEnem);
+            if (municipio.mediaEstadualEnem !== null && Number.isFinite(mediaEstadual)) {
+                mediasEstaduaisPorUf.set(municipio.uf, mediaEstadual);
+            }
+            if (municipio.mediaEnem === null || municipio.mediaEnem === undefined) return;
+            const nota = Number(municipio.mediaEnem);
+            if (!Number.isFinite(nota)) return;
+            if (municipio.codigoIbge) notasPorCodigo.set(String(municipio.codigoIbge), nota);
+            notasPorNome.set(municipio.uf + "|" + normalizarNome(municipio.municipio), nota);
+        });
+    }
+
+    function obterNotaMunicipio(feature) {
+        const propriedades = feature.properties || {};
+        const codigo = String(propriedades.cd_geocmu || propriedades.codigo_ibge || "");
+        if (codigo && notasPorCodigo.has(codigo)) return notasPorCodigo.get(codigo);
+
+        const nome = propriedades.nome || propriedades.name || "";
+        return notasPorNome.get(ufSelecionada + "|" + normalizarNome(nome));
+    }
+
+    function interpolarCorNota(nota) {
+        const escalaNotas = [
+            { nota: metaMediaEnem - 100, cor: CORES_ESCALA_META[0] },
+            { nota: metaMediaEnem - 50, cor: CORES_ESCALA_META[1] },
+            { nota: metaMediaEnem, cor: CORES_ESCALA_META[2] },
+            { nota: metaMediaEnem + 50, cor: CORES_ESCALA_META[3] },
+            { nota: metaMediaEnem + 100, cor: CORES_ESCALA_META[4] }
+        ];
+        const valor = Math.max(escalaNotas[0].nota, Math.min(escalaNotas[escalaNotas.length - 1].nota, nota));
+        let inferior = escalaNotas[0];
+        let superior = escalaNotas[escalaNotas.length - 1];
+
+        for (let indice = 1; indice < escalaNotas.length; indice++) {
+            if (valor <= escalaNotas[indice].nota) {
+                inferior = escalaNotas[indice - 1];
+                superior = escalaNotas[indice];
+                break;
+            }
+        }
+
+        const proporcao = (valor - inferior.nota) / (superior.nota - inferior.nota);
+        const canal = function (cor, posicao) {
+            return parseInt(cor.slice(posicao, posicao + 2), 16);
+        };
+        const rgb = [1, 3, 5].map(function (posicao) {
+            const inicio = canal(inferior.cor, posicao);
+            const fim = canal(superior.cor, posicao);
+            return Math.round(inicio + (fim - inicio) * proporcao);
+        });
+
+        return "#" + rgb.map(function (valorCanal) {
+            return valorCanal.toString(16).padStart(2, "0");
+        }).join("");
+    }
+
+    function estiloMunicipio(feature) {
+        const nota = obterNotaMunicipio(feature);
+        return {
+            color: "#ffffff",
+            weight: 0.45,
+            fillColor: nota === undefined ? COR_SEM_DADOS : interpolarCorNota(nota),
+            fillOpacity: 0.9
+        };
+    }
+
+    function estiloEstado(feature) {
+        const mediaEstadual = mediasEstaduaisPorUf.get(siglaEstado(feature));
+        const fillColor = mediaEstadual === undefined
+            ? COR_SEM_DADOS
+            : interpolarCorNota(mediaEstadual);
+
+        return {
+            color: "#ffffff",
+            weight: 1.8,
+            lineCap: "round",
+            lineJoin: "round",
+            fillColor: fillColor,
+            fillOpacity: 0.9
+        };
+    }
+
+    function descricaoEstado(uf) {
+        const mediaEstadual = mediasEstaduaisPorUf.get(uf);
+        const quantidadeUnidades = quantidadesUnidadesPorUf.get(uf) || 0;
+        const media = mediaEstadual === undefined
+            ? "Sem média estadual disponível"
+            : "Média estadual: " + mediaEstadual.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+        const textoUnidades = unidadesEmpresaCarregadas
+            ? "Unidades da empresa: " + quantidadeUnidades
+            : "Carregando unidades da empresa";
+        return media + " · " + textoUnidades;
+    }
+
+    function municipioPossuiUnidade(feature) {
+        const propriedades = feature.properties || {};
+        const codigo = String(propriedades.cd_geocmu || propriedades.codigo_ibge || "");
+        return Boolean(codigo && codigosMunicipiosComUnidade.has(codigo));
+    }
+
+    function atualizarRankingAtencao() {
+        const municipios = municipiosDemonstrativos
+            .filter(function (municipio) {
+                return municipio.mediaEnem !== null && municipio.mediaEnem !== undefined &&
+                    (!ufSelecionada || municipio.uf === ufSelecionada);
+            })
+            .sort(function (a, b) {
+                return Number(a.mediaEnem) - Number(b.mediaEnem);
+            })
+            .slice(0, 10);
+
+        escopoAtencao.textContent = (nomeEstadoSelecionado || "Brasil") + " · menores médias ENEM";
+        listaAtencao.replaceChildren();
+
+        if (municipios.length === 0) {
+            const vazio = document.createElement("li");
+            vazio.className = "attention-empty";
+            vazio.textContent = "Sem médias disponíveis para esta seleção.";
+            listaAtencao.appendChild(vazio);
+            return;
+        }
+
+        municipios.forEach(function (municipio, indice) {
+            const linha = document.createElement("li");
+            const botao = document.createElement("button");
+            const posicao = document.createElement("span");
+            const nome = document.createElement("span");
+            const uf = document.createElement("small");
+            const media = document.createElement("strong");
+
+            botao.type = "button";
+            botao.className = "attention-place";
+            botao.setAttribute("aria-label", "Focar no mapa: " + municipio.municipio + ", " + municipio.uf);
+            posicao.className = "attention-rank";
+            posicao.textContent = String(indice + 1);
+            nome.className = "attention-city";
+            nome.textContent = municipio.municipio;
+            uf.className = "attention-uf";
+            uf.textContent = municipio.uf;
+            media.className = "attention-score";
+            media.textContent = Number(municipio.mediaEnem).toLocaleString("pt-BR", {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1
+            }) + " pts";
+
+            nome.appendChild(uf);
+            botao.append(posicao, nome, media);
+            botao.addEventListener("click", function () {
+                focarMunicipio(municipio);
+            });
+            linha.appendChild(botao);
+            listaAtencao.appendChild(linha);
+        });
+    }
+
+    function normalizarNome(texto) {
+        return String(texto || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLocaleLowerCase("pt-BR")
+            .trim();
+    }
+
+    async function focarMunicipio(municipio) {
+        if (ufSelecionada !== municipio.uf || !camadaMunicipios) {
+            if (!camadaEstados) {
+                status.textContent = "O mapa ainda está carregando. Tente novamente em instantes.";
+                return;
+            }
+
+            let nomeDoEstado = municipio.uf;
+            camadaEstados.eachLayer(function (camada) {
+                if (siglaEstado(camada.feature) === municipio.uf) {
+                    nomeDoEstado = nomeEstado(camada.feature);
+                }
+            });
+
+            const abriuEstado = await abrirEstado(municipio.uf, nomeDoEstado);
+            if (!abriuEstado) return;
+        }
+
+        let camadaAlvo;
+        const codigoMunicipio = String(municipio.codigoIbge || "");
+        camadaMunicipios.eachLayer(function (camada) {
+            const propriedades = camada.feature.properties || {};
+            const codigo = String(propriedades.cd_geocmu || propriedades.codigo_ibge || "");
+            const nome = propriedades.nome || propriedades.name || "";
+
+            if ((codigoMunicipio && codigo === codigoMunicipio) || normalizarNome(nome) === normalizarNome(municipio.municipio)) {
+                camadaAlvo = camada;
+            }
+        });
+
+        if (!camadaAlvo) {
+            status.textContent = "Não encontramos o município no mapa deste estado.";
+            return;
+        }
+
+        mapa.fitBounds(camadaAlvo.getBounds(), { padding: [32, 32], maxZoom: 9 });
+        camadaAlvo.openPopup();
+        status.textContent = municipio.municipio + " (" + municipio.uf + ") selecionado no mapa.";
+    }
+
+    async function carregarMediasEnem(ano) {
+        const requisicao = ++solicitacaoDados;
+        try {
+            const resposta = await fetch("/dashboardDiretorGeral/mapa/" + encodeURIComponent(ano));
+            if (!resposta.ok) throw new Error("Falha ao carregar as médias do ENEM.");
+            const dados = await resposta.json();
+            if (requisicao !== solicitacaoDados) return;
+            municipiosDemonstrativos = Array.isArray(dados.municipios) ? dados.municipios : [];
+            reconstruirIndiceNotas();
+            atualizarRankingAtencao();
+            if (camadaEstados) camadaEstados.setStyle(estiloEstado);
+            if (camadaMunicipios) camadaMunicipios.setStyle(estiloMunicipio);
+            status.textContent = "Dados do ENEM " + dados.ano + " carregados. Selecione um estado para explorar os municípios.";
+        } catch (erro) {
+            if (requisicao !== solicitacaoDados) return;
+            console.error("Não foi possível carregar as médias do ENEM:", erro);
+            municipiosDemonstrativos = [];
+            reconstruirIndiceNotas();
+            if (camadaEstados) camadaEstados.setStyle(estiloEstado);
+            if (camadaMunicipios) camadaMunicipios.setStyle(estiloMunicipio);
+            listaAtencao.replaceChildren();
+            const vazio = document.createElement("li");
+            vazio.className = "attention-empty";
+            vazio.textContent = "Não foi possível carregar as médias do ENEM.";
+            listaAtencao.appendChild(vazio);
+        }
+    }
+
+    function nomeEstado(feature) {
+        const propriedades = feature.properties || {};
+        return propriedades.nome || propriedades.name || "Estado";
+    }
+
+    function siglaEstado(feature) {
+        const propriedades = feature.properties || {};
+        return propriedades.sigla || propriedades.uf || propriedades.abbrev || "";
+    }
+
+    function configurarEstado(feature, camada) {
+        const nome = nomeEstado(feature);
+        const sigla = siglaEstado(feature);
+
+        camada.on("mouseover", function (evento) {
+            if (estadoEmDestaque && estadoEmDestaque !== camada) {
+                estadoEmDestaque.setStyle(estiloEstado(estadoEmDestaque.feature));
+            }
+            estadoEmDestaque = camada;
+            camada.bringToFront();
+            camada.setStyle(Object.assign({}, estiloEstado(camada.feature), { weight: 2.5, color: "#7a1f3d" }));
+            tooltipMapa
+                .setContent((sigla ? nome + " (" + sigla + ")" : nome) + " · " + descricaoEstado(sigla))
+                .setLatLng(evento.latlng);
+            mapa.openTooltip(tooltipMapa);
+        });
+        camada.on("mousemove", function (evento) {
+            tooltipMapa.setLatLng(evento.latlng);
+        });
+        camada.on("mouseout", function () {
+            if (estadoEmDestaque !== camada) return;
+            camada.setStyle(estiloEstado(camada.feature));
+            estadoEmDestaque = null;
+            mapa.closeTooltip(tooltipMapa);
+        });
+        camada.on("click", function () {
+            abrirEstado(sigla, nome);
+        });
+    }
+
+    async function abrirEstado(uf, nome) {
+        if (!uf) {
+            status.textContent = "Não foi possível identificar a UF deste estado.";
+            return false;
+        }
+
+        const solicitacao = ++solicitacaoAtual;
+        status.textContent = "Carregando municípios de " + nome + "...";
+
+        try {
+            const resposta = await fetch(URL_MUNICIPIOS + encodeURIComponent(uf) + ".geojson");
+            if (!resposta.ok) throw new Error("Falha ao carregar municípios.");
+            const dados = await resposta.json();
+            if (solicitacao !== solicitacaoAtual) return false;
+
+            if (camadaMunicipios) {
+                municipioEmDestaque = null;
+                estadoEmDestaque = null;
+                mapa.closeTooltip(tooltipMapa);
+                mapa.removeLayer(camadaMunicipios);
+            }
+            estadoEmDestaque = null;
+            mapa.closeTooltip(tooltipMapa);
+            mapa.removeLayer(camadaEstados);
+            ufSelecionada = uf;
+            nomeEstadoSelecionado = nome;
+
+            camadaMunicipios = L.geoJSON(dados, {
+                style: estiloMunicipio,
+                onEachFeature: function (feature, camada) {
+                    const propriedades = feature.properties || {};
+                    const nomeMunicipio = propriedades.nome || propriedades.name || "Município";
+                    const nota = obterNotaMunicipio(feature);
+                    const mediaEstado = mediasEstaduaisPorUf.get(ufSelecionada);
+                    function obterTextoPopup() {
+                        const textoBase = nota === undefined
+                            ? nomeMunicipio + "<br>Sem média disponível"
+                            : nomeMunicipio + "<br>Média ENEM: " + nota.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) +
+                                " pontos" + (mediaEstado === undefined ? "" : "<br>Média estadual: " + mediaEstado.toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + " pontos");
+                        const avisoUnidade = municipioPossuiUnidade(feature)
+                            ? "<br><strong class=\"map-popup-unit\">✓ A empresa já possui uma unidade neste município.</strong>"
+                            : "";
+                        return textoBase + avisoUnidade;
+                    }
+
+                    camada.bindPopup(obterTextoPopup());
+                    camada.on("popupopen", function () {
+                        camada.setPopupContent(obterTextoPopup());
+                    });
+                    camada.on("mouseover", function (evento) {
+                        if (municipioEmDestaque && municipioEmDestaque !== camada) {
+                            municipioEmDestaque.setStyle(estiloMunicipio(municipioEmDestaque.feature));
+                        }
+                        municipioEmDestaque = camada;
+                        camada.bringToFront();
+                        camada.setStyle(Object.assign({}, estiloMunicipio(camada.feature), { weight: 2, color: "#7a1f3d" }));
+                        tooltipMapa
+                            .setContent(obterTextoPopup())
+                            .setLatLng(evento.latlng);
+                        mapa.openTooltip(tooltipMapa);
+                    });
+                    camada.on("mousemove", function (evento) {
+                        tooltipMapa.setLatLng(evento.latlng);
+                    });
+                    camada.on("mouseout", function () {
+                        if (municipioEmDestaque !== camada) return;
+                        camada.setStyle(estiloMunicipio(camada.feature));
+                        municipioEmDestaque = null;
+                        mapa.closeTooltip(tooltipMapa);
+                    });
+                }
+            }).addTo(mapa);
+
+            mapa.fitBounds(camadaMunicipios.getBounds(), { padding: [12, 12] });
+            visualizacaoAtual.textContent = nome + (uf ? " (" + uf + ")" : "");
+            botaoVoltar.hidden = false;
+            legendaEstados.hidden = true;
+            legendaMunicipios.hidden = false;
+            status.textContent = "Municípios de " + nome + ". Passe o cursor ou selecione uma área para ver o nome.";
+            atualizarRankingAtencao();
+            return true;
+        } catch (erro) {
+            if (solicitacao !== solicitacaoAtual) return false;
+            console.error("Não foi possível carregar os municípios:", erro);
+            status.textContent = "Não foi possível carregar os municípios. Verifique sua conexão e tente outro estado.";
+            return false;
+        }
+    }
+
+    function voltarAoBrasil() {
+        solicitacaoAtual++;
+        municipioEmDestaque = null;
+        mapa.closeTooltip(tooltipMapa);
+        if (camadaMunicipios) mapa.removeLayer(camadaMunicipios);
+        camadaEstados.addTo(mapa);
+        mapa.fitBounds(camadaEstados.getBounds(), { padding: [12, 12] });
+        ufSelecionada = "";
+        nomeEstadoSelecionado = "";
+        legendaEstados.hidden = false;
+        legendaMunicipios.hidden = true;
+        visualizacaoAtual.textContent = "Brasil";
+        botaoVoltar.hidden = true;
+        status.textContent = "Selecione um estado para visualizar seus municípios.";
+        atualizarRankingAtencao();
+    }
+
+    async function iniciar() {
+        try {
+            const resposta = await fetch(URL_ESTADOS);
+            if (!resposta.ok) throw new Error("Falha ao carregar estados.");
+            const dados = await resposta.json();
+
+            camadaEstados = L.geoJSON(dados, {
+                style: estiloEstado,
+                onEachFeature: configurarEstado
+            }).addTo(mapa);
+
+            mapa.fitBounds(camadaEstados.getBounds(), { padding: [12, 12] });
+            status.textContent = "Selecione um estado para visualizar seus municípios.";
+        } catch (erro) {
+            console.error("Não foi possível carregar o mapa do Brasil:", erro);
+            status.textContent = "Não foi possível carregar os estados brasileiros. Verifique sua conexão.";
+        }
+    }
+
+    botaoVoltar.addEventListener("click", voltarAoBrasil);
+    window.atualizarUnidadesMapaDiretor = function (unidades) {
+        const registrosUnidades = unidades || [];
+        unidadesEmpresaCarregadas = true;
+        codigosMunicipiosComUnidade = new Set(registrosUnidades.map(function (unidade) {
+            return String(unidade.co_municipio || "");
+        }).filter(Boolean));
+
+        const idsPorUf = new Map();
+        registrosUnidades.forEach(function (unidade) {
+            const uf = String(unidade.uf || "");
+            const idUnidade = String(unidade.id_unidade || "");
+            if (!uf || !idUnidade) return;
+            if (!idsPorUf.has(uf)) idsPorUf.set(uf, new Set());
+            idsPorUf.get(uf).add(idUnidade);
+        });
+        quantidadesUnidadesPorUf = new Map();
+        idsPorUf.forEach(function (ids, uf) {
+            quantidadesUnidadesPorUf.set(uf, ids.size);
+        });
+    };
+    seletorMeta.addEventListener("change", function () {
+        if (seletorMeta.value.trim() === "") {
+            seletorMeta.value = String(metaMediaEnem);
+            return;
+        }
+        const novaMeta = Number(seletorMeta.value);
+        if (!Number.isFinite(novaMeta) || novaMeta < 0 || novaMeta > 1000) {
+            seletorMeta.value = String(metaMediaEnem);
+            return;
+        }
+
+        metaMediaEnem = novaMeta;
+        const textoMeta = "Meta: " + metaMediaEnem.toLocaleString("pt-BR") + " pts";
+        metaEstados.textContent = textoMeta;
+        metaMunicipios.textContent = textoMeta;
+        try {
+            localStorage.setItem("metaMapaOportunidade", String(metaMediaEnem));
+        } catch (erro) {
+            // A atualização das cores não depende da persistência da meta.
+        }
+        if (camadaEstados) camadaEstados.setStyle(estiloEstado);
+        if (camadaMunicipios) camadaMunicipios.setStyle(estiloMunicipio);
+    });
+    window.atualizarDadosMapaDiretor = carregarMediasEnem;
+    iniciar();
+})();
+
+</script>
+  <script>
+(function () {
+    const seletorAno = document.getElementById("ano-enem");
+    const seletorSemestre = document.getElementById("semestre-planejamento");
+    const elementoStatus = document.getElementById("dashboard-status");
+    const corpoHeatmap = document.getElementById("heatmap-body");
+    const canvasMunicipios = document.getElementById("graficoMunicipios");
+    const idEmpresa = sessionStorage.getItem("ID_EMPRESA");
+    const areas = [
+        { chave: "linguagens", nome: "Linguagens", municipio: "municipio_lc", estado: "estado_lc" },
+        { chave: "humanas", nome: "Humanas", municipio: "municipio_ch", estado: "estado_ch" },
+        { chave: "natureza", nome: "Natureza", municipio: "municipio_cn", estado: "estado_cn" },
+        { chave: "matematica", nome: "Matemática", municipio: "municipio_mt", estado: "estado_mt" },
+        { chave: "redacao", nome: "Redação", municipio: "municipio_redacao", estado: "estado_redacao" }
+    ];
+    let graficoMunicipios;
+    let requisicao = 0;
+
+    if (!seletorAno || !seletorSemestre) return;
+    seletorSemestre.value = new Date().getMonth() < 6 ? "1" : "2";
+
+    function numero(valor) {
+        if (valor === null || valor === undefined || valor === "") return null;
+        const resultado = Number(valor);
+        return Number.isFinite(resultado) ? resultado : null;
+    }
+
+    function normalizarArea(valor) {
+        return String(valor || "").trim().normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+
+    function chaveArea(valor) {
+        const area = normalizarArea(valor);
+        if (area === "linguagens") return "linguagens";
+        if (area === "ciencias humanas" || area === "humanas") return "humanas";
+        if (area === "ciencias naturais" || area === "ciencias da natureza" || area === "natureza") return "natureza";
+        if (area === "ciencias exatas" || area === "matematica") return "matematica";
+        return "";
+    }
+
+    function mediaObjetiva(registro, tipo) {
+        const notas = ["lc", "ch", "cn", "mt"].map(function (area) {
+            return numero(registro[tipo + "_" + area]);
+        });
+        if (notas.some(function (nota) { return nota === null; })) return null;
+        return notas.reduce(function (soma, nota) { return soma + nota; }, 0) / notas.length;
+    }
+
+    function areasMaisFracas(municipio) {
+        const notas = areas.slice(0, 4).map(function (area) {
+            return { chave: area.chave, nota: numero(municipio[area.municipio]) };
+        });
+        if (notas.some(function (item) { return item.nota === null; })) return [];
+        const menorNota = Math.min.apply(null, notas.map(function (item) { return item.nota; }));
+        return notas.filter(function (item) { return item.nota === menorNota; })
+            .map(function (item) { return item.chave; });
+    }
+
+    function prepararDados(payload) {
+        const municipios = (payload.municipios || []).map(function (registro) {
+            const diferencas = {};
+            areas.forEach(function (area) {
+                const municipal = numero(registro[area.municipio]);
+                const estadual = numero(registro[area.estado]);
+                diferencas[area.chave] = municipal !== null && estadual !== null ? municipal - estadual : null;
+            });
+            return {
+                registro: registro,
+                diferencas: diferencas,
+                mediaObjetivaMunicipal: mediaObjetiva(registro, "municipio"),
+                mediaObjetivaEstadual: mediaObjetiva(registro, "estado"),
+                areasFracas: areasMaisFracas(registro)
+            };
+        });
+
+        const municipioPorCodigo = new Map();
+        municipios.forEach(function (municipio) {
+            municipioPorCodigo.set(String(municipio.registro.co_municipio), municipio);
+        });
+
+        let participantes = 0;
+        let temParticipantes = false;
+        let diferencasPonderadas = 0;
+        let pesoDiferencas = 0;
+        municipios.forEach(function (municipio) {
+            const registro = municipio.registro;
+            const quantidade = numero(registro.qtd_participantes);
+            if (quantidade !== null) {
+                participantes += quantidade;
+                temParticipantes = true;
+            }
+            if (municipio.mediaObjetivaMunicipal !== null && municipio.mediaObjetivaEstadual !== null && quantidade > 0) {
+                diferencasPonderadas += (municipio.mediaObjetivaMunicipal - municipio.mediaObjetivaEstadual) * quantidade;
+                pesoDiferencas += quantidade;
+            }
+        });
+
+        const unidades = new Map();
+        (payload.unidades || []).forEach(function (registro) {
+            const id = String(registro.id_unidade);
+            if (!unidades.has(id)) {
+                unidades.set(id, {
+                    id: id,
+                    municipio: municipioPorCodigo.get(String(registro.co_municipio)),
+                    professores: new Set()
+                });
+            }
+            const area = chaveArea(registro.area_atuacao);
+            if (registro.id_usuario !== null && area) unidades.get(id).professores.add(area);
+        });
+
+        let unidadesElegiveis = 0;
+        let unidadesSemProfessor = 0;
+        unidades.forEach(function (unidade) {
+            if (!unidade.municipio || unidade.municipio.areasFracas.length === 0) return;
+            unidadesElegiveis++;
+            if (unidade.municipio.areasFracas.every(function (area) { return !unidade.professores.has(area); })) {
+                unidadesSemProfessor++;
+            }
+        });
+
+        let totalEventos = 0;
+        let eventosNaAreaFraca = 0;
+        (payload.eventos || []).forEach(function (evento) {
+            totalEventos++;
+            const unidade = unidades.get(String(evento.id_unidade));
+            const area = chaveArea(evento.area);
+            if (unidade && unidade.municipio && area && unidade.municipio.areasFracas.includes(area)) {
+                eventosNaAreaFraca++;
+            }
+        });
+
+        return {
+            ano: payload.ano,
+            anoPlanejamento: payload.anoPlanejamento,
+            semestre: payload.semestre,
+            municipios: municipios,
+            participantes: temParticipantes ? participantes : null,
+            diferencaVsEstado: pesoDiferencas > 0 ? diferencasPonderadas / pesoDiferencas : null,
+            unidadesElegiveis: unidadesElegiveis,
+            unidadesSemProfessor: unidadesSemProfessor,
+            totalEventos: totalEventos,
+            eventosNaAreaFraca: eventosNaAreaFraca
+        };
+    }
+
+    function formatar(valor, casas) {
+        return Number(valor).toLocaleString("pt-BR", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: casas === undefined ? 1 : casas
+        });
+    }
+
+    function atualizarIndicadores(dados) {
+        document.getElementById("kpi-diferenca").textContent = dados.diferencaVsEstado === null
+            ? "Sem dados"
+            : (dados.diferencaVsEstado > 0 ? "+" : "") + formatar(dados.diferencaVsEstado) + " pts";
+        document.getElementById("kpi-diferenca-descricao").textContent =
+            "Média das quatro áreas objetivas, ponderada pelos participantes, em relação ao estado.";
+
+        document.getElementById("kpi-participantes").textContent = dados.participantes === null
+            ? "Sem dados"
+            : formatar(dados.participantes, 0);
+        document.getElementById("kpi-participantes-descricao").textContent =
+            "Participantes do ENEM " + dados.ano + " nos municípios atendidos pela rede.";
+
+        document.getElementById("kpi-cobertura").textContent = dados.unidadesElegiveis > 0
+            ? dados.unidadesSemProfessor + " de " + dados.unidadesElegiveis
+            : "Sem dados";
+        document.getElementById("kpi-cobertura-descricao").textContent =
+            "Unidades sem professor na área objetiva de menor média do município.";
+
+        document.getElementById("kpi-aderencia").textContent = dados.totalEventos > 0
+            ? formatar((dados.eventosNaAreaFraca / dados.totalEventos) * 100) + "%"
+            : "Sem dados";
+        document.getElementById("kpi-aderencia-descricao").textContent = dados.eventosNaAreaFraca + " de " +
+            dados.totalEventos + " eventos do " + dados.semestre + "º semestre de " + dados.anoPlanejamento +
+            " estão na área de menor média.";
+    }
+
+    function atualizarGrafico(municipios) {
+        const dados = municipios.filter(function (item) {
+            return item.mediaObjetivaMunicipal !== null && item.mediaObjetivaEstadual !== null;
+        });
+        canvasMunicipios.parentElement.style.height = Math.max(320, dados.length * 34 + 72) + "px";
+        const rotulos = dados.map(function (item) { return item.registro.nome_municipio; });
+        const valores = dados.map(function (item) {
+            return item.mediaObjetivaMunicipal - item.mediaObjetivaEstadual;
+        });
+        if (graficoMunicipios) graficoMunicipios.destroy();
+        graficoMunicipios = new Chart(canvasMunicipios, {
+            type: "bar",
+            data: {
+                labels: rotulos,
+                datasets: [{
+                    label: "Diferença em relação ao estado (pontos)",
+                    data: valores,
+                    backgroundColor: valores.map(function (valor) { return valor < 0 ? "#bd4a08" : "#2c6aa0"; }),
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: "y",
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { callback: function (valor) { return valor > 0 ? "+" + valor : valor; } } },
+                    y: {
+                        grid: { display: false },
+                        ticks: { autoSkip: false, padding: 6 }
+                    }
+                }
+            }
+        });
+    }
+
+    function classeHeatmap(valor) {
+        if (valor === null) return "neutral";
+        if (valor <= -30) return "neg4";
+        if (valor < -10) return "neg2";
+        if (valor > 10) return "pos2";
+        return "neutral";
+    }
+
+    function atualizarHeatmap(municipios) {
+        corpoHeatmap.replaceChildren();
+        municipios.forEach(function (item) {
+            const linha = document.createElement("div");
+            linha.className = "heatmap-row";
+            const nome = document.createElement("strong");
+            nome.textContent = item.registro.nome_municipio;
+            linha.appendChild(nome);
+
+            areas.forEach(function (area) {
+                const celula = document.createElement("span");
+                const valor = item.diferencas[area.chave];
+                celula.className = "h " + classeHeatmap(valor);
+                celula.textContent = valor === null ? "—" : (valor > 0 ? "+" : "") + formatar(valor);
+                linha.appendChild(celula);
+            });
+            corpoHeatmap.appendChild(linha);
+        });
+
+        if (municipios.length === 0) {
+            const linha = document.createElement("div");
+            linha.className = "heatmap-row";
+            linha.textContent = "Sem dados para este ano.";
+            corpoHeatmap.appendChild(linha);
+        }
+    }
+
+    function mostrarStatus(texto, erro) {
+        if (!elementoStatus) return;
+        elementoStatus.textContent = texto || "";
+        elementoStatus.hidden = !texto;
+        elementoStatus.classList.toggle("erro", Boolean(erro));
+    }
+
+    async function carregarDados() {
+        if (!idEmpresa || !seletorAno.value) return;
+        const idRequisicao = ++requisicao;
+        mostrarStatus("Carregando dados da rede...");
+
+        try {
+            const parametros = new URLSearchParams({
+                ano: seletorAno.value,
+                anoPlanejamento: String(new Date().getFullYear()),
+                semestre: seletorSemestre.value
+            });
+            const resposta = await fetch("/dashboardDiretorGeral/dados/" + encodeURIComponent(idEmpresa) + "?" + parametros);
+            if (!resposta.ok) throw new Error("Não foi possível carregar os dados da rede.");
+            const payload = await resposta.json();
+            if (idRequisicao !== requisicao) return;
+
+            if (window.atualizarUnidadesMapaDiretor) window.atualizarUnidadesMapaDiretor(payload.unidades);
+            const dados = prepararDados(payload);
+            atualizarIndicadores(dados);
+            atualizarGrafico(dados.municipios);
+            atualizarHeatmap(dados.municipios);
+            mostrarStatus("");
+            if (window.atualizarDadosMapaDiretor) window.atualizarDadosMapaDiretor(payload.ano);
+        } catch (erro) {
+            if (idRequisicao !== requisicao) return;
+            console.error("Erro ao carregar dados da dashboard:", erro);
+            mostrarStatus(erro.message, true);
+        }
+    }
+
+    async function carregarAnos() {
+        if (!idEmpresa) {
+            seletorAno.replaceChildren(new Option("Empresa não identificada", ""));
+            mostrarStatus("Faça login novamente para carregar os dados da empresa.", true);
+            return;
+        }
+
+        try {
+            const resposta = await fetch("/dashboardDiretorGeral/anos/" + encodeURIComponent(idEmpresa));
+            if (!resposta.ok) throw new Error("Não foi possível carregar os anos disponíveis.");
+            const anos = await resposta.json();
+            seletorAno.replaceChildren();
+            if (!anos.length) {
+                seletorAno.add(new Option("Sem anos disponíveis", ""));
+                mostrarStatus("Não há anos comparáveis para os municípios da rede.", true);
+                return;
+            }
+
+            anos.forEach(function (ano) { seletorAno.add(new Option(String(ano), String(ano))); });
+            seletorAno.value = String(anos[0]);
+            await carregarDados();
+        } catch (erro) {
+            console.error("Erro ao carregar anos da dashboard:", erro);
+            seletorAno.replaceChildren(new Option("Erro ao carregar anos", ""));
+            mostrarStatus(erro.message, true);
+        }
+    }
+
+    seletorAno.addEventListener("change", carregarDados);
+    seletorSemestre.addEventListener("change", carregarDados);
+    carregarAnos();
+})();
+
+</script>
   <script src="../js/menu.js"></script>
+  <script src="../js/controleAcesso.js"></script>
 </body>
 
 </html>

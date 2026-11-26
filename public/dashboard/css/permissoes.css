@@ -20,6 +20,17 @@
   color: #7b1e3a;
 }
 
+.orientacao-cargos {
+  margin: -18px 0 22px;
+  color: #666;
+  font-size: 14px;
+}
+
+#ajuda-cargo {
+  color: #666;
+  font-size: 12px;
+}
+
 
 .tabela-card {
   background: #ffffff;

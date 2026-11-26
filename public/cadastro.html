@@ -1,313 +1,331 @@
 <!doctype html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Growth Map | Cadastro</title>
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&family=Poppins:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="icon"
-      href="./assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png"
-    />
-    <link rel="stylesheet" href="./css/cadastro.css" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Growth Map | Cadastro</title>
 
-  <body>
-    <div class="container">
-      <!-- bloc1 é na esquerda, bloc2 na direta -->
+  <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;700&family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet" />
+  <link rel="icon" href="./assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png" />
+  <link rel="stylesheet" href="./css/cadastro.css" />
+</head>
 
-      <div id="bloc1" class="cadastro">
-        <a
-          href="index.html"
-          class="link-logo"
-          aria-label="Ir para a página inicial"
-        >
-          <div id="logo"></div>
-        </a>
-        <div id="inputs">
-          <!-- separei os inputs em caixas pra ficar mais facil de mexer -->
+<body>
+  <div class="container">
+    <!-- bloc1 é na esquerda, bloc2 na direta -->
 
-          <div class="caixa" id="caixaNome">
-            <p class="tituloInp">Empresa:</p>
-            <input id="inpNome" class="input" type="text" />
+    <div id="bloc1" class="cadastro">
+      <a href="index.html" class="link-logo" aria-label="Ir para a página inicial">
+        <div id="logo"></div>
+      </a>
+      <div id="inputs">
+        <!-- separei os inputs em caixas pra ficar mais facil de mexer -->
+
+        <div class="caixa" id="caixaNome">
+          <p class="tituloInp">Empresa:</p>
+          <input id="inpNome" class="input" type="text" placeholder="Nome da empresa"/>
+        </div>
+
+        <div class="caixa" id="caixaEmail">
+          <p class="tituloInp">Email:</p>
+          <input id="inpEmail" class="input" type="text" placeholder="seuemail@email.com" />
+        </div>
+
+        <div class="caixa" id="caixaCnpj">
+          <p class="tituloInp">CNPJ:</p>
+          <input id="inpCnpj" class="input" type="text" placeholder="37235564000113" />
+        </div>
+
+        <div class="caixa" id="caixaSenha">
+          <p class="tituloInp">Senha:</p>
+          <div class="campo-senha">
+            <input id="inpSenha" class="input" type="password" oninput="verificarForcaSenha()" placeholder="*****" />
+            <button type="button" class="btn-ver-senha" onclick="alternarVisibilidadeSenha('inpSenha', this)"
+              aria-label="Mostrar ou ocultar senha">
+              <img src="./assets/imgs/olhos-fechados.png" alt="Ocultar senha" class="icone-olho" />
+            </button>
           </div>
 
-          <div class="caixa" id="caixaEmail">
-            <p class="tituloInp">Email:</p>
-            <input id="inpEmail" class="input" type="text" />
-          </div>
-
-          <div class="caixa" id="caixaCnpj">
-            <p class="tituloInp">CNPJ:</p>
-            <input id="inpCnpj" class="input" type="text" />
-          </div>
-
-          <div class="caixa" id="caixaSenha">
-            <p class="tituloInp">Senha:</p>
-            <input id="inpSenha" class="input" type="password" oninput="verificarForcaSenha()" />
-
-            <div class="validacao_senha">
-              <div class="fraco" id="fraco"></div>
-              <div class="medio" id="medio"></div>
-              <div class="forte" id="forte"></div>
-            </div>
-          </div>
-
-          <div class="caixa" id="caixaConfirmarSenha">
-            <p class="tituloInp">Confirmar senha:</p>
-            <input id="inpConfSenha" class="input" type="password" />
+          <div class="validacao_senha">
+            <div class="fraco" id="fraco"></div>
+            <div class="medio" id="medio"></div>
+            <div class="forte" id="forte"></div>
           </div>
         </div>
 
-        <div class="caixa" id="caixaBotao">
-          <!-- caixa para o botao -->
-          <button class="botao" onclick="cadastrar()">CADASTRAR-SE</button>
-          <p class="texto">
-            Já tem uma conta? <b><a href="login.html">Entrar</a></b>
-          </p>
+        <div class="caixa" id="caixaConfirmarSenha">
+          <p class="tituloInp">Confirmar senha:</p>
+          <div class="campo-senha">
+            <input id="inpConfSenha" class="input" type="password" placeholder="*****"/>
+            <button type="button" class="btn-ver-senha" onclick="alternarVisibilidadeSenha('inpConfSenha', this)">
+              <img src="./assets/imgs/olhos-fechados.png" class="icone-olho" />
+            </button>
+          </div>
         </div>
       </div>
 
-      <div id="bloc2" class="cadastro">
-        <p class="texto-cadastro">Cadastro.</p>
-        <div class="cadastro" id="logoFundo"></div>
+      <div class="caixa" id="caixaBotao">
+        <!-- caixa para o botao -->
+        <button class="botao" onclick="cadastrar()">CADASTRAR-SE</button>
+        <p class="texto">
+          Já tem uma conta? <b><a href="login.html">Entrar</a></b>
+        </p>
       </div>
     </div>
 
-    <script>
-      function validarNome(nome) {
-        if (nome.length < 3) {
-          return false;
-        }
+    <div id="bloc2" class="cadastro">
+      <p class="texto-cadastro">Cadastro.</p>
+      <div class="cadastro" id="logoFundo"></div>
+    </div>
+  </div>
 
-        return true;
+  <script>
+    const CAMINHO_OLHO_ABERTO = "./assets/imgs/olho.png";
+    const CAMINHO_OLHO_FECHADO = "./assets/imgs/olhos-fechados.png";
+
+    function alternarVisibilidadeSenha(idInput, botao) {
+      const input = document.getElementById(idInput);
+      const img = botao.querySelector("img");
+
+      const estaOculta = input.type === "password";
+      input.type = estaOculta ? "text" : "password";
+
+      if (img) {
+        img.src = estaOculta ? CAMINHO_OLHO_ABERTO : CAMINHO_OLHO_FECHADO;
+        img.alt = estaOculta ? "Ocultar senha" : "Mostrar senha";
       }
+    }
 
-      function validarEmail(email) {
-        if (!email.includes("@")) {
-          return false;
-        }
-
-        let partes = email.split("@");
-
-        if (partes.length != 2) {
-          // mais de um @ no email
-          return false;
-        }
-
-        let usuario = partes[0];
-        let dominio = partes[1];
-
-        if (usuario.length < 1) {
-          // nada antes do @ no email
-          return false;
-        }
-
-        if (dominio.indexOf(".") < 1) {
-          // sem ponto no dominio ou ponto logo no inicio
-          return false;
-        }
-
-        return true;
-      }
-
-      function validarCnpj(cnpj) {
-        cnpj = cnpj.replace(/\D/g, ""); // Regex que substitui pontos e barras por nada, dai o cpnj vem apenas com os numeros
-
-        if (cnpj.length != 14) {
-          return false;
-        }
-
-        console.log(cnpj);
-
-        let todosIguais = true;
-
-        for (let i = 1; i < cnpj.length; i++) {
-          if (cnpj[i] != cnpj[0]) {
-            todosIguais = false;
-          }
-        }
-        if (todosIguais) {
-          return false;
-        }
-
-        return true;
-      }
-
-      let mensagemErro = "";
-
-      function analisarSenha(senha) { 
-        let tamanho = senha.length >= 8; 
-        let temMinuscula = false; 
-        let temMaiuscula = false; 
-        let temEspecial = false; 
-        let especiais = "!@#$%&*_-."; 
-        
-        for (let i = 0; i < senha.length; i++) { 
-          let caractere = senha[i]; 
-          
-          if (caractere >= "a" && caractere <= "z") { 
-            temMinuscula = true; 
-          } 
-          
-          if (caractere >= "A" && caractere <= "Z") { 
-            temMaiuscula = true; 
-          } 
-          
-          if (especiais.includes(caractere)) { 
-            temEspecial = true; 
-          } 
-        } 
-        
-        return { tamanho, temMinuscula, temMaiuscula, temEspecial }; 
-      }
-
-      function verificarForcaSenha() { 
-        let senha = inpSenha.value; 
-        let analise = analisarSenha(senha); 
-
-        fraco.style.backgroundColor = "#888";
-        medio.style.backgroundColor = "#888";
-        forte.style.backgroundColor = "#888"; 
-        
-        if (senha.length == 0) { 
-          return; 
-        } 
-        
-        let pontos = 0; 
-        
-        if (analise.tamanho) { 
-          pontos++; 
-        } 
-        
-        if (analise.temMinuscula) { 
-          pontos++; 
-        } 
-        
-        if (analise.temMaiuscula) { 
-          pontos++; 
-        } 
-        
-        if (analise.temEspecial) { 
-          pontos++; 
-        } 
-        
-        if (pontos <= 2) { 
-          fraco.style.backgroundColor = "red";
-
-        } else if (pontos == 3) { 
-          fraco.style.backgroundColor = "red";
-          medio.style.backgroundColor = "yellow";
-
-        } else {
-          fraco.style.backgroundColor = "red";
-          medio.style.backgroundColor = "yellow";
-          forte.style.backgroundColor = "green"; 
-        } 
-      }
-
-      function validarSenha(senha) {
-        mensagemErro = "";
-
-        let analise = analisarSenha(senha);
-
-        if (!analise.tamanho) { 
-          mensagemErro = "A senha deve ter pelo menos 8 caracteres."; 
-          return false; 
-        } 
-        
-        if (!analise.temMinuscula) { 
-          mensagemErro = "A senha deve ter pelo menos uma letra minúscula."; 
-          return false; 
-        } 
-        
-        if (!analise.temMaiuscula) { 
-          mensagemErro = "A senha deve ter pelo menos uma letra maiúscula."; 
-          return false; 
-        } 
-        
-        if (!analise.temEspecial) { 
-          mensagemErro = "A senha deve ter pelo menos um caractere especial."; 
-          return false; 
-        } 
-        
-        return true;
-      }
-
-      function validarConfSenha(senha, confSenha) {
-        return senha == confSenha;
-      }
-
-      function cadastrar() {
-        let nome = inpNome.value.trim();
-        let email = inpEmail.value.trim();
-        let cnpj = inpCnpj.value.replace(/\D/g, "");
-        let senha = inpSenha.value;
-        let confSenha = inpConfSenha.value;
-
-        if (nome == "" || email == "" || cnpj == "" || senha == "") {
-          alert("Preencha todos os campos!");
-          return false;
-        }
-
-        if (!validarNome(nome)) {
-          alert("Digite um nome válido.");
-          return false;
-        }
-
-        if (!validarEmail(email)) {
-          alert("Digite um email válido.");
-          return false;
-        }
-
-        if (!validarCnpj(cnpj)) {
-          alert("Digite um CNPJ válido.");
-          return false;
-        }
-
-        if (!validarSenha(senha)) {
-          alert(mensagemErro);
-          return false;
-        }
-
-        if (!validarConfSenha(senha, confSenha)) {
-          alert("As senhas não são iguais.");
-          return false;
-        }
-
-        fetch("/empresas/cadastrar", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            nome: nome,
-            email: email,
-            cnpj: cnpj,
-            senha: senha,
-          }),
-        })
-          .then(function (resposta) {
-            if (resposta.ok) {
-              alert("Cadastro realizado com sucesso!");
-
-              window.location = "login.html";
-            } else {
-              resposta.text().then(function (texto) {
-                alert(texto);
-              });
-            }
-          })
-          .catch(function (erro) {
-            console.log("#ERRO:", erro);
-          });
-
+    function validarNome(nome) {
+      if (nome.length < 3) {
         return false;
       }
-    </script>
-  </body>
+
+      return true;
+    }
+
+    function validarEmail(email) {
+      if (!email.includes("@")) {
+        return false;
+      }
+
+      let partes = email.split("@");
+
+      if (partes.length != 2) {
+        // mais de um @ no email
+        return false;
+      }
+
+      let usuario = partes[0];
+      let dominio = partes[1];
+
+      if (usuario.length < 1) {
+        // nada antes do @ no email
+        return false;
+      }
+
+      if (dominio.indexOf(".") < 1) {
+        // sem ponto no dominio ou ponto logo no inicio
+        return false;
+      }
+
+      return true;
+    }
+
+    function validarCnpj(cnpj) {
+      cnpj = cnpj.replace(/\D/g, ""); // Regex que substitui pontos e barras por nada, dai o cpnj vem apenas com os numeros
+
+      if (cnpj.length != 14) {
+        return false;
+      }
+
+      console.log(cnpj);
+
+      let todosIguais = true;
+
+      for (let i = 1; i < cnpj.length; i++) {
+        if (cnpj[i] != cnpj[0]) {
+          todosIguais = false;
+        }
+      }
+      if (todosIguais) {
+        return false;
+      }
+
+      return true;
+    }
+
+    let mensagemErro = "";
+
+    function analisarSenha(senha) {
+      let tamanho = senha.length >= 8;
+      let temMinuscula = false;
+      let temMaiuscula = false;
+      let temEspecial = false;
+      let especiais = "!@#$%&*_-.";
+
+      for (let i = 0; i < senha.length; i++) {
+        let caractere = senha[i];
+
+        if (caractere >= "a" && caractere <= "z") {
+          temMinuscula = true;
+        }
+
+        if (caractere >= "A" && caractere <= "Z") {
+          temMaiuscula = true;
+        }
+
+        if (especiais.includes(caractere)) {
+          temEspecial = true;
+        }
+      }
+
+      return { tamanho, temMinuscula, temMaiuscula, temEspecial };
+    }
+
+    function verificarForcaSenha() {
+      let senha = inpSenha.value;
+      let analise = analisarSenha(senha);
+
+      fraco.style.backgroundColor = "#888";
+      medio.style.backgroundColor = "#888";
+      forte.style.backgroundColor = "#888";
+
+      if (senha.length == 0) {
+        return;
+      }
+
+      let pontos = 0;
+
+      if (analise.tamanho) {
+        pontos++;
+      }
+
+      if (analise.temMinuscula) {
+        pontos++;
+      }
+
+      if (analise.temMaiuscula) {
+        pontos++;
+      }
+
+      if (analise.temEspecial) {
+        pontos++;
+      }
+
+      if (pontos <= 2) {
+        fraco.style.backgroundColor = "red";
+      } else if (pontos == 3) {
+        fraco.style.backgroundColor = "red";
+        medio.style.backgroundColor = "yellow";
+      } else {
+        fraco.style.backgroundColor = "red";
+        medio.style.backgroundColor = "yellow";
+        forte.style.backgroundColor = "green";
+      }
+    }
+
+    function validarSenha(senha) {
+      mensagemErro = "";
+
+      let analise = analisarSenha(senha);
+
+      if (!analise.tamanho) {
+        mensagemErro = "A senha deve ter pelo menos 8 caracteres.";
+        return false;
+      }
+
+      if (!analise.temMinuscula) {
+        mensagemErro = "A senha deve ter pelo menos uma letra minúscula.";
+        return false;
+      }
+
+      if (!analise.temMaiuscula) {
+        mensagemErro = "A senha deve ter pelo menos uma letra maiúscula.";
+        return false;
+      }
+
+      if (!analise.temEspecial) {
+        mensagemErro = "A senha deve ter pelo menos um caractere especial.";
+        return false;
+      }
+
+      return true;
+    }
+
+    function validarConfSenha(senha, confSenha) {
+      return senha == confSenha;
+    }
+
+    function cadastrar() {
+      let nome = inpNome.value.trim();
+      let email = inpEmail.value.trim();
+      let cnpj = inpCnpj.value.replace(/\D/g, "");
+      let senha = inpSenha.value;
+      let confSenha = inpConfSenha.value;
+
+      if (nome == "" || email == "" || cnpj == "" || senha == "") {
+        alert("Preencha todos os campos!");
+        return false;
+      }
+
+      if (!validarNome(nome)) {
+        alert("Digite um nome válido.");
+        return false;
+      }
+
+      if (!validarEmail(email)) {
+        alert("Digite um email válido.");
+        return false;
+      }
+
+      if (!validarCnpj(cnpj)) {
+        alert("Digite um CNPJ válido.");
+        return false;
+      }
+
+      if (!validarSenha(senha)) {
+        alert(mensagemErro);
+        return false;
+      }
+
+      if (!validarConfSenha(senha, confSenha)) {
+        alert("As senhas não são iguais.");
+        return false;
+      }
+
+      fetch("/empresas/cadastrar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nome: nome,
+          email: email,
+          cnpj: cnpj,
+          senha: senha,
+        }),
+      })
+        .then(function (resposta) {
+          if (resposta.ok) {
+            alert("Cadastro realizado com sucesso!");
+
+            window.location = "login.html";
+          } else {
+            resposta.text().then(function (texto) {
+              alert(texto);
+            });
+          }
+        })
+        .catch(function (erro) {
+          console.log("#ERRO:", erro);
+        });
+
+      return false;
+    }
+  </script>
+</body>
+
 </html>
