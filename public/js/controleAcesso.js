@@ -56,6 +56,13 @@ function coordenadorGerenciaUsuarios(pagina) {
         (pagina == "usuarios.html" || pagina == "permissoes.html");
 }
 
+function diretorGeralAcessaDashboard(pagina) {
+    return (
+        (cargoLogado == "Diretor Geral") &&
+        pagina == "dashboardDiretorGeral.html"
+    );
+}
+
 function coordenadorAcessaDashboard(pagina) {
     return ehCoordenador() && pagina == "dashboardCoordenador.html";
 }
@@ -78,7 +85,7 @@ function aplicarAcesso(modulos) {
     }
 
     // Bloqueia a navegação direta para módulos não permitidos
-    if (moduloAtual != "" && !permitido && !coordenadorGerenciaUsuarios(pagina) && !coordenadorAcessaDashboard(pagina) && !professorAcessaDashboard(pagina)) {
+    if (moduloAtual != "" && !permitido && !coordenadorGerenciaUsuarios(pagina) && !coordenadorAcessaDashboard(pagina) && !professorAcessaDashboard(pagina) && !diretorGeralAcessaDashboard(pagina)) {
         alert("Seu cargo não possui acesso a esta página.");
         window.location = "./acessoRapido.html";
         return;
@@ -136,7 +143,7 @@ function aplicarAcesso(modulos) {
         if (moduloCard != "" && tipoConta != "empresa") {
             var exibir = false;
 
-            if (coordenadorGerenciaUsuarios(paginaCard) || coordenadorAcessaDashboard(paginaCard) || professorAcessaDashboard(paginaCard)) {
+            if (cargoLogado == "Diretor Geral"||coordenadorGerenciaUsuarios(paginaCard) || coordenadorAcessaDashboard(paginaCard) || professorAcessaDashboard(paginaCard)) {
                 exibir = true;
             }
 
