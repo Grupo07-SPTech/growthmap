@@ -124,7 +124,8 @@
         </div>
 
         <div class="director-chart-container branch-chart-container">
-          <canvas id="graficoAreasEnem"></canvas>
+          <canvas id="graficoAreasEnem" hidden></canvas>
+          <p class="chart-empty-state" id="estado-grafico">Carregando desempenho...</p>
         </div>
 
         <div class="legend"><span><i class="legend-dot city"></i><span id="legenda-municipio">Município</span></span><span><i
@@ -217,6 +218,8 @@
       var historicoAtual = [];
       var professoresAtuais = [];
       var eventosAtuais = [];
+      var professoresErro = false;
+      var eventosErro = false;
       var anoPlanejamento = new Date().getFullYear();
       seletorSemestre.value = new Date().getMonth() < 6 ? "1" : "2";
       var areas = [
@@ -284,6 +287,15 @@
       }
 
       function atualizarCobertura() {
+        if (professoresErro) {
+          document.querySelectorAll(".coverage-tags span").forEach(function (tag) { tag.classList.remove("alert"); });
+          ["linguagens", "humanas", "natureza", "matematica"].forEach(function (chave) {
+            document.getElementById("prof-" + chave).textContent = "—";
+          });
+          document.getElementById("kpi-cobertura").textContent = "—";
+          document.getElementById("kpi-cobertura-descricao").textContent = "Não foi possível carregar os professores.";
+          return;
+        }
         var contagens = criarContagemAreas();
         professoresAtuais.forEach(function (registro) {
           var chave = mapearArea(registro.area_atuacao);
@@ -337,7 +349,7 @@
         areas.forEach(function (area) {
           var linha = document.querySelector('.effort-row[data-area="' + area.chave + '"]');
           var diferenca = diferencas[area.chave];
-          var quantidade = area.chave === "redacao" ? null : contagensEventos[area.chave];
+          var quantidade = eventosErro || area.chave === "redacao" ? null : contagensEventos[area.chave];
           document.getElementById("dif-" + area.chave).textContent = diferenca === null ? "—" : formatarPontos(diferenca);
           document.getElementById("eventos-" + area.chave).textContent = quantidade === null ? "—" : quantidade;
           linha.querySelector(".need i").style.setProperty("--need", maiorDiferenca ? (Math.abs(diferenca || 0) / maiorDiferenca * 100) + "%" : "0%");
@@ -351,6 +363,12 @@
       }
 
       function atualizarAderencia() {
+        if (eventosErro) {
+          document.getElementById("kpi-aderencia").textContent = "—";
+          document.getElementById("kpi-aderencia-descricao").textContent = "Não foi possível carregar os eventos.";
+          atualizarTabelaEsforco();
+          return;
+        }
         if (!desempenhoAtual) {
           document.getElementById("kpi-aderencia").textContent = "—";
           document.getElementById("kpi-aderencia-descricao").textContent = "Aguardando dados de desempenho.";
@@ -471,20 +489,25 @@
           if (chave) professores[chave] += Number(registro.quantidade) || 0;
         });
         var totalProfessores = fracas.reduce(function (soma, area) { return soma + professores[area.chave]; }, 0);
-        document.getElementById("leitura-professores").textContent = totalProfessores;
-        document.getElementById("leitura-resumo-professores").textContent = "professores nas áreas de maior defasagem.";
+        document.getElementById("leitura-professores").textContent = professoresErro ? "—" : totalProfessores;
+        document.getElementById("leitura-resumo-professores").textContent = professoresErro
+          ? "Não foi possível carregar os professores."
+          : "professores nas áreas de maior defasagem.";
 
         var eventosPrioritarios = eventosAtuais.filter(function (evento) {
           var chave = mapearArea(evento.area);
           return fracas.some(function (area) { return area.chave === chave; });
         }).length;
-        document.getElementById("leitura-eventos").textContent = eventosPrioritarios + "/" + eventosAtuais.length;
-        document.getElementById("leitura-resumo-eventos").textContent = "eventos nas áreas prioritárias no " +
-          Number(seletorSemestre.value) + "º semestre de " + anoPlanejamento + ".";
+        document.getElementById("leitura-eventos").textContent = eventosErro ? "—" : eventosPrioritarios + "/" + eventosAtuais.length;
+        document.getElementById("leitura-resumo-eventos").textContent = eventosErro
+          ? "Não foi possível carregar os eventos."
+          : "eventos nas áreas prioritárias no " + Number(seletorSemestre.value) + "º semestre de " + anoPlanejamento + ".";
       }
 
       function carregarProfessores(idUnidade) {
         var requisicaoAtual = ++requisicaoProfessores;
+        professoresErro = false;
+        professoresAtuais = [];
         var url = "/dashboardDiretorFilial/professores/" + encodeURIComponent(idEmpresa) + "/" + encodeURIComponent(idUnidade);
         return fetch(url).then(function (resposta) {
           if (!resposta.ok) throw new Error("Não foi possível carregar os professores.");
@@ -497,6 +520,7 @@
         }).catch(function (erro) {
           if (requisicaoAtual !== requisicaoProfessores) return;
           console.error("Erro ao carregar professores da unidade:", erro);
+          professoresErro = true;
           professoresAtuais = [];
           atualizarCobertura();
           atualizarLeituraRapida();
@@ -508,6 +532,7 @@
         var idUnidade = seletorUnidade.value;
         if (!idUnidade) return;
         var requisicaoAtual = ++requisicaoPedagogica;
+        eventosErro = false;
         eventosAtuais = [];
         atualizarAderencia();
         atualizarLeituraRapida();
@@ -525,6 +550,7 @@
         }).catch(function (erro) {
           if (requisicaoAtual !== requisicaoPedagogica) return;
           console.error("Erro ao carregar eventos da unidade:", erro);
+          eventosErro = true;
           eventosAtuais = [];
           atualizarAderencia();
           atualizarLeituraRapida();
@@ -543,6 +569,9 @@
           graficoAreas.destroy();
           graficoAreas = null;
         }
+        document.getElementById("legenda-municipio").textContent = "Município";
+        document.getElementById("descricao-grafico-areas").textContent = "Média no ENEM por área no município selecionado, no estado e na rede.";
+        mostrarEstadoGrafico("Aguardando dados de desempenho.");
         atualizarEvolucao([]);
         atualizarCobertura();
         atualizarAderencia();
@@ -594,6 +623,12 @@
           "Médias do ENEM " + ano + " em " + nomeMunicipio + ", no estado e nos municípios atendidos pela rede.";
 
         if (graficoAreas) graficoAreas.destroy();
+        var dadosGrafico = municipio.concat(estado, rede);
+        if (!dadosGrafico.some(function (valor) { return valor !== null; })) {
+          mostrarEstadoGrafico("Não há notas disponíveis para montar o gráfico.");
+          return;
+        }
+        mostrarEstadoGrafico("");
         graficoAreas = new Chart(document.getElementById("graficoAreasEnem"), {
           type: "bar",
           data: {
@@ -613,6 +648,14 @@
         });
       }
 
+      function mostrarEstadoGrafico(mensagem) {
+        var canvas = document.getElementById("graficoAreasEnem");
+        var estado = document.getElementById("estado-grafico");
+        canvas.hidden = Boolean(mensagem);
+        estado.hidden = !mensagem;
+        estado.textContent = mensagem;
+      }
+
       function atualizarDados() {
         var ano = Number(seletorAno.value);
         var idUnidade = seletorUnidade.value;
@@ -622,6 +665,7 @@
         }
 
         var requisicaoAtual = ++requisicaoDados;
+        mostrarEstadoGrafico("Carregando dados do ENEM " + ano + "...");
         var desempenhoUrl = "/dashboardDiretorFilial/desempenho/" + encodeURIComponent(idEmpresa) + "/" + encodeURIComponent(idUnidade);
         var redeUrl = "/dashboardDiretorFilial/rede/" + encodeURIComponent(idEmpresa) + "?ano=" + encodeURIComponent(ano);
         mostrarStatus("Carregando dados do ENEM " + ano + "...");
@@ -636,6 +680,7 @@
             var desempenho = historico.find(function (registro) { return Number(registro.ano) === ano; });
             if (!desempenho) {
               limparDados();
+              mostrarEstadoGrafico("Não há dados comparáveis para este ano.");
               mostrarStatus("Não há desempenho para o ano selecionado.", true);
               return;
             }
@@ -653,6 +698,7 @@
             if (requisicaoAtual !== requisicaoDados) return;
             console.error("Erro ao carregar indicadores da filial:", erro);
             limparDados();
+            mostrarEstadoGrafico("Não foi possível carregar o gráfico.");
             mostrarStatus(erro.message || "Não foi possível carregar os dados.", true);
           });
       }
@@ -665,6 +711,8 @@
       function mostrarErro(mensagem) {
         seletorUnidade.disabled = true;
         seletorAno.disabled = true;
+        limparDados();
+        mostrarEstadoGrafico(mensagem);
         mostrarStatus(mensagem, true);
       }
 
@@ -724,7 +772,11 @@
             seletorUnidade.add(opcao);
           });
           seletorUnidade.disabled = Boolean(idUnidadeSessao);
-          return selecionarUnidade(unidades[0]);
+          return selecionarUnidade(unidades[0]).catch(function (erro) {
+            console.error("Erro ao carregar anos da unidade:", erro);
+            seletorAno.replaceChildren(new Option("Erro ao carregar anos", ""));
+            mostrarStatus(erro.message || "Não foi possível carregar os anos.", true);
+          });
         })
         .catch(function (erro) {
           console.error("Erro ao carregar filtros da dashboard da filial:", erro);
