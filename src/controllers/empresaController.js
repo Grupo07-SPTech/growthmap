@@ -1,4 +1,5 @@
 var empresaModel = require("../models/empresaModel");
+var notificacaoService = require("../services/notificacaoService");
 
 function autenticar(req, res) {
     var email = req.body.email;
@@ -63,6 +64,7 @@ function cadastrar(req, res) {
                                 empresaModel.cadastrar(nome, email, cnpj, senha)
                                     .then(function (resultado) {
                                         res.status(201).json(resultado);
+                                        notificacaoService.avisarCadastro(nome, email);
                                     })
                                     .catch(function (erro) {
                                         console.log(erro);
@@ -119,6 +121,8 @@ function buscarPorId(req, res) {
             res.status(500).json(resultado);
         });
 }
+
+
 
 module.exports = {
     autenticar,
