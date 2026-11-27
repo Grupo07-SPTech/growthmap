@@ -1,21 +1,27 @@
-function postar(caminho, corpo) {
+function postar(endpoint, payload) {
     if (!process.env.EMAIL_API_URL) {
         console.log("EMAIL_API_URL não configurada, e-mail não enviado.");
         return Promise.resolve();
     }
 
-    return fetch(`${process.env.EMAIL_API_URL}${caminho}`, {
+
+    const urlBase = process.env.EMAIL_API_URL.replace(/\/+$/, "");
+    const caminhoFormatado = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+
+    
+    return fetch(`${urlBase}${caminhoFormatado}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(corpo),
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(5000),
     })
-        .then(function (resposta) {
-            if (!resposta.ok) {
-                console.log("Serviço de e-mail respondeu " + resposta.status);
+        .then(function (response) {
+            if (!response.ok) {
+                console.log("Serviço de e-mail respondeu " + response.status);
             }
         })
-        .catch(function (erro) {
-            console.log("Serviço de e-mail indisponível:", erro.message);
+        .catch(function (err) {
+            console.log("Serviço de e-mail indisponível:", err.message);
         });
 }
 

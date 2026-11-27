@@ -67,7 +67,7 @@ async function cadastrar(req, res) {
         eventoModel.cadastrar(tipo || 'tarefa', nome, area || 'Geral', data, rotulo || 'Tarefa', idUsuario)
             .then(function (resultado) {
                 res.status(201).json(resultado);
-                 avisarEventoPorEmail(fkUsuario, nome, area || 'Geral', data);
+                avisarEventoPorEmail(idUsuario, nome, area || 'Geral', data);
             })
             .catch(function (erro) {
                 console.log(erro);
