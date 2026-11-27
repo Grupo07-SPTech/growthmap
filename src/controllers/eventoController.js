@@ -1,4 +1,7 @@
 var eventoModel = require("../models/eventoModel");
+
+var usuarioModel = require("../models/usuarioModel");
+var notificacaoService = require("../services/notificacaoService");
 var sessaoEventos = require("../sessaoEventos");
 
 async function verificarAcesso(req, res, exigeAlteracao) {
@@ -64,6 +67,7 @@ async function cadastrar(req, res) {
         eventoModel.cadastrar(tipo || 'tarefa', nome, area || 'Geral', data, rotulo || 'Tarefa', idUsuario)
             .then(function (resultado) {
                 res.status(201).json(resultado);
+                avisarEventoPorEmail(idUsuario, nome, area || 'Geral', data);
             })
             .catch(function (erro) {
                 console.log(erro);
@@ -111,11 +115,23 @@ async function deletar(req, res) {
         .catch(erro => res.status(500).json(erro.sqlMessage));
 }
 
-function responderAlteracao(res, resultado) {
-    if (!resultado.affectedRows) {
-        return res.status(404).send("Evento não encontrado.");
-    }
-    res.json(resultado);
+function avisarEventoPorEmail(idUsuario, nomeEvento, area, data) {
+    usuarioModel.buscarPorId(idUsuario)
+        .then(function (usuarios) {
+            if (usuarios.length > 0) {
+                notificacaoService.avisarEvento(
+                    usuarios[0].nome,
+                    usuarios[0].email,
+                    nomeEvento,
+                    area,
+                    data
+                );
+            }
+        })
+        .catch(function (erro) {
+            console.log("Não foi possível buscar o e-mail do usuário:", erro.sqlMessage || erro);
+        });
+
 }
 
 module.exports = {

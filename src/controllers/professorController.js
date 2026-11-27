@@ -1,4 +1,5 @@
 var professorModel = require("../models/professorModel");
+var notificacaoService = require("../services/notificacaoService");
 
 function cadastrar(req, res) {
     var nome = req.body.nome;
@@ -11,14 +12,17 @@ function cadastrar(req, res) {
 
     if (!campoValido(nome) || !campoValido(email) || !campoValido(cpf) || !campoValido(area) || !campoValido(idUnidade) || !campoValido(senha)) {
         return res.status(400).send("Preencha todos os campos obrigatórios!");
-    } else { 
-        professorModel.cadastrar(nome, email, senha, cargo, area, idUnidade, cpf)
-            .then(resultado => res.json(resultado))
-            .catch(erro => {
-                console.log(erro);
-                res.status(500).json(erro.sqlMessage);
-            });
     }
+
+    professorModel.cadastrar(nome, email, senha, cargo, area, idUnidade, cpf)
+        .then(resultado => {
+            res.json(resultado);
+            notificacaoService.avisarCadastro(nome, email);
+        })
+        .catch(erro => {
+            console.log(erro);
+            res.status(500).json(erro.sqlMessage);
+        });
 }
 
 function listarPorEmpresa(req, res) {
