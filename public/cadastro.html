@@ -25,7 +25,7 @@
 
         <div class="caixa" id="caixaNome">
           <p class="tituloInp">Empresa:</p>
-          <input id="inpNome" class="input" type="text" placeholder="Nome da empresa"/>
+          <input id="inpNome" class="input" type="text" placeholder="Nome da empresa" />
         </div>
 
         <div class="caixa" id="caixaEmail">
@@ -58,7 +58,7 @@
         <div class="caixa" id="caixaConfirmarSenha">
           <p class="tituloInp">Confirmar senha:</p>
           <div class="campo-senha">
-            <input id="inpConfSenha" class="input" type="password" placeholder="*****"/>
+            <input id="inpConfSenha" class="input" type="password" placeholder="*****" />
             <button type="button" class="btn-ver-senha" onclick="alternarVisibilidadeSenha('inpConfSenha', this)">
               <img src="./assets/imgs/olhos-fechados.png" class="icone-olho" />
             </button>
@@ -80,6 +80,8 @@
       <div class="cadastro" id="logoFundo"></div>
     </div>
   </div>
+
+  <script src="./js/modais.js"></script>
 
   <script>
     const CAMINHO_OLHO_ABERTO = "./assets/imgs/olho.png";
@@ -311,6 +313,7 @@
         .then(function (resposta) {
           if (resposta.ok) {
             alert("Cadastro realizado com sucesso!");
+            window.location = "login.html";
 
             window.location = "login.html";
           } else {

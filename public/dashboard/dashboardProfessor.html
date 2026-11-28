@@ -73,6 +73,13 @@
 
     <main class="main-content">
 
+        <!-- Botão de download de relatório (sem função por enquanto) -->
+        <div class="barra-relatorio">
+            <button class="btn-relatorio" id="btn-baixar-relatorio" type="button">
+                <i class="fi fi-rr-download"></i> Baixar relatório
+            </button>
+        </div>
+
         <header class="dash-header">
 
             <div class="dash-title">
@@ -126,6 +133,9 @@
 
             <div class="kpi-card">
 
+                <span class="info-tip" tabindex="0"
+                    data-tip="Média do município na área selecionada no ano mais recente, comparada à média estadual.">?</span>
+
                 <span class="kpi-title">MÉDIA DE DESEMPENHO</span>
 
                 <span class="kpi-value" id="kpi-media">512,0 pts</span>
@@ -139,6 +149,9 @@
 
             <div class="kpi-card warning">
 
+                <span class="info-tip" tabindex="0"
+                    data-tip="Percentual de candidatos ausentes na prova do dia correspondente à área (Dia 1 ou Dia 2).">?</span>
+
                 <span class="kpi-title">TAXA DE ABSTENÇÃO</span>
 
                 <span class="kpi-value" id="kpi-abstencao">24,5%</span>
@@ -151,6 +164,9 @@
 
 
             <div class="kpi-card">
+
+                <span class="info-tip" tabindex="0"
+                    data-tip="Variação percentual da média do município entre o primeiro e o último ano disponível.">?</span>
 
                 <span class="kpi-title" id="titulo-evolucao">
                     EVOLUÇÃO PLURIANUAL DA MÉDIA GERAL DE MATEMÁTICA
@@ -167,6 +183,9 @@
 
             <div class="kpi-card" id="card-diferencial">
 
+                <span class="info-tip" tabindex="0"
+                    data-tip="Diferença percentual entre a média do município e a média do estado.">?</span>
+
                 <span class="kpi-title">DIFERENCIAL REGIONAL</span>
 
                 <span class="kpi-value" id="kpi-diferencial">-7,6%</span>
@@ -179,6 +198,9 @@
 
 
             <div class="kpi-card danger" id="card-gargalo-redacao" style="display: none;">
+
+                <span class="info-tip" tabindex="0"
+                    data-tip="Competência da redação com a menor pontuação média no município.">?</span>
 
                 <span class="kpi-title">GARGALO NA REDAÇÃO</span>
 
@@ -194,6 +216,9 @@
         <section class="charts-grid">
 
             <div class="chart-card progress-card">
+
+                <span class="info-tip" tabindex="0"
+                    data-tip="Eventos cadastrados em relação à meta do período.">?</span>
 
                 <div class="chart-header">
 
@@ -232,6 +257,9 @@
 
             <div class="chart-card diagnostic-card" id="card-diagnostic">
 
+                <span class="info-tip" tabindex="0"
+                    data-tip="Pontuação média por competência da redação (0 a 200). A competência mais baixa aparece em vermelho.">?</span>
+
                 <div class="chart-header">
 
                     <h3 id="diagnostic-title">
@@ -254,6 +282,9 @@
 
 
             <div class="chart-card historical-card">
+
+                <span class="info-tip" tabindex="0"
+                    data-tip="Compara a média do município com a do estado ao longo dos anos na área selecionada.">?</span>
 
                 <div class="chart-header">
 
@@ -279,6 +310,7 @@
 
 
     <script src="../js/menu.js"></script>
+    <script src="../js/modais.js"></script>
 
     <script>
 
