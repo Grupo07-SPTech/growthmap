@@ -1,568 +1,616 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Growth Map | Dashboard Coordenador</title>
-    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/dashboardCoordenador.css">
     <link rel="icon" href="../assets/logo/logos-sem-fundo/logo_com_escrita_all-branco.png">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
+
 <body>
 
-<button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
-    <i class="fi fi-rr-menu-burger"></i>
-</button>
+    <button class="btn-menu" id="btn-menu" aria-label="Abrir ou fechar menu">
+        <i class="fi fi-rr-menu-burger"></i>
+    </button>
 
-<!-- ── Sidebar ──────────────────────────────────────────────────── -->
-<div class="sidebar">
-    <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo Growth Map">
-    <div class="nav-indicador" id="nav-indicador"></div>
-    <div class="nav-item">
-        <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
-    </div>
-    <div class="nav-item">
-        <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
-    </div>
-    <div class="nav-item">
-        <a href="./filiais.html"><i class="fi fi-rr-home"></i></a>
-    </div>
-    <div class="nav-item ativo">
-        <a href="./dashboardCoordenador.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
-    </div>
-    <div class="nav-item">
-        <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
-    </div>
-    <a href="perfilUsuario.html">
-        <div class="perfil"></div>
-    </a>
-    <div class="sair"><a href="../index.html">Sair</a></div>
-</div>
-
-<!-- ── Conteúdo principal ───────────────────────────────────────── -->
-<div class="conteudo">
-
-    <!-- Saudação + botão de seleção de unidade -->
-    <div class="upper">
-        <div class="text_upper">
-            <div class="upper-title">Olá, coordenador!</div>
-            <div class="upper-subtitle">Acompanhe a evolução do ENEM no município da sua unidade.</div>
+    <!-- ── Sidebar ──────────────────────────────────────────────────── -->
+    <div class="sidebar">
+        <img class="logo" src="../assets/logo/logos-sem-fundo/logo_com_escrita_vermelho.png" alt="Logo Growth Map">
+        <div class="nav-indicador" id="nav-indicador"></div>
+        <div class="nav-item">
+            <a href="./acessoRapido.html"><i class="fi fi-rr-apps"></i></a>
         </div>
-        <button class="card_upper" id="btn-trocar-unidade" title="Clique para trocar de unidade">
-            <i class="fi fi-rr-home" style="margin-right:6px;font-size:13px;"></i>
-            <span id="badge-unidade">Carregando...</span>
-        </button>
+        <div class="nav-item">
+            <a href="./painelEventos.html"><i class="fi fi-rr-calendar"></i></a>
+        </div>
+        <div class="nav-item">
+            <a href="./filiais.html"><i class="fi fi-rr-home"></i></a>
+        </div>
+        <div class="nav-item ativo">
+            <a href="./dashboardCoordenador.html"><i class="fi fi-rr-chart-pie-alt"></i></a>
+        </div>
+        <div class="nav-item">
+            <a href="./usuarios.html"><i class="fi fi-rr-users"></i></a>
+        </div>
+        <a href="perfilUsuario.html">
+            <div class="perfil"></div>
+        </a>
+        <div class="sair"><a href="../index.html">Sair</a></div>
     </div>
 
-    <!-- ── KPIs ─────────────────────────────────────────────────── -->
-    <div class="kpis">
+    <!-- ── Conteúdo principal ───────────────────────────────────────── -->
+    <div class="conteudo">
 
-        <!-- KPI 1: Área mais fraca -->
-        <div class="conteudo_kpis">
-            <span class="kpi-label">Área mais fraca — foco das aulas</span>
-            <span class="kpi-destaque" id="kpi-area-fraca">—</span>
-            <div class="kpi-comparativo">
-                <span class="kpi-comp-item">
-                    <span class="kpi-comp-label">Município</span>
-                    <span class="kpi-comp-valor" id="kpi-nota-municipio">—</span>
-                </span>
-                <span class="kpi-comp-sep">vs</span>
-                <span class="kpi-comp-item">
-                    <span class="kpi-comp-label">Estado</span>
-                    <span class="kpi-comp-valor" id="kpi-nota-estado">—</span>
-                </span>
+        <!-- Botão de download de relatório (sem função por enquanto) -->
+        <div class="barra-relatorio">
+            <button class="btn-relatorio" id="btn-baixar-relatorio" type="button">
+                <i class="fi fi-rr-download"></i> Baixar relatório
+            </button>
+        </div>
+
+        <!-- Saudação + botão de seleção de unidade -->
+        <div class="upper">
+            <div class="text_upper">
+                <div class="upper-title">Olá, coordenador!</div>
+                <div class="upper-subtitle">Acompanhe a evolução do ENEM no município da sua unidade.</div>
             </div>
-            <span class="kpi-diff" id="kpi-diff-area">Carregando dados...</span>
+            <button class="card_upper" id="btn-trocar-unidade" title="Clique para trocar de unidade">
+                <i class="fi fi-rr-home" style="margin-right:6px;font-size:13px;"></i>
+                <span id="badge-unidade">Carregando...</span>
+            </button>
         </div>
 
-        <!-- KPI 2: Variação da média geral 2024 → 2025 -->
-        <div class="conteudo_kpis">
-            <span class="kpi-label">Média geral ENEM — município</span>
-            <div class="kpi-comparativo">
-                <span class="kpi-comp-item">
-                    <span class="kpi-comp-label" id="kpi-ano-anterior-label">2024</span>
-                    <span class="kpi-comp-valor" id="kpi-media-anterior">—</span>
-                </span>
-                <span class="kpi-comp-sep">→</span>
-                <span class="kpi-comp-item">
-                    <span class="kpi-comp-label" id="kpi-ano-atual-label">2025</span>
-                    <span class="kpi-comp-valor" id="kpi-media-atual">—</span>
-                </span>
-            </div>
-            <span class="kpi-diff" id="kpi-variacao">Carregando dados...</span>
-        </div>
+        <!-- ── KPIs ─────────────────────────────────────────────────── -->
+        <div class="kpis">
 
-        <!-- KPI 3: Registros no painel -->
-        <div class="conteudo_kpis">
-            <span class="kpi-label">Registros no painel</span>
-            <span class="kpi-destaque">
-                <span id="kpi-registros-atual">0</span>
-                <span style="font-size:13px;color:#555;font-weight:600;"> / meta <span id="meta-valor">10</span></span>
-            </span>
-            <div class="kpi-progress-wrap">
-                <div class="kpi-progress-bar">
-                    <div class="kpi-progress-fill" id="meta-barra" style="width:0%;"></div>
+            <!-- KPI 1: Área mais fraca -->
+            <div class="conteudo_kpis">
+                <span class="info-tip" tabindex="0"
+                    data-tip="Área do ENEM com a menor média no município da unidade, comparada à média do estado. Indica onde reforçar as aulas.">?</span>
+                <span class="kpi-label">Área mais fraca — foco das aulas</span>
+                <span class="kpi-destaque" id="kpi-area-fraca">—</span>
+                <div class="kpi-comparativo">
+                    <span class="kpi-comp-item">
+                        <span class="kpi-comp-label">Município</span>
+                        <span class="kpi-comp-valor" id="kpi-nota-municipio">—</span>
+                    </span>
+                    <span class="kpi-comp-sep">vs</span>
+                    <span class="kpi-comp-item">
+                        <span class="kpi-comp-label">Estado</span>
+                        <span class="kpi-comp-valor" id="kpi-nota-estado">—</span>
+                    </span>
                 </div>
-                <span class="kpi-progress-pct" id="meta-pct">0% da meta</span>
+                <span class="kpi-diff" id="kpi-diff-area">Carregando dados...</span>
             </div>
-            <span class="kpi-diff" id="meta-faltam">Carregando...</span>
-            <button class="kpi-meta-btn" id="btn-abrir-meta">✏️ Definir meta</button>
+
+            <!-- KPI 2: Variação da média geral 2024 → 2025 -->
+            <div class="conteudo_kpis">
+                <span class="info-tip" tabindex="0"
+                    data-tip="Média geral do ENEM no município da unidade em 2024 e 2025, com a variação em pontos entre os anos.">?</span>
+                <span class="kpi-label">Média geral ENEM — município</span>
+                <div class="kpi-comparativo">
+                    <span class="kpi-comp-item">
+                        <span class="kpi-comp-label" id="kpi-ano-anterior-label">2024</span>
+                        <span class="kpi-comp-valor" id="kpi-media-anterior">—</span>
+                    </span>
+                    <span class="kpi-comp-sep">→</span>
+                    <span class="kpi-comp-item">
+                        <span class="kpi-comp-label" id="kpi-ano-atual-label">2025</span>
+                        <span class="kpi-comp-valor" id="kpi-media-atual">—</span>
+                    </span>
+                </div>
+                <span class="kpi-diff" id="kpi-variacao">Carregando dados...</span>
+            </div>
+
+            <!-- KPI 3: Registros no painel -->
+            <div class="conteudo_kpis">
+                <span class="info-tip" tabindex="0"
+                    data-tip="Quantidade de registros de eventos no painel em relação à meta mensal definida para a unidade.">?</span>
+                <span class="kpi-label">Registros no painel</span>
+                <span class="kpi-destaque">
+                    <span id="kpi-registros-atual">0</span>
+                    <span style="font-size:13px;color:#555;font-weight:600;"> / meta <span
+                            id="meta-valor">10</span></span>
+                </span>
+                <div class="kpi-progress-wrap">
+                    <div class="kpi-progress-bar">
+                        <div class="kpi-progress-fill" id="meta-barra" style="width:0%;"></div>
+                    </div>
+                    <span class="kpi-progress-pct" id="meta-pct">0% da meta</span>
+                </div>
+                <span class="kpi-diff" id="meta-faltam">Carregando...</span>
+                <button class="kpi-meta-btn" id="btn-abrir-meta">✏️ Definir meta</button>
+            </div>
+
         </div>
 
-    </div>
-
-    <!-- ── Modal: selecionar unidade ────────────────────────────── -->
-    <div class="meta-overlay" id="modal-unidade-overlay">
-        <div class="meta-modal" style="width:360px;">
-            <h3>Selecionar Unidade</h3>
-            <p>Escolha a unidade que deseja visualizar.</p>
-            <select id="select-unidade" style="
+        <!-- ── Modal: selecionar unidade ────────────────────────────── -->
+        <div class="meta-overlay" id="modal-unidade-overlay">
+            <div class="meta-modal" style="width:360px;">
+                <h3>Selecionar Unidade</h3>
+                <p>Escolha a unidade que deseja visualizar.</p>
+                <select id="select-unidade" style="
                 width:100%; padding:10px 14px; border:1px solid #d9b8c2;
                 border-radius:8px; font-family:Poppins,sans-serif;
                 font-size:14px; color:#333; outline:none; box-sizing:border-box;">
-            </select>
-            <div class="meta-modal-actions">
-                <button class="meta-btn-cancelar" id="btn-cancelar-unidade">Cancelar</button>
-                <button class="meta-btn-salvar"   id="btn-confirmar-unidade">Confirmar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ── Modal: definir meta ──────────────────────────────────── -->
-    <div class="meta-overlay" id="meta-overlay">
-        <div class="meta-modal">
-            <h3>Definir meta de registros</h3>
-            <p>Quantos registros são a meta mensal?</p>
-            <input type="number" id="meta-input" min="1" max="999" placeholder="Ex.: 20">
-            <div class="meta-modal-actions">
-                <button class="meta-btn-cancelar" id="btn-fechar-meta">Cancelar</button>
-                <button class="meta-btn-salvar"   id="btn-salvar-meta">Salvar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ── Linha 1: Evolução ENEM + Eventos por Mês ─────────────── -->
-    <div class="graficos-row">
-
-        <div class="evolucao_medias">
-            <div class="evolucao_medias_text">
-                <div class="evolucao_header">
-                    <i class="fi fi-rr-chart-line-up"></i>
-                    <h3>Evolução das Médias do ENEM — Município da Unidade</h3>
+                </select>
+                <div class="meta-modal-actions">
+                    <button class="meta-btn-cancelar" id="btn-cancelar-unidade">Cancelar</button>
+                    <button class="meta-btn-salvar" id="btn-confirmar-unidade">Confirmar</button>
                 </div>
-                <p class="evolucao_desc">Médias anuais do ENEM no município (2024 e 2025) por área de conhecimento.</p>
-            </div>
-            <div class="button_pai">
-                <button class="evolucao_medias_button ativo" data-campo="media_cn"      data-nome="C.Natureza">C.Natureza</button>
-                <button class="evolucao_medias_button"       data-campo="media_ch"      data-nome="C.Humanas">C.Humanas</button>
-                <button class="evolucao_medias_button"       data-campo="media_lc"      data-nome="Linguagens">Linguagens</button>
-                <button class="evolucao_medias_button"       data-campo="media_mt"      data-nome="Matemática">Matemática</button>
-                <button class="evolucao_medias_button"       data-campo="media_redacao" data-nome="Redação">Redação</button>
-            </div>
-            <div id="chart"></div>
-        </div>
-
-        <div class="acompanhamento">
-            <div class="card-header">
-                <h3>Painel de Acompanhamento de Registro de Eventos</h3>
-            </div>
-            <p class="card-descricao">Registros de eventos por mês em <span id="label-ano-eventos">2026</span>.</p>
-            <div id="chartA"></div>
-        </div>
-
-    </div>
-
-    <!-- ── Linha 2: Registros por Professor + Atividade Recente ─── -->
-    <div class="dashboard-2_pai">
-
-        <div class="equipe">
-            <div class="card-header">
-                <h3>Registros por Professor</h3>
-            </div>
-            <p class="card-descricao">Quantidade de registros no painel por professor da unidade.</p>
-            <div id="chartProfessores"></div>
-        </div>
-
-        <div class="card-atividade">
-            <div class="card-header">
-                <h3>Atividade Recente</h3>
-            </div>
-            <div class="lista-atividade" id="lista-atividade">
-                <p style="color:#aaa;font-size:13px;">Carregando atividades...</p>
             </div>
         </div>
 
-    </div>
+        <!-- ── Modal: definir meta ──────────────────────────────────── -->
+        <div class="meta-overlay" id="meta-overlay">
+            <div class="meta-modal">
+                <h3>Definir meta de registros</h3>
+                <p>Quantos registros são a meta mensal?</p>
+                <input type="number" id="meta-input" min="1" max="999" placeholder="Ex.: 20">
+                <div class="meta-modal-actions">
+                    <button class="meta-btn-cancelar" id="btn-fechar-meta">Cancelar</button>
+                    <button class="meta-btn-salvar" id="btn-salvar-meta">Salvar</button>
+                </div>
+            </div>
+        </div>
 
-</div><!-- /conteudo -->
+        <!-- ── Linha 1: Evolução ENEM + Eventos por Mês ─────────────── -->
+        <div class="graficos-row">
 
-<script src="../js/menu.js"></script>
-<script>
-(function () {
-    'use strict';
+            <div class="evolucao_medias">
+                <span class="info-tip" tabindex="0"
+                    data-tip="Média anual do ENEM no município (2024 e 2025) na área de conhecimento selecionada nos botões.">?</span>
+                <div class="evolucao_medias_text">
+                    <div class="evolucao_header">
+                        <i class="fi fi-rr-chart-line-up"></i>
+                        <h3>Evolução das Médias do ENEM — Município da Unidade</h3>
+                    </div>
+                    <p class="evolucao_desc">Médias anuais do ENEM no município (2024 e 2025) por área de conhecimento.
+                    </p>
+                </div>
+                <div class="button_pai">
+                    <button class="evolucao_medias_button ativo" data-campo="media_cn"
+                        data-nome="C.Natureza">C.Natureza</button>
+                    <button class="evolucao_medias_button" data-campo="media_ch"
+                        data-nome="C.Humanas">C.Humanas</button>
+                    <button class="evolucao_medias_button" data-campo="media_lc"
+                        data-nome="Linguagens">Linguagens</button>
+                    <button class="evolucao_medias_button" data-campo="media_mt"
+                        data-nome="Matemática">Matemática</button>
+                    <button class="evolucao_medias_button" data-campo="media_redacao"
+                        data-nome="Redação">Redação</button>
+                </div>
+                <div id="chart"></div>
+            </div>
 
-    /* ── Constantes ──────────────────────────────────────────────── */
-    var COR   = '#7a1f3d';
-    var MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-    var ANO_ATUAL = new Date().getFullYear();
+            <div class="acompanhamento">
+                <span class="info-tip" tabindex="0"
+                    data-tip="Número de eventos registrados em cada mês do ano atual na unidade.">?</span>
+                <div class="card-header">
+                    <h3>Painel de Acompanhamento de Registro de Eventos</h3>
+                </div>
+                <p class="card-descricao">Registros de eventos por mês em <span id="label-ano-eventos">2026</span>.</p>
+                <div id="chartA"></div>
+            </div>
 
-    /* ── Estado em memória ───────────────────────────────────────── */
-    var dadosHistorico  = [];
-    var metaAtual       = 10;
-    var registrosAtuais = 0;
-    var unidadeAtual    = null;
-    var todasUnidades   = [];
-    var professoresCache= [];
+        </div>
 
-    /* ── Meta persiste no localStorage por unidade ───────────────── */
-    function chaveMetaLocal(id) { return 'meta_coordenador_' + id; }
-    function carregarMetaLocal(id) {
-        var v = localStorage.getItem(chaveMetaLocal(id));
-        return v ? parseInt(v, 10) : 10;
-    }
-    function salvarMetaLocal(id, valor) {
-        localStorage.setItem(chaveMetaLocal(id), String(valor));
-    }
+        <!-- ── Linha 2: Registros por Professor + Atividade Recente ─── -->
+        <div class="dashboard-2_pai">
 
-    /* ── Helpers ─────────────────────────────────────────────────── */
-    function $(id) { return document.getElementById(id); }
-    function setText(id, v) { var el = $(id); if (el) el.textContent = v; }
-    function abrirModal(id)  { var el = $(id); if (el) el.classList.add('aberto'); }
-    function fecharModal(id) { var el = $(id); if (el) el.classList.remove('aberto'); }
-    function formatPts(v) {
-        return Number.isFinite(Number(v)) ? Number(v).toFixed(0) + ' pts' : '—';
-    }
-    function tempoRelativo(dataStr) {
-        var diff = Date.now() - new Date(dataStr).getTime();
-        var min  = Math.floor(diff / 60000);
-        if (min < 60)  return 'há ' + min + ' min';
-        var h = Math.floor(min / 60);
-        if (h < 24)    return 'há ' + h + 'h';
-        var d = Math.floor(h / 24);
-        return d + ' dia' + (d > 1 ? 's' : '');
-    }
+            <div class="equipe">
+                <span class="info-tip" tabindex="0"
+                    data-tip="Quantidade de registros feitos no painel por cada professor da unidade.">?</span>
+                <div class="card-header">
+                    <h3>Registros por Professor</h3>
+                </div>
+                <p class="card-descricao">Quantidade de registros no painel por professor da unidade.</p>
+                <div id="chartProfessores"></div>
+            </div>
 
-    /* ── Gráfico 1: Evolução das médias (linha) ──────────────────── */
-    var chartEvolucao = new ApexCharts($('chart'), {
-        series: [{ name: 'C.Natureza', data: [] }],
-        chart: { height: 260, type: 'line', zoom: { enabled: false },
-                 toolbar: { show: false }, fontFamily: 'Poppins, sans-serif' },
-        colors: [COR],
-        stroke: { curve: 'smooth', width: 3 },
-        markers: { size: 5, strokeWidth: 0 },
-        dataLabels: { enabled: true, style: { fontSize: '11px', colors: [COR] }, offsetY: -6 },
-        grid: { borderColor: '#f1f1f1' },
-        xaxis: { categories: ['2024', '2025'] },
-        yaxis: { min: 400, max: 700, title: { text: 'Média' } },
-        legend: { show: false },
-        noData: { text: 'Sem dados de desempenho regional.' },
-    });
-    chartEvolucao.render();
+            <div class="card-atividade">
+                <span class="info-tip" tabindex="0"
+                    data-tip="Últimos registros feitos pelos professores da unidade, com a área e o tempo decorrido.">?</span>
+                <div class="card-header">
+                    <h3>Atividade Recente</h3>
+                </div>
+                <div class="lista-atividade" id="lista-atividade">
+                    <p style="color:#aaa;font-size:13px;">Carregando atividades...</p>
+                </div>
+            </div>
 
-    document.querySelectorAll('.evolucao_medias_button').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            document.querySelectorAll('.evolucao_medias_button')
-                    .forEach(function (b) { b.classList.remove('ativo'); });
-            btn.classList.add('ativo');
-            renderizarEvolucao(btn.dataset.campo, btn.dataset.nome);
-        });
-    });
+        </div>
 
-    function renderizarEvolucao(campo, nome) {
-        var anos   = dadosHistorico.map(function (r) { return String(r.ano); });
-        var valores= dadosHistorico.map(function (r) {
-            return r[campo] == null ? null : Number(r[campo]);
-        });
-        chartEvolucao.updateOptions({
-            series: [{ name: nome, data: valores }],
-            xaxis:  { categories: anos },
-        });
-    }
+    </div><!-- /conteudo -->
 
-    /* ── Gráfico 2: Eventos por Mês (linha) ──────────────────────── */
-    var chartEventos = new ApexCharts($('chartA'), {
-        chart: { type: 'line', height: 300, zoom: { enabled: false },
-                 toolbar: { show: false }, fontFamily: 'Poppins, sans-serif' },
-        series: [{ name: 'Registros', data: new Array(12).fill(0) }],
-        colors: [COR],
-        stroke: { curve: 'smooth', width: 3 },
-        markers: { size: 4 },
-        dataLabels: { enabled: false },
-        grid: { borderColor: '#f1f1f1' },
-        xaxis: { categories: MESES },
-        yaxis: { title: { text: 'Registros por mês' }, min: 0, forceNiceScale: true },
-        legend: { show: false },
-        noData: { text: 'Nenhum evento registrado este ano.' },
-    });
-    chartEventos.render();
+    <script src="../js/menu.js"></script>
+    <script src="../js/modais.js"></script>
+    <script>
+        (function () {
+            'use strict';
 
-    /* ── Gráfico 3: Registros por Professor (barras) ─────────────── */
-    var chartProfessores = new ApexCharts($('chartProfessores'), {
-        chart: { type: 'bar', height: 300, toolbar: { show: false },
-                 fontFamily: 'Poppins, sans-serif' },
-        plotOptions: { bar: { horizontal: false, columnWidth: '55%',
-                              borderRadius: 6, distributed: true } },
-        colors: ['#7a1f3d','#a84060','#c86882','#d9a0b0','#e8c4cf'],
-        dataLabels: { enabled: true, style: { fontSize: '12px', colors: ['#333'] }, offsetY: -6 },
-        series: [{ name: 'Registros', data: [] }],
-        xaxis: { categories: [] },
-        yaxis: { title: { text: 'Nº de registros' }, min: 0, forceNiceScale: true },
-        grid: { borderColor: '#f1f1f1' },
-        legend: { show: false },
-        tooltip: {
-            custom: function (opts) {
-                var idx  = opts.dataPointIndex;
-                var val  = opts.series[0][idx];
-                var prof = professoresCache[idx] || {};
-                return '<div style="padding:8px 12px;font-family:Poppins,sans-serif;font-size:12px;">'
-                     + '<strong>' + (prof.nome || '') + '</strong><br>'
-                     + 'Área: ' + (prof.area_atuacao || '—') + '<br>'
-                     + 'Registros: <strong>' + val + '</strong></div>';
-            },
-        },
-        noData: { text: 'Nenhum professor encontrado para esta unidade.' },
-    });
-    chartProfessores.render();
+            /* ── Constantes ──────────────────────────────────────────────── */
+            var COR = '#7a1f3d';
+            var MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            var ANO_ATUAL = new Date().getFullYear();
 
-    /* ── KPI 1: Área mais fraca ──────────────────────────────────── */
-    function renderizarAreaFraca(areaFraca) {
-        if (!areaFraca) {
-            setText('kpi-area-fraca', '—'); setText('kpi-nota-municipio', '—');
-            setText('kpi-nota-estado', '—'); setText('kpi-diff-area', 'Sem dados de desempenho regional.');
-            return;
-        }
-        var mapa = {
-            media_cn:      { nome: 'C.Natureza', est: 'estado_cn'       },
-            media_ch:      { nome: 'C.Humanas',  est: 'estado_ch'       },
-            media_lc:      { nome: 'Linguagens', est: 'estado_lc'       },
-            media_mt:      { nome: 'Matemática', est: 'estado_mt'       },
-            media_redacao: { nome: 'Redação',    est: 'estado_redacao'  },
-        };
-        var fraca = null;
-        Object.keys(mapa).forEach(function (campo) {
-            var val = Number(areaFraca[campo]);
-            if (!Number.isFinite(val)) return;
-            if (!fraca || val < fraca.val) {
-                fraca = { nome: mapa[campo].nome, val: val,
-                          est: Number(areaFraca[mapa[campo].est]) };
+            /* ── Estado em memória ───────────────────────────────────────── */
+            var dadosHistorico = [];
+            var metaAtual = 10;
+            var registrosAtuais = 0;
+            var unidadeAtual = null;
+            var todasUnidades = [];
+            var professoresCache = [];
+
+            /* ── Meta persiste no localStorage por unidade ───────────────── */
+            function chaveMetaLocal(id) { return 'meta_coordenador_' + id; }
+            function carregarMetaLocal(id) {
+                var v = localStorage.getItem(chaveMetaLocal(id));
+                return v ? parseInt(v, 10) : 10;
             }
-        });
-        if (!fraca) { setText('kpi-area-fraca', 'Sem dados'); return; }
-
-        var diff = Number.isFinite(fraca.est) ? fraca.val - fraca.est : null;
-        setText('kpi-area-fraca',     fraca.nome);
-        setText('kpi-nota-municipio', formatPts(fraca.val));
-        setText('kpi-nota-estado',    Number.isFinite(fraca.est) ? formatPts(fraca.est) : '—');
-
-        var elDiff = $('kpi-diff-area');
-        if (elDiff && diff !== null) {
-            elDiff.textContent = (diff >= 0 ? '+' : '') + diff.toFixed(0) + ' pts em relação ao estado';
-            elDiff.className   = 'kpi-diff ' + (diff >= 0 ? 'kpi-positivo' : 'kpi-negativo');
-        }
-        var elMun = $('kpi-nota-municipio');
-        if (elMun && diff !== null) {
-            elMun.className = 'kpi-comp-valor ' + (diff >= 0 ? 'kpi-positivo' : 'kpi-negativo');
-        }
-    }
-
-    /* ── KPI 2: Variação da média geral ─────────────────────────── */
-    function renderizarVariacaoMedia(rows) {
-        if (!rows || !rows.length) {
-            setText('kpi-media-anterior', '—'); setText('kpi-media-atual', '—');
-            setText('kpi-variacao', 'Sem dados para 2024/2025.'); return;
-        }
-        var l2024 = rows.find(function (r) { return Number(r.ano) === 2024; });
-        var l2025 = rows.find(function (r) { return Number(r.ano) === 2025; });
-        setText('kpi-ano-anterior-label', '2024');
-        setText('kpi-ano-atual-label',    '2025');
-        setText('kpi-media-anterior', l2024 ? formatPts(l2024.media_geral) : '—');
-        setText('kpi-media-atual',    l2025 ? formatPts(l2025.media_geral) : '—');
-        if (l2024 && l2025) {
-            var v   = Number(l2025.media_geral) - Number(l2024.media_geral);
-            var elV = $('kpi-variacao');
-            if (elV) {
-                elV.textContent = (v >= 0 ? '+' : '') + v.toFixed(0) + ' pts em relação ao ano anterior';
-                elV.className   = 'kpi-diff ' + (v >= 0 ? 'kpi-positivo' : 'kpi-negativo');
-            }
-        }
-    }
-
-    /* ── KPI 3: Meta de registros ───────────────────────────────── */
-    function renderizarMeta() {
-        var pct    = metaAtual > 0 ? Math.min(Math.round((registrosAtuais / metaAtual) * 100), 100) : 0;
-        var faltam = Math.max(metaAtual - registrosAtuais, 0);
-        setText('meta-valor',          metaAtual);
-        setText('kpi-registros-atual', registrosAtuais);
-        setText('meta-pct',            pct + '% da meta');
-        setText('meta-faltam', faltam > 0 ? 'Faltam ' + faltam + ' registros para a meta' : 'Meta atingida! 🎉');
-        var barra = $('meta-barra');
-        if (barra) barra.style.width = pct + '%';
-    }
-
-    /* ── Painel: Atividade Recente ───────────────────────────────── */
-    var iconePorTipo = { 'aula': 'fi-rr-book-alt', 'simulado': 'fi-rr-document',
-                         'revisao': 'fi-rr-refresh', 'avaliacao': 'fi-rr-star' };
-
-    function renderizarAtividade(atividades) {
-        var lista = $('lista-atividade');
-        if (!lista) return;
-        if (!atividades || !atividades.length) {
-            lista.innerHTML = '<p style="color:#aaa;font-size:13px;padding:8px 0;">Nenhuma atividade registrada.</p>';
-            return;
-        }
-        lista.innerHTML = atividades.map(function (a) {
-            var icone = iconePorTipo[(a.tipo || '').toLowerCase()] || 'fi-rr-chart-line-up';
-            var tempo = a.data ? tempoRelativo(a.data) : '—';
-            var area  = a.area || a.area_atuacao || '—';
-            return '<div class="atividade-item">'
-                 + '  <div class="atividade-icone"><i class="fi ' + icone + '"></i></div>'
-                 + '  <div class="atividade-texto">'
-                 + '    <span class="atividade-titulo">' + (a.nome_evento || a.tipo || 'Registro') + '</span>'
-                 + '    <span class="atividade-sub">' + (a.nome_professor || '—') + ' · ' + area + '</span>'
-                 + '  </div>'
-                 + '  <span class="atividade-tempo">' + tempo + '</span>'
-                 + '</div>';
-        }).join('');
-    }
-
-    /* ── Modal de unidades ───────────────────────────────────────── */
-    function preencherSelectUnidades(unidades, idSelecionado) {
-        var select = $('select-unidade');
-        if (!select) return;
-        select.innerHTML = '';
-        (unidades || []).forEach(function (u) {
-            var opt = document.createElement('option');
-            opt.value = u.id;
-            opt.textContent = u.nome + ' — ' + u.nome_municipio + '/' + u.uf;
-            select.appendChild(opt);
-        });
-        if (idSelecionado) select.value = String(idSelecionado);
-    }
-
-    $('btn-trocar-unidade') && $('btn-trocar-unidade').addEventListener('click', function () {
-        preencherSelectUnidades(todasUnidades, unidadeAtual ? unidadeAtual.id : null);
-        abrirModal('modal-unidade-overlay');
-    });
-    $('btn-cancelar-unidade') && $('btn-cancelar-unidade').addEventListener('click', function () {
-        fecharModal('modal-unidade-overlay');
-    });
-    $('btn-confirmar-unidade') && $('btn-confirmar-unidade').addEventListener('click', function () {
-        var select = $('select-unidade');
-        var id = select ? Number(select.value) : 0;
-        if (!id) return;
-        fecharModal('modal-unidade-overlay');
-        carregarDashboard(id);
-    });
-    $('modal-unidade-overlay') && $('modal-unidade-overlay').addEventListener('click', function (e) {
-        if (e.target === this) fecharModal('modal-unidade-overlay');
-    });
-
-    /* ── Modal de meta ───────────────────────────────────────────── */
-    $('btn-abrir-meta') && $('btn-abrir-meta').addEventListener('click', function () {
-        var inp = $('meta-input'); if (inp) inp.value = metaAtual;
-        abrirModal('meta-overlay');
-        if ($('meta-input')) $('meta-input').focus();
-    });
-    $('btn-fechar-meta') && $('btn-fechar-meta').addEventListener('click', function () {
-        fecharModal('meta-overlay');
-    });
-    $('btn-salvar-meta') && $('btn-salvar-meta').addEventListener('click', function () {
-        var val = parseInt(($('meta-input') || {}).value, 10);
-        if (!val || val < 1) return;
-        metaAtual = val;
-        if (unidadeAtual) salvarMetaLocal(unidadeAtual.id, val);
-        renderizarMeta();
-        fecharModal('meta-overlay');
-    });
-    $('meta-overlay') && $('meta-overlay').addEventListener('click', function (e) {
-        if (e.target === this) fecharModal('meta-overlay');
-    });
-
-    /* ── Carregamento da API ──────────────────────────────────────── */
-    async function carregarDashboard(idUnidadeSelecionada) {
-        var idUnidade = idUnidadeSelecionada || Number(sessionStorage.getItem('ID_UNIDADE'));
-        var idUsuario = Number(sessionStorage.getItem('ID_USUARIO'));
-
-        if (!idUnidade || !idUsuario) {
-            console.warn('[dashboardCoordenador] Sessão sem ID_UNIDADE ou ID_USUARIO.');
-            return;
-        }
-
-        try {
-            var res = await fetch('/dashboardCoordenador/dados/' + idUnidade);
-            if (!res.ok) {
-                var err = await res.json().catch(function () { return {}; });
-                throw new Error(err.mensagem || 'Falha ao carregar dados.');
-            }
-            var d = await res.json();
-
-            /* badge de unidade */
-            unidadeAtual = d.unidade || null;
-            if (unidadeAtual) {
-                setText('badge-unidade',
-                    unidadeAtual.nome + ' — ' + unidadeAtual.nome_municipio + '/' + unidadeAtual.uf);
+            function salvarMetaLocal(id, valor) {
+                localStorage.setItem(chaveMetaLocal(id), String(valor));
             }
 
-            /* lista de unidades para o modal */
-            if (unidadeAtual && unidadeAtual.id_empresa && !todasUnidades.length) {
-                var resUn = await fetch('/dashboardCoordenador/unidades/' + unidadeAtual.id_empresa);
-                if (resUn.ok) todasUnidades = await resUn.json();
+            /* ── Helpers ─────────────────────────────────────────────────── */
+            function $(id) { return document.getElementById(id); }
+            function setText(id, v) { var el = $(id); if (el) el.textContent = v; }
+            function abrirModal(id) { var el = $(id); if (el) el.classList.add('aberto'); }
+            function fecharModal(id) { var el = $(id); if (el) el.classList.remove('aberto'); }
+            function formatPts(v) {
+                return Number.isFinite(Number(v)) ? Number(v).toFixed(0) + ' pts' : '—';
+            }
+            function tempoRelativo(dataStr) {
+                var diff = Date.now() - new Date(dataStr).getTime();
+                var min = Math.floor(diff / 60000);
+                if (min < 60) return 'há ' + min + ' min';
+                var h = Math.floor(min / 60);
+                if (h < 24) return 'há ' + h + 'h';
+                var d = Math.floor(h / 24);
+                return d + ' dia' + (d > 1 ? 's' : '');
             }
 
-            /* KPI 1 */
-            renderizarAreaFraca(d.areaFraca);
-
-            /* KPI 2 */
-            renderizarVariacaoMedia(d.variacaoMedia);
-
-            /* KPI 3 */
-            registrosAtuais = d.totalRegistros || 0;
-            metaAtual       = carregarMetaLocal(idUnidade);
-            renderizarMeta();
-
-            /* Gráfico 1 */
-            dadosHistorico = d.historico || [];
-            var btnAtivo   = document.querySelector('.evolucao_medias_button.ativo');
-            renderizarEvolucao(
-                btnAtivo ? btnAtivo.dataset.campo : 'media_cn',
-                btnAtivo ? btnAtivo.dataset.nome  : 'C.Natureza'
-            );
-
-            /* Gráfico 2 */
-            setText('label-ano-eventos', String(ANO_ATUAL));
-            var eventosMes = new Array(12).fill(0);
-            (d.eventosPorMes || []).forEach(function (item) {
-                var idx = Number(item.mes) - 1;
-                if (idx >= 0 && idx < 12) eventosMes[idx] = Number(item.registros) || 0;
+            /* ── Gráfico 1: Evolução das médias (linha) ──────────────────── */
+            var chartEvolucao = new ApexCharts($('chart'), {
+                series: [{ name: 'C.Natureza', data: [] }],
+                chart: {
+                    height: 260, type: 'line', zoom: { enabled: false },
+                    toolbar: { show: false }, fontFamily: 'Poppins, sans-serif'
+                },
+                colors: [COR],
+                stroke: { curve: 'smooth', width: 3 },
+                markers: { size: 5, strokeWidth: 0 },
+                dataLabels: { enabled: true, style: { fontSize: '11px', colors: [COR] }, offsetY: -6 },
+                grid: { borderColor: '#f1f1f1' },
+                xaxis: { categories: ['2024', '2025'] },
+                yaxis: { min: 400, max: 700, title: { text: 'Média' } },
+                legend: { show: false },
+                noData: { text: 'Sem dados de desempenho regional.' },
             });
-            chartEventos.updateOptions({ series: [{ name: 'Registros', data: eventosMes }] });
+            chartEvolucao.render();
 
-            /* Gráfico 3 */
-            var profs = d.professores || [];
-            professoresCache = profs;
-            chartProfessores.updateOptions({
-                series: [{ name: 'Registros', data: profs.map(function (p) { return Number(p.registros) || 0; }) }],
-                xaxis:  { categories: profs.map(function (p) { return p.nome; }) },
+            document.querySelectorAll('.evolucao_medias_button').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('.evolucao_medias_button')
+                        .forEach(function (b) { b.classList.remove('ativo'); });
+                    btn.classList.add('ativo');
+                    renderizarEvolucao(btn.dataset.campo, btn.dataset.nome);
+                });
             });
 
-            /* Atividade recente */
-            renderizarAtividade(d.atividadeRecente);
+            function renderizarEvolucao(campo, nome) {
+                var anos = dadosHistorico.map(function (r) { return String(r.ano); });
+                var valores = dadosHistorico.map(function (r) {
+                    return r[campo] == null ? null : Number(r[campo]);
+                });
+                chartEvolucao.updateOptions({
+                    series: [{ name: nome, data: valores }],
+                    xaxis: { categories: anos },
+                });
+            }
 
-        } catch (erro) {
-            console.error('[dashboardCoordenador] Erro ao carregar dados:', erro);
-        }
-    }
+            /* ── Gráfico 2: Eventos por Mês (linha) ──────────────────────── */
+            var chartEventos = new ApexCharts($('chartA'), {
+                chart: {
+                    type: 'line', height: 300, zoom: { enabled: false },
+                    toolbar: { show: false }, fontFamily: 'Poppins, sans-serif'
+                },
+                series: [{ name: 'Registros', data: new Array(12).fill(0) }],
+                colors: [COR],
+                stroke: { curve: 'smooth', width: 3 },
+                markers: { size: 4 },
+                dataLabels: { enabled: false },
+                grid: { borderColor: '#f1f1f1' },
+                xaxis: { categories: MESES },
+                yaxis: { title: { text: 'Registros por mês' }, min: 0, forceNiceScale: true },
+                legend: { show: false },
+                noData: { text: 'Nenhum evento registrado este ano.' },
+            });
+            chartEventos.render();
 
-    /* ── Inicialização ───────────────────────────────────────────── */
-    window.onload = function () {
-        carregarDashboard();
-    };
+            /* ── Gráfico 3: Registros por Professor (barras) ─────────────── */
+            var chartProfessores = new ApexCharts($('chartProfessores'), {
+                chart: {
+                    type: 'bar', height: 300, toolbar: { show: false },
+                    fontFamily: 'Poppins, sans-serif'
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false, columnWidth: '55%',
+                        borderRadius: 6, distributed: true
+                    }
+                },
+                colors: ['#7a1f3d', '#a84060', '#c86882', '#d9a0b0', '#e8c4cf'],
+                dataLabels: { enabled: true, style: { fontSize: '12px', colors: ['#333'] }, offsetY: -6 },
+                series: [{ name: 'Registros', data: [] }],
+                xaxis: { categories: [] },
+                yaxis: { title: { text: 'Nº de registros' }, min: 0, forceNiceScale: true },
+                grid: { borderColor: '#f1f1f1' },
+                legend: { show: false },
+                tooltip: {
+                    custom: function (opts) {
+                        var idx = opts.dataPointIndex;
+                        var val = opts.series[0][idx];
+                        var prof = professoresCache[idx] || {};
+                        return '<div style="padding:8px 12px;font-family:Poppins,sans-serif;font-size:12px;">'
+                            + '<strong>' + (prof.nome || '') + '</strong><br>'
+                            + 'Área: ' + (prof.area_atuacao || '—') + '<br>'
+                            + 'Registros: <strong>' + val + '</strong></div>';
+                    },
+                },
+                noData: { text: 'Nenhum professor encontrado para esta unidade.' },
+            });
+            chartProfessores.render();
 
-})();
-</script>
-<script src="../js/controleAcesso.js"></script>
+            /* ── KPI 1: Área mais fraca ──────────────────────────────────── */
+            function renderizarAreaFraca(areaFraca) {
+                if (!areaFraca) {
+                    setText('kpi-area-fraca', '—'); setText('kpi-nota-municipio', '—');
+                    setText('kpi-nota-estado', '—'); setText('kpi-diff-area', 'Sem dados de desempenho regional.');
+                    return;
+                }
+                var mapa = {
+                    media_cn: { nome: 'C.Natureza', est: 'estado_cn' },
+                    media_ch: { nome: 'C.Humanas', est: 'estado_ch' },
+                    media_lc: { nome: 'Linguagens', est: 'estado_lc' },
+                    media_mt: { nome: 'Matemática', est: 'estado_mt' },
+                    media_redacao: { nome: 'Redação', est: 'estado_redacao' },
+                };
+                var fraca = null;
+                Object.keys(mapa).forEach(function (campo) {
+                    var val = Number(areaFraca[campo]);
+                    if (!Number.isFinite(val)) return;
+                    if (!fraca || val < fraca.val) {
+                        fraca = {
+                            nome: mapa[campo].nome, val: val,
+                            est: Number(areaFraca[mapa[campo].est])
+                        };
+                    }
+                });
+                if (!fraca) { setText('kpi-area-fraca', 'Sem dados'); return; }
+
+                var diff = Number.isFinite(fraca.est) ? fraca.val - fraca.est : null;
+                setText('kpi-area-fraca', fraca.nome);
+                setText('kpi-nota-municipio', formatPts(fraca.val));
+                setText('kpi-nota-estado', Number.isFinite(fraca.est) ? formatPts(fraca.est) : '—');
+
+                var elDiff = $('kpi-diff-area');
+                if (elDiff && diff !== null) {
+                    elDiff.textContent = (diff >= 0 ? '+' : '') + diff.toFixed(0) + ' pts em relação ao estado';
+                    elDiff.className = 'kpi-diff ' + (diff >= 0 ? 'kpi-positivo' : 'kpi-negativo');
+                }
+                var elMun = $('kpi-nota-municipio');
+                if (elMun && diff !== null) {
+                    elMun.className = 'kpi-comp-valor ' + (diff >= 0 ? 'kpi-positivo' : 'kpi-negativo');
+                }
+            }
+
+            /* ── KPI 2: Variação da média geral ─────────────────────────── */
+            function renderizarVariacaoMedia(rows) {
+                if (!rows || !rows.length) {
+                    setText('kpi-media-anterior', '—'); setText('kpi-media-atual', '—');
+                    setText('kpi-variacao', 'Sem dados para 2024/2025.'); return;
+                }
+                var l2024 = rows.find(function (r) { return Number(r.ano) === 2024; });
+                var l2025 = rows.find(function (r) { return Number(r.ano) === 2025; });
+                setText('kpi-ano-anterior-label', '2024');
+                setText('kpi-ano-atual-label', '2025');
+                setText('kpi-media-anterior', l2024 ? formatPts(l2024.media_geral) : '—');
+                setText('kpi-media-atual', l2025 ? formatPts(l2025.media_geral) : '—');
+                if (l2024 && l2025) {
+                    var v = Number(l2025.media_geral) - Number(l2024.media_geral);
+                    var elV = $('kpi-variacao');
+                    if (elV) {
+                        elV.textContent = (v >= 0 ? '+' : '') + v.toFixed(0) + ' pts em relação ao ano anterior';
+                        elV.className = 'kpi-diff ' + (v >= 0 ? 'kpi-positivo' : 'kpi-negativo');
+                    }
+                }
+            }
+
+            /* ── KPI 3: Meta de registros ───────────────────────────────── */
+            function renderizarMeta() {
+                var pct = metaAtual > 0 ? Math.min(Math.round((registrosAtuais / metaAtual) * 100), 100) : 0;
+                var faltam = Math.max(metaAtual - registrosAtuais, 0);
+                setText('meta-valor', metaAtual);
+                setText('kpi-registros-atual', registrosAtuais);
+                setText('meta-pct', pct + '% da meta');
+                setText('meta-faltam', faltam > 0 ? 'Faltam ' + faltam + ' registros para a meta' : 'Meta atingida! 🎉');
+                var barra = $('meta-barra');
+                if (barra) barra.style.width = pct + '%';
+            }
+
+            /* ── Painel: Atividade Recente ───────────────────────────────── */
+            var iconePorTipo = {
+                'aula': 'fi-rr-book-alt', 'simulado': 'fi-rr-document',
+                'revisao': 'fi-rr-refresh', 'avaliacao': 'fi-rr-star'
+            };
+
+            function renderizarAtividade(atividades) {
+                var lista = $('lista-atividade');
+                if (!lista) return;
+                if (!atividades || !atividades.length) {
+                    lista.innerHTML = '<p style="color:#aaa;font-size:13px;padding:8px 0;">Nenhuma atividade registrada.</p>';
+                    return;
+                }
+                lista.innerHTML = atividades.map(function (a) {
+                    var icone = iconePorTipo[(a.tipo || '').toLowerCase()] || 'fi-rr-chart-line-up';
+                    var tempo = a.data ? tempoRelativo(a.data) : '—';
+                    var area = a.area || a.area_atuacao || '—';
+                    return '<div class="atividade-item">'
+                        + '  <div class="atividade-icone"><i class="fi ' + icone + '"></i></div>'
+                        + '  <div class="atividade-texto">'
+                        + '    <span class="atividade-titulo">' + (a.nome_evento || a.tipo || 'Registro') + '</span>'
+                        + '    <span class="atividade-sub">' + (a.nome_professor || '—') + ' · ' + area + '</span>'
+                        + '  </div>'
+                        + '  <span class="atividade-tempo">' + tempo + '</span>'
+                        + '</div>';
+                }).join('');
+            }
+
+            /* ── Modal de unidades ───────────────────────────────────────── */
+            function preencherSelectUnidades(unidades, idSelecionado) {
+                var select = $('select-unidade');
+                if (!select) return;
+                select.innerHTML = '';
+                (unidades || []).forEach(function (u) {
+                    var opt = document.createElement('option');
+                    opt.value = u.id;
+                    opt.textContent = u.nome + ' — ' + u.nome_municipio + '/' + u.uf;
+                    select.appendChild(opt);
+                });
+                if (idSelecionado) select.value = String(idSelecionado);
+            }
+
+            $('btn-trocar-unidade') && $('btn-trocar-unidade').addEventListener('click', function () {
+                preencherSelectUnidades(todasUnidades, unidadeAtual ? unidadeAtual.id : null);
+                abrirModal('modal-unidade-overlay');
+            });
+            $('btn-cancelar-unidade') && $('btn-cancelar-unidade').addEventListener('click', function () {
+                fecharModal('modal-unidade-overlay');
+            });
+            $('btn-confirmar-unidade') && $('btn-confirmar-unidade').addEventListener('click', function () {
+                var select = $('select-unidade');
+                var id = select ? Number(select.value) : 0;
+                if (!id) return;
+                fecharModal('modal-unidade-overlay');
+                carregarDashboard(id);
+            });
+            $('modal-unidade-overlay') && $('modal-unidade-overlay').addEventListener('click', function (e) {
+                if (e.target === this) fecharModal('modal-unidade-overlay');
+            });
+
+            /* ── Modal de meta ───────────────────────────────────────────── */
+            $('btn-abrir-meta') && $('btn-abrir-meta').addEventListener('click', function () {
+                var inp = $('meta-input'); if (inp) inp.value = metaAtual;
+                abrirModal('meta-overlay');
+                if ($('meta-input')) $('meta-input').focus();
+            });
+            $('btn-fechar-meta') && $('btn-fechar-meta').addEventListener('click', function () {
+                fecharModal('meta-overlay');
+            });
+            $('btn-salvar-meta') && $('btn-salvar-meta').addEventListener('click', function () {
+                var val = parseInt(($('meta-input') || {}).value, 10);
+                if (!val || val < 1) return;
+                metaAtual = val;
+                if (unidadeAtual) salvarMetaLocal(unidadeAtual.id, val);
+                renderizarMeta();
+                fecharModal('meta-overlay');
+            });
+            $('meta-overlay') && $('meta-overlay').addEventListener('click', function (e) {
+                if (e.target === this) fecharModal('meta-overlay');
+            });
+
+            /* ── Carregamento da API ──────────────────────────────────────── */
+            async function carregarDashboard(idUnidadeSelecionada) {
+                var idUnidade = idUnidadeSelecionada || Number(sessionStorage.getItem('ID_UNIDADE'));
+                var idUsuario = Number(sessionStorage.getItem('ID_USUARIO'));
+
+                if (!idUnidade || !idUsuario) {
+                    console.warn('[dashboardCoordenador] Sessão sem ID_UNIDADE ou ID_USUARIO.');
+                    return;
+                }
+
+                try {
+                    var res = await fetch('/dashboardCoordenador/dados/' + idUnidade);
+                    if (!res.ok) {
+                        var err = await res.json().catch(function () { return {}; });
+                        throw new Error(err.mensagem || 'Falha ao carregar dados.');
+                    }
+                    var d = await res.json();
+
+                    /* badge de unidade */
+                    unidadeAtual = d.unidade || null;
+                    if (unidadeAtual) {
+                        setText('badge-unidade',
+                            unidadeAtual.nome + ' — ' + unidadeAtual.nome_municipio + '/' + unidadeAtual.uf);
+                    }
+
+                    /* lista de unidades para o modal */
+                    if (unidadeAtual && unidadeAtual.id_empresa && !todasUnidades.length) {
+                        var resUn = await fetch('/dashboardCoordenador/unidades/' + unidadeAtual.id_empresa);
+                        if (resUn.ok) todasUnidades = await resUn.json();
+                    }
+
+                    /* KPI 1 */
+                    renderizarAreaFraca(d.areaFraca);
+
+                    /* KPI 2 */
+                    renderizarVariacaoMedia(d.variacaoMedia);
+
+                    /* KPI 3 */
+                    registrosAtuais = d.totalRegistros || 0;
+                    metaAtual = carregarMetaLocal(idUnidade);
+                    renderizarMeta();
+
+                    /* Gráfico 1 */
+                    dadosHistorico = d.historico || [];
+                    var btnAtivo = document.querySelector('.evolucao_medias_button.ativo');
+                    renderizarEvolucao(
+                        btnAtivo ? btnAtivo.dataset.campo : 'media_cn',
+                        btnAtivo ? btnAtivo.dataset.nome : 'C.Natureza'
+                    );
+
+                    /* Gráfico 2 */
+                    setText('label-ano-eventos', String(ANO_ATUAL));
+                    var eventosMes = new Array(12).fill(0);
+                    (d.eventosPorMes || []).forEach(function (item) {
+                        var idx = Number(item.mes) - 1;
+                        if (idx >= 0 && idx < 12) eventosMes[idx] = Number(item.registros) || 0;
+                    });
+                    chartEventos.updateOptions({ series: [{ name: 'Registros', data: eventosMes }] });
+
+                    /* Gráfico 3 */
+                    var profs = d.professores || [];
+                    professoresCache = profs;
+                    chartProfessores.updateOptions({
+                        series: [{ name: 'Registros', data: profs.map(function (p) { return Number(p.registros) || 0; }) }],
+                        xaxis: { categories: profs.map(function (p) { return p.nome; }) },
+                    });
+
+                    /* Atividade recente */
+                    renderizarAtividade(d.atividadeRecente);
+
+                } catch (erro) {
+                    console.error('[dashboardCoordenador] Erro ao carregar dados:', erro);
+                }
+            }
+
+            /* ── Inicialização ───────────────────────────────────────────── */
+            window.onload = function () {
+                carregarDashboard();
+            };
+
+        })();
+    </script>
+    <script src="../js/controleAcesso.js"></script>
 </body>
+
 </html>

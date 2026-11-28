@@ -43,6 +43,13 @@
   </div>
 
   <main class="conteudo diretor-dashboard">
+    <!-- Botão de download de relatório (sem função por enquanto) -->
+    <div class="barra-relatorio">
+      <button class="btn-relatorio" id="btn-baixar-relatorio" type="button">
+        <i class="fi fi-rr-download"></i> Baixar relatório
+      </button>
+    </div>
+
     <header class="dash-header">
       <div class="dash-title">
         <a class="back-link" href="./dashboardDiretorGeral.html"><i class="fi fi-rr-arrow-left"></i> Visão rede</a>
@@ -81,23 +88,30 @@
 
     <div class="info-banner">
       <i class="fi fi-rr-info"></i>
-      <span id="texto-municipio">As notas do ENEM representam o município da unidade selecionada, não os alunos da unidade.</span>
+      <span id="texto-municipio">As notas do ENEM representam o município da unidade selecionada, não os alunos da
+        unidade.</span>
     </div>
 
     <section class="kpi-grid" aria-label="Indicadores principais da unidade">
       <article class="kpi-card warning">
+        <span class="info-tip" tabindex="0"
+          data-tip="Média das diferenças entre o município e o estado nas 4 áreas objetivas do ano selecionado. Valor negativo significa abaixo do estado.">?</span>
         <span class="kpi-title">DIFERENÇA VS. ESTADO</span>
         <strong class="kpi-value" id="kpi-diferenca">—</strong>
         <span class="kpi-footer" id="kpi-diferenca-descricao">Carregando desempenho...</span>
       </article>
 
       <article class="kpi-card">
+        <span class="info-tip" tabindex="0"
+          data-tip="Participantes do ENEM no município no ano selecionado, com a variação em relação ao ano anterior disponível.">?</span>
         <span class="kpi-title">BASE DE CANDIDATOS</span>
         <strong class="kpi-value" id="kpi-participantes">—</strong>
         <span class="kpi-footer" id="kpi-participantes-descricao">Carregando participantes...</span>
       </article>
 
       <article class="kpi-card danger coverage-card">
+        <span class="info-tip" tabindex="0"
+          data-tip="Total de professores da unidade que atuam nas áreas de maior defasagem em relação ao estado.">?</span>
         <span class="kpi-title">COBERTURA DE PROFESSORES</span>
         <strong class="kpi-value" id="kpi-cobertura">—</strong>
         <span class="kpi-footer" id="kpi-cobertura-descricao">Carregando professores...</span>
@@ -110,6 +124,8 @@
       </article>
 
       <article class="kpi-card warning">
+        <span class="info-tip" tabindex="0"
+          data-tip="Percentual de eventos do semestre que estão nas áreas de maior defasagem do município.">?</span>
         <span class="kpi-title">ADERÊNCIA PEDAGÓGICA</span>
         <strong class="kpi-value" id="kpi-aderencia">—</strong>
         <span class="kpi-footer" id="kpi-aderencia-descricao">Carregando eventos...</span>
@@ -118,6 +134,8 @@
 
     <section class="branch-grid top-grid">
       <article class="chart-card area-chart-card">
+        <span class="info-tip" tabindex="0"
+          data-tip="Compara a média do ENEM por área no município, no estado e na média da rede.">?</span>
         <div class="chart-header">
           <h2>Município, estado e rede por área</h2>
           <p id="descricao-grafico-areas">Média no ENEM por área no município selecionado, no estado e na rede.</p>
@@ -128,12 +146,15 @@
           <p class="chart-empty-state" id="estado-grafico">Carregando desempenho...</p>
         </div>
 
-        <div class="legend"><span><i class="legend-dot city"></i><span id="legenda-municipio">Município</span></span><span><i
-              class="legend-dot state"></i>Estado</span><span><i class="legend-dot network"></i>Média da rede</span>
+        <div class="legend"><span><i class="legend-dot city"></i><span
+              id="legenda-municipio">Município</span></span><span><i class="legend-dot state"></i>Estado</span><span><i
+              class="legend-dot network"></i>Média da rede</span>
         </div>
       </article>
 
       <article class="chart-card effort-card">
+        <span class="info-tip" tabindex="0"
+          data-tip="Compara a necessidade (diferença do município vs. estado) com o esforço (eventos da unidade) em cada área. Redação não tem contagem de eventos.">?</span>
         <div class="chart-header">
           <h2>Necessidade x esforço por área</h2>
           <p>Diferença do município vs. estado ao lado do número de eventos da unidade.</p>
@@ -162,12 +183,15 @@
             <div class="events"><i></i><b id="eventos-redacao">—</b></div>
           </div>
         </div>
-        <p class="chart-note"><i class="fi fi-rr-bulb"></i><span id="nota-esforco">A tabela compara as diferenças do município com os eventos por área.</span></p>
+        <p class="chart-note"><i class="fi fi-rr-bulb"></i><span id="nota-esforco">A tabela compara as diferenças do
+            município com os eventos por área.</span></p>
       </article>
     </section>
 
     <section class="branch-grid bottom-grid">
       <article class="chart-card evolution-card">
+        <span class="info-tip" tabindex="0"
+          data-tip="Média do município por área ao longo dos anos, colorida por faixa de nota. A variação compara o primeiro e o último ano.">?</span>
         <div class="chart-header">
           <h2>Evolução do município por área</h2>
           <p id="descricao-evolucao">Médias disponíveis no banco para o município selecionado.</p>
@@ -183,13 +207,18 @@
       </article>
 
       <article class="chart-card quick-read-card">
+        <span class="info-tip" tabindex="0"
+          data-tip="Resumo da(s) área(s) com maior defasagem: diferença vs. estado, professores e eventos nessa área.">?</span>
         <div class="chart-header">
           <h2 id="leitura-titulo">Leitura rápida</h2>
           <p>Resumo do principal ponto de atenção para a coordenação.</p>
         </div>
-        <div class="quick-stat"><strong id="leitura-diferenca">—</strong><span id="leitura-resumo-diferenca">Carregando desempenho.</span></div>
-        <div class="quick-stat"><strong id="leitura-professores">—</strong><span id="leitura-resumo-professores">Carregando professores.</span></div>
-        <div class="quick-stat"><strong id="leitura-eventos">—</strong><span id="leitura-resumo-eventos">Carregando eventos.</span></div>
+        <div class="quick-stat"><strong id="leitura-diferenca">—</strong><span id="leitura-resumo-diferenca">Carregando
+            desempenho.</span></div>
+        <div class="quick-stat"><strong id="leitura-professores">—</strong><span
+            id="leitura-resumo-professores">Carregando professores.</span></div>
+        <div class="quick-stat"><strong id="leitura-eventos">—</strong><span id="leitura-resumo-eventos">Carregando
+            eventos.</span></div>
         <div class="decision-note"><i class="fi fi-rr-shield-check"></i>
           <p>A plataforma mostra a evidência. A decisão de priorizar continua com a coordenação.</p>
         </div>
@@ -200,6 +229,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
   <script src="../js/menu.js"></script>
   <script src="../js/controleAcesso.js"></script>
+  <script src="../js/modais.js"></script>
   <script>
     (function () {
       var seletorUnidade = document.getElementById("unidade");
